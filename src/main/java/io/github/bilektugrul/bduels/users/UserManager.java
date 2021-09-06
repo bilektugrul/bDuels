@@ -1,6 +1,6 @@
 package io.github.bilektugrul.bduels.users;
 
-import io.github.bilektugrul.bduels.bDuels;
+import io.github.bilektugrul.bduels.BDuels;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public class UserManager {
 
-    private final bDuels plugin;
+    private final BDuels plugin;
     private final Set<User> userList = new HashSet<>();
 
-    public UserManager(bDuels plugin) {
+    public UserManager(BDuels plugin) {
         this.plugin = plugin;
     }
 

@@ -9,10 +9,7 @@ public class DuelRewards {
     private int moneyBet;
     private List<ItemStack> itemsBet;
 
-    public DuelRewards(int moneyBet, List<ItemStack> itemsBet) {
-        this.moneyBet = moneyBet;
-        this.itemsBet = itemsBet;
-    }
+    public DuelRewards() {}
 
     public int getMoneyBet() {
         return moneyBet;
@@ -29,4 +26,9 @@ public class DuelRewards {
     public void setItemsBet(List<ItemStack> itemsBet) {
         this.itemsBet = itemsBet;
     }
+
+    public void addItemToBet(ItemStack itemStack) {
+        itemsBet.add(itemStack);
+    }
+
 }

@@ -9,9 +9,9 @@ public class Duel {
 
     private final Player player, opponent;
     private Arena arena;
-    private final HashMap<Player, DuelRewards> duelRewards;
+    private final HashMap<String, DuelRewards> duelRewards;
 
-    public Duel(Player player, Player opponent, Arena arena, HashMap<Player, DuelRewards> duelRewards) {
+    public Duel(Player player, Player opponent, Arena arena, HashMap<String, DuelRewards> duelRewards) {
         this.player = player;
         this.opponent = opponent;
         this.arena = arena;
