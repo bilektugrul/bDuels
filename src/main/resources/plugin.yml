@@ -1,0 +1,7 @@
+name: bDuels
+version: '${project.version}'
+main: io.github.bilektugrul.bduels.bDuels
+api-version: 1.17
+prefix: [ bDuels ]
+authors: [ bilektugrul ]
+description: Acayip özelliklerle dolu mükemmel bir düello eklentisi!
