@@ -1,43 +1,42 @@
 package io.github.bilektugrul.bduels.duels;
 
-import org.bukkit.entity.Player;
+import io.github.bilektugrul.bduels.users.User;
 
 import java.util.HashMap;
 
 public class DuelRequestProcess {
 
-    private final Player player, opponent;
-    private final HashMap<String, DuelRewards> duelRewards = new HashMap<>();
-    private final HashMap<String, Boolean> finished = new HashMap<>();
+    private final User player, opponent;
+    private final HashMap<User, DuelRewards> duelRewards = new HashMap<>();
+    private final HashMap<User, Boolean> finished = new HashMap<>();
 
-    public DuelRequestProcess(Player player, Player opponent) {
+    public DuelRequestProcess(User player, User opponent) {
         this.player = player;
         this.opponent = opponent;
-        for (Player p : getPlayers()) {
-            String name = p.getName();
-            duelRewards.put(name, new DuelRewards());
-            finished.put(name, false);
+        for (User user : getPlayers()) {
+            duelRewards.put(user, new DuelRewards());
+            finished.put(user, false);
         }
     }
 
-    public Player[] getPlayers() {
-        return new Player[]{player, opponent};
+    public User[] getPlayers() {
+        return new User[]{player, opponent};
     }
 
     public DuelRewards getRewardsOf(String name) {
         return duelRewards.get(name);
     }
 
-    public HashMap<String, DuelRewards> getDuelRewards() {
+    public HashMap<User, DuelRewards> getDuelRewards() {
         return duelRewards;
     }
 
-    public boolean isFinished(String name) {
-        return finished.get(name);
+    public boolean isFinished(User user) {
+        return finished.get(user);
     }
 
-    public void setFinished(String name, boolean isFinished) {
-        finished.put(name, isFinished);
+    public void setFinished(User user, boolean isFinished) {
+        finished.put(user, isFinished);
     }
 
     public boolean isBothFinished() {
@@ -47,15 +46,15 @@ public class DuelRequestProcess {
         return true;
     }
 
-    public HashMap<String, Boolean> getFinished() {
+    public HashMap<User, Boolean> getFinished() {
         return finished;
     }
 
-    public Player getPlayer() {
+    public User getPlayer() {
         return player;
     }
 
-    public Player getOpponent() {
+    public User getOpponent() {
         return opponent;
     }
 

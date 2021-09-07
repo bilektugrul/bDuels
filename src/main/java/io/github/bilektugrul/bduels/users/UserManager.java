@@ -17,11 +17,11 @@ public class UserManager {
     }
 
     public User loadUser(Player p) {
-        return loadUser(p.getUniqueId(), p.getName(), true);
+        return loadUser(p, true);
     }
 
-    public User loadUser(UUID uuid, String name, boolean keep) {
-        User user = new User(uuid, name);
+    public User loadUser(Player player, boolean keep) {
+        User user = new User(player);
         if (keep) userList.add(user);
         return user;
     }
@@ -33,7 +33,7 @@ public class UserManager {
 
     public User getUser(UUID uuid) {
         for (User user : userList) {
-            if (user.getUUID().equals(uuid)) {
+            if (user.getPlayer().getUniqueId().equals(uuid)) {
                 return user;
             }
         }

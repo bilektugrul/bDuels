@@ -4,8 +4,8 @@ import org.bukkit.Location;
 
 public class Arena {
 
-    private String name;
-    private Location startLocation, startLocation2;
+    private final String name;
+    private Location playerLocation, opponentLocation;
     private Location edge, otherEdge;
     private ArenaState state;
 
@@ -25,12 +25,12 @@ public class Arena {
         return otherEdge;
     }
 
-    public Location getStartLocation() {
-        return startLocation;
+    public Location getPlayerLocation() {
+        return playerLocation;
     }
 
-    public Location getStartLocation2() {
-        return startLocation2;
+    public Location getOpponentLocation() {
+        return opponentLocation;
     }
 
     public ArenaState getState() {
@@ -45,12 +45,12 @@ public class Arena {
         this.otherEdge = otherEdge;
     }
 
-    public void setStartLocation(Location startLocation) {
-        this.startLocation = startLocation;
+    public void setPlayerLocation(Location playerLocation) {
+        this.playerLocation = playerLocation;
     }
 
-    public void setStartLocation2(Location startLocation2) {
-        this.startLocation2 = startLocation2;
+    public void setOpponentLocation(Location opponentLocation) {
+        this.opponentLocation = opponentLocation;
     }
 
     public void setState(ArenaState state) {

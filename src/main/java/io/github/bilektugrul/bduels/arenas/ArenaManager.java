@@ -7,7 +7,11 @@ public class ArenaManager {
 
     public Set<Arena> arenas = new HashSet<>();
 
-    public Arena findNextEmptyArena() {
+    public boolean isAnyArenaAvailable() {
+        return findNextEmptyArenaIfPresent() != null;
+    }
+
+    public Arena findNextEmptyArenaIfPresent() {
         for (Arena arena : arenas) {
             if (arena.getState() == ArenaState.EMPTY) {
                 return arena;

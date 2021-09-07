@@ -1,28 +1,36 @@
 package io.github.bilektugrul.bduels.users;
 
-import org.bukkit.Bukkit;
+import io.github.bilektugrul.bduels.duels.Duel;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 public class User {
 
-    private final UUID uuid;
-    private final String name;
-    private UserState state;
+    private final Player player;
 
-    public User(UUID uuid, String name) {
-        this.uuid = uuid;
-        this.name = name;
+    private UserState state;
+    private Duel duel;
+
+    public User(Player player) {
+        this.player = player;
         this.state = UserState.FREE;
     }
 
-    public UUID getUUID() {
-        return uuid;
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Duel getDuel() {
+        return duel;
     }
 
     public String getName() {
-        return name;
+        return player.getName();
+    }
+
+    public UUID getUUID() {
+        return player.getUniqueId();
     }
 
     public UserState getState() {
@@ -31,10 +39,6 @@ public class User {
 
     public void setState(UserState newState) {
         state = newState;
-    }
-
-    public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
     }
 
 }
