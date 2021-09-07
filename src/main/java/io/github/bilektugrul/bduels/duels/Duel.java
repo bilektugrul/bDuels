@@ -5,6 +5,7 @@ import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 
@@ -14,11 +15,24 @@ public class Duel {
     private final Arena arena;
     private final HashMap<User, DuelRewards> duelRewards;
 
+    private final HashMap<User, PreDuelData> preDuelData = new HashMap<>();
+
     public Duel(DuelRequestProcess requestProcess, Arena arena) {
         this.player = requestProcess.getPlayer();
         this.opponent = requestProcess.getOpponent();
         this.arena = arena;
         this.duelRewards = requestProcess.getDuelRewards();
+
+        Player player = this.player.getPlayer();
+        Player opponentPlayer = this.opponent.getPlayer();
+
+        PlayerInventory playerInventory = player.getInventory();
+        PlayerInventory opponentInventory = opponentPlayer.getInventory();
+
+        PreDuelData playerData = new PreDuelData(player.getLocation(), playerInventory.getContents(), playerInventory.getArmorContents());
+        PreDuelData opponentData = new PreDuelData(opponentPlayer.getLocation(), opponentInventory.getContents(), opponentInventory.getArmorContents());
+        preDuelData.put(this.player, playerData);
+        preDuelData.put(this.opponent, opponentData);
     }
 
     public void start() {
@@ -35,6 +49,10 @@ public class Duel {
 
     public HashMap<User, DuelRewards> getDuelRewards() {
         return duelRewards;
+    }
+
+    public HashMap<User, PreDuelData> getPreDuelData() {
+        return preDuelData;
     }
 
     public User[] getPlayers() {

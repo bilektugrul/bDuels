@@ -58,6 +58,10 @@ public class DuelManager {
         return null;
     }
 
+    public ArrayList<Duel> getOngoingDuels() {
+        return ongoingDuels;
+    }
+
     public boolean canSendOrAcceptDuel(User user) {
         return getOpponent(user) == null && getRequestSender(user) == null
                 && user.getState() == UserState.FREE;
@@ -66,7 +70,9 @@ public class DuelManager {
     public void sendDuelRequest(User sender, User opponent) {
         Player senderPlayer = sender.getPlayer();
         Player opponentPlayer = opponent.getPlayer();
-        if (arenaManager.isAnyArenaAvailable()) {
+        if (!canSendOrAcceptDuel(sender) || !canSendOrAcceptDuel(opponent)) {
+            senderPlayer.sendMessage("Şu an duel atamazsın veya bu oyuncu şu an duel kabul edemez.");
+        } else if (arenaManager.isAnyArenaAvailable()) {
 
             String senderName = senderPlayer.getName();
             String opponentName = opponentPlayer.getName();
@@ -88,43 +94,32 @@ public class DuelManager {
                 cancel(process, false);
             })));
 
-            inventory.setItem(48, ClickableItem.of(redGlass, (event -> {
-                Player clicker = (Player) event.getWhoClicked();
-                if (clicker.equals(senderPlayer)) {
-                    boolean newFinished = !process.isFinished(sender);
-                    process.setFinished(sender, newFinished);
-                    if (newFinished) {
-                        event.setCurrentItem(greenGlass);
-                        if (process.isBothFinished()) {
-                            startMatch(process);
-                        }
-                    } else {
-                        event.setCurrentItem(redGlass);
-                    }
-                }
-            })));
-
-            inventory.setItem(50, ClickableItem.of(redGlass, (event -> {
-                Player clicker = (Player) event.getWhoClicked();
-                if (clicker.equals(opponentPlayer)) {
-                    boolean newFinished = !process.isFinished(opponent);
-                    process.setFinished(opponent, newFinished);
-                    if (newFinished) {
-                        event.setCurrentItem(greenGlass);
-                        if (process.isBothFinished()) {
-                            startMatch(process);
-                        }
-                    } else {
-                        event.setCurrentItem(redGlass);
-                    }
-                }
-            })));
+            putAcceptItem(inventory, 48, sender, process);
+            putAcceptItem(inventory, 50, opponent, process);
 
             inventory.open(senderPlayer);
             inventory.open(opponentPlayer);
         } else {
             senderPlayer.sendMessage("Hiç müsait arena yok.");
         }
+    }
+
+    public void putAcceptItem(HInventory inventory, int slot, User user, DuelRequestProcess process) {
+        inventory.setItem(slot, ClickableItem.of(redGlass, (event -> {
+            Player clicker = (Player) event.getWhoClicked();
+            if (clicker.equals(user.getPlayer())) {
+                boolean newFinished = !process.isFinished(user);
+                process.setFinished(user, newFinished);
+                if (newFinished) {
+                    event.setCurrentItem(greenGlass);
+                    if (process.isBothFinished()) {
+                        startMatch(process);
+                    }
+                } else {
+                    event.setCurrentItem(redGlass);
+                }
+            }
+        })));
     }
 
     public void cancel(DuelRequestProcess requestProcess, boolean starting) {
@@ -135,7 +130,7 @@ public class DuelManager {
         duelRequestProcesses.remove(requestProcess);
         duelRequests.remove(requestProcess.getPlayer());
         if (!starting) {
-            // başka bir şey yapmaya gerek var mı ki aq????
+            // TODO: İLERDE DUEL CANCEL MESAJI FALAN BURAYA KNK
         }
     }
 
@@ -147,6 +142,7 @@ public class DuelManager {
 
         Duel duel = new Duel(requestProcess, matchArena);
         ongoingDuels.add(duel);
+        duel.start();
     }
 
     public void endMatch(Duel duel, User loser) {
@@ -155,7 +151,9 @@ public class DuelManager {
         arena.setState(ArenaState.POST_MATCH);
         ongoingDuels.remove(duel);
         for (User user : duel.getPlayers()) {
-            //TODO: PREDUELDATA OLUŞTUR VE OYUNCULARI O DATAYA GÖRE IŞINLA FALAN
+            PreDuelData duelData = duel.getPreDuelData().get(user);
+            Player player = user.getPlayer();
+            player.teleport(duelData.getLocation());
         }
     }
 
