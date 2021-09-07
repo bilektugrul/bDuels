@@ -1,6 +1,6 @@
 name: bDuels
 version: '${project.version}'
-main: io.github.bilektugrul.bduels.bDuels
+main: io.github.bilektugrul.bduels.BDuels
 api-version: 1.17
 prefix: [ bDuels ]
 authors: [ bilektugrul ]
