@@ -9,6 +9,7 @@ import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,8 +69,8 @@ public class DuelManager {
     }
 
     public void sendDuelRequest(User sender, User opponent) {
-        Player senderPlayer = sender.getPlayer();
-        Player opponentPlayer = opponent.getPlayer();
+        Player senderPlayer = sender.getBase();
+        Player opponentPlayer = opponent.getBase();
         if (!canSendOrAcceptDuel(sender) || !canSendOrAcceptDuel(opponent)) {
             senderPlayer.sendMessage("Şu an duel atamazsın veya bu oyuncu şu an duel kabul edemez.");
         } else if (arenaManager.isAnyArenaAvailable()) {
@@ -90,9 +91,7 @@ public class DuelManager {
                 inventory.setItem(i, ClickableItem.empty(glass));
             }
 
-            inventory.setItem(4, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> {
-                cancel(process, false);
-            })));
+            inventory.setItem(4, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> cancel(process, false))));
 
             putAcceptItem(inventory, 48, sender, process);
             putAcceptItem(inventory, 50, opponent, process);
@@ -107,12 +106,13 @@ public class DuelManager {
     public void putAcceptItem(HInventory inventory, int slot, User user, DuelRequestProcess process) {
         inventory.setItem(slot, ClickableItem.of(redGlass, (event -> {
             Player clicker = (Player) event.getWhoClicked();
-            if (clicker.equals(user.getPlayer())) {
+            if (clicker.equals(user.getBase())) {
                 boolean newFinished = !process.isFinished(user);
                 process.setFinished(user, newFinished);
                 if (newFinished) {
                     event.setCurrentItem(greenGlass);
                     if (process.isBothFinished()) {
+                        inventory.setClosable(true);
                         startMatch(process);
                     }
                 } else {
@@ -124,8 +124,8 @@ public class DuelManager {
 
     public void cancel(DuelRequestProcess requestProcess, boolean starting) {
         for (User user : requestProcess.getPlayers()) {
-            Player player = user.getPlayer();
-            player.closeInventory();
+            Player player = user.getBase();
+            inventoryAPI.getInventoryManager().getPlayerInventory(player).close(player);
         }
         duelRequestProcesses.remove(requestProcess);
         duelRequests.remove(requestProcess.getPlayer());
@@ -151,10 +151,14 @@ public class DuelManager {
         arena.setState(ArenaState.POST_MATCH);
         ongoingDuels.remove(duel);
         for (User user : duel.getPlayers()) {
-            PreDuelData duelData = duel.getPreDuelData().get(user);
-            Player player = user.getPlayer();
-            player.teleport(duelData.getLocation());
+            PreDuelData preDuelData = duel.getPreDuelData().get(user);
+            Player player = user.getBase();
+            player.teleport(preDuelData.getLocation());
+            user.setState(UserState.FREE);
+            user.setDuel(null);
         }
+        arena.setState(ArenaState.EMPTY);
+        Bukkit.broadcastMessage("winner " + winner.getName());
     }
 
 }

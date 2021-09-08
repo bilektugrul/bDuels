@@ -1,36 +1,50 @@
 package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.duels.Duel;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 public class User {
 
-    private final Player player;
+    private final Player base;
 
     private UserState state;
     private Duel duel;
+    private Location respawnLocation;
 
     public User(Player player) {
-        this.player = player;
+        this.base = player;
         this.state = UserState.FREE;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getBase() {
+        return base;
     }
 
     public Duel getDuel() {
         return duel;
     }
 
+    public void setDuel(Duel duel) {
+        this.duel = duel;
+    }
+
+    public Location getRespawnLocation() {
+        return respawnLocation;
+    }
+
+    public void setRespawnLocation(Location respawnLocation) {
+        this.respawnLocation = respawnLocation;
+    }
+
     public String getName() {
-        return player.getName();
+        return base.getName();
     }
 
     public UUID getUUID() {
-        return player.getUniqueId();
+        return base.getUniqueId();
     }
 
     public UserState getState() {

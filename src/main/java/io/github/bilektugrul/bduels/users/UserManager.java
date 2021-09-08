@@ -33,7 +33,7 @@ public class UserManager {
 
     public User getUser(UUID uuid) {
         for (User user : userList) {
-            if (user.getPlayer().getUniqueId().equals(uuid)) {
+            if (user.getBase().getUniqueId().equals(uuid)) {
                 return user;
             }
         }

@@ -23,8 +23,11 @@ public class Duel {
         this.arena = arena;
         this.duelRewards = requestProcess.getDuelRewards();
 
-        Player player = this.player.getPlayer();
-        Player opponentPlayer = this.opponent.getPlayer();
+        player.setDuel(this);
+        opponent.setDuel(this);
+
+        Player player = this.player.getBase();
+        Player opponentPlayer = this.opponent.getBase();
 
         PlayerInventory playerInventory = player.getInventory();
         PlayerInventory opponentInventory = opponentPlayer.getInventory();
@@ -36,11 +39,11 @@ public class Duel {
     }
 
     public void start() {
-        Player player1 = this.player.getPlayer();
+        Player player1 = this.player.getBase();
         player1.teleport(arena.getPlayerLocation());
         player.setState(UserState.IN_MATCH);
 
-        Player opponentPlayer = this.opponent.getPlayer();
+        Player opponentPlayer = this.opponent.getBase();
         opponentPlayer.teleport(arena.getOpponentLocation());
         opponent.setState(UserState.IN_MATCH);
 
