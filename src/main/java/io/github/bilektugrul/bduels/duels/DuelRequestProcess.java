@@ -3,12 +3,13 @@ package io.github.bilektugrul.bduels.duels;
 import io.github.bilektugrul.bduels.users.User;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class DuelRequestProcess {
 
     private final User player, opponent;
-    private final HashMap<User, DuelRewards> duelRewards = new HashMap<>();
-    private final HashMap<User, Boolean> finished = new HashMap<>();
+    private final Map<User, DuelRewards> duelRewards = new HashMap<>();
+    private final Map<User, Boolean> finished = new HashMap<>();
 
     public DuelRequestProcess(User player, User opponent) {
         this.player = player;
@@ -23,11 +24,11 @@ public class DuelRequestProcess {
         return new User[]{player, opponent};
     }
 
-    public DuelRewards getRewardsOf(String name) {
+    public DuelRewards getRewardsOf(User name) {
         return duelRewards.get(name);
     }
 
-    public HashMap<User, DuelRewards> getDuelRewards() {
+    public Map<User, DuelRewards> getDuelRewards() {
         return duelRewards;
     }
 
@@ -46,7 +47,7 @@ public class DuelRequestProcess {
         return true;
     }
 
-    public HashMap<User, Boolean> getFinished() {
+    public Map<User, Boolean> getFinished() {
         return finished;
     }
 

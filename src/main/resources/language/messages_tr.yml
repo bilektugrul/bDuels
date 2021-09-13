@@ -1,0 +1,23 @@
+messages:
+
+  no-permission: '%prefix% &cÜzgünüm %player% ancak bunu yapamazsın.'
+  only-players: '%prefix% &cSadece oyuncular bu komutu kullanabilir.'
+  config-reloaded: '%prefix% &bAyarlar başarıyla yenilendi.'
+
+  duel:
+    enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
+    player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
+    not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
+    not-now: '%prefix% &cŞu an duel atamazsın veya %rakip% şu an duel kabul edemez.'
+
+  arenas:
+    help-message: |
+      %prefix% &b/arena oluştur <arena ismi> &7| &bYeni bir arena oluşturur.
+      %prefix% &b/arena sil <arena ismi> &7| &bYeni bir arena oluşturur.
+      %prefix% &b/arena p1 <arena ismi> &7| &bArenanın 1. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.
+      %prefix% &b/arena p2 <arena ismi> &7| &bArenanın 2. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.
+      %prefix% &b/arena edge1 <arena ismi> &7| &bArenanın 1. köşesini bulunduğunuz lokasyon olarak ayarlar.
+      %prefix% &b/arena edge2 <arena ismi> &7| &bArenanın 2. köşesini bulunduğunuz lokasyon olarak ayarlar.
+    wrong-usage: '%prefix% &cKomutu hatalı kullandınız.'
+    created: '%prefix% &b%arena% &eadlı arena oluşturuldu. Geri kalan ayarlarını yapmayı unutmayın.'
+    all-in-usage: '%prefix% &cŞu anda hiç müsait arena yok.'

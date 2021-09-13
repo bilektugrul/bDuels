@@ -8,14 +8,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Duel {
 
     private final User player, opponent;
     private final Arena arena;
-    private final HashMap<User, DuelRewards> duelRewards;
+    private final Map<User, DuelRewards> duelRewards;
 
-    private final HashMap<User, PreDuelData> preDuelData = new HashMap<>();
+    private final Map<User, PreDuelData> preDuelData = new HashMap<>();
 
     public Duel(DuelRequestProcess requestProcess, Arena arena) {
         this.player = requestProcess.getPlayer();
@@ -50,11 +51,11 @@ public class Duel {
         arena.setState(ArenaState.IN_MATCH);
     }
 
-    public HashMap<User, DuelRewards> getDuelRewards() {
+    public Map<User, DuelRewards> getDuelRewards() {
         return duelRewards;
     }
 
-    public HashMap<User, PreDuelData> getPreDuelData() {
+    public Map<User, PreDuelData> getPreDuelData() {
         return preDuelData;
     }
 

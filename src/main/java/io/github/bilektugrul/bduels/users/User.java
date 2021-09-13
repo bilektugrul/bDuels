@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.duels.Duel;
+import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -53,6 +54,10 @@ public class User {
 
     public void setState(UserState newState) {
         state = newState;
+    }
+
+    public void sendMessage(String message) {
+        base.sendMessage(Utils.getMessage(message, base));
     }
 
 }

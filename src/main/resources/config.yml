@@ -1,0 +1,9 @@
+# bDuels PlaceholderAPI'yi destekler ve önerir. Binlerce farklı placeholderi rahatça kullanmak için kurmanızı öneririz.
+
+language: tr # Farklı dili içeren bir dosya oluşturursanız onun dilini yazabilirsiniz.
+
+custom-placeholders:
+  # Burada oluşturduğunuz placeholderleri bDuels'in her yerinde kullanabilirsiniz. (%<placeholder adı>%)
+  # PlaceholderAPI aracılığı ile başka eklentilerde de kullanabilirsiniz. (%bduels_custom_<placeholder adı>%)
+  prefix: '&8[&abDuels&8]&r'
+  #isim: içerik

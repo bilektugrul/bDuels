@@ -9,6 +9,8 @@ import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
+import io.github.bilektugrul.bduels.utils.Utils;
+import me.despical.commons.compat.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DuelManager {
@@ -24,13 +27,13 @@ public class DuelManager {
     private final ArenaManager arenaManager;
 
     private final Map<User, User> duelRequests = new HashMap<>();
-    private final ArrayList<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
-    private final ArrayList<Duel> ongoingDuels = new ArrayList<>();
+    private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
+    private final List<Duel> ongoingDuels = new ArrayList<>();
 
     private final int[] midGlasses = {13, 22, 31, 40, 49};
-    private final ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
-    private final ItemStack greenGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 13);
-    private final ItemStack redGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+    private final ItemStack glass = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
+    private final ItemStack greenGlass = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
+    private final ItemStack redGlass = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
 
     public DuelManager(BDuels bDuels) {
         this.inventoryAPI = bDuels.getInventoryAPI();
@@ -59,7 +62,7 @@ public class DuelManager {
         return null;
     }
 
-    public ArrayList<Duel> getOngoingDuels() {
+    public List<Duel> getOngoingDuels() {
         return ongoingDuels;
     }
 
@@ -71,9 +74,16 @@ public class DuelManager {
     public void sendDuelRequest(User sender, User opponent) {
         Player senderPlayer = sender.getBase();
         Player opponentPlayer = opponent.getBase();
+
+        if (senderPlayer.equals(opponentPlayer)) return;
+
         if (!canSendOrAcceptDuel(sender) || !canSendOrAcceptDuel(opponent)) {
-            senderPlayer.sendMessage("Şu an duel atamazsın veya bu oyuncu şu an duel kabul edemez.");
-        } else if (arenaManager.isAnyArenaAvailable()) {
+            senderPlayer.sendMessage(Utils.getMessage("duel.not-now", senderPlayer)
+                    .replace("%rakip%", opponent.getName()));
+            return;
+        }
+
+        if (arenaManager.isAnyArenaAvailable()) {
 
             String senderName = senderPlayer.getName();
             String opponentName = opponentPlayer.getName();
@@ -99,7 +109,7 @@ public class DuelManager {
             inventory.open(senderPlayer);
             inventory.open(opponentPlayer);
         } else {
-            senderPlayer.sendMessage("Hiç müsait arena yok.");
+            senderPlayer.sendMessage(Utils.getMessage("arenas.all-in-usage", senderPlayer));
         }
     }
 
@@ -134,6 +144,7 @@ public class DuelManager {
         }
     }
 
+    //TODO: BOŞ ARENA VAR MI KONTROLÜ EKLESEN İYİ OLUR
     public void startMatch(DuelRequestProcess requestProcess) {
         cancel(requestProcess, true);
 

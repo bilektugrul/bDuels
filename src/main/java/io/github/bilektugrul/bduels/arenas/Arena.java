@@ -5,12 +5,12 @@ import org.bukkit.Location;
 public class Arena {
 
     private final String name;
-    private Location playerLocation, opponentLocation;
-    private Location edge, otherEdge;
+    private Location playerLocation, opponentLocation, edge, otherEdge;
     private ArenaState state;
 
     public Arena(String name) {
         this.name = name;
+        this.state = ArenaState.EMPTY;
     }
 
     public String getName() {
@@ -55,5 +55,12 @@ public class Arena {
 
     public void setState(ArenaState state) {
         this.state = state;
+    }
+
+    public boolean isReady() {
+        return playerLocation != null
+                && opponentLocation != null
+                && edge != null
+                && otherEdge != null;
     }
 }

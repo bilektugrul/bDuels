@@ -9,3 +9,5 @@ description: Acayip özelliklerle dolu mükemmel bir düello eklentisi!
 commands:
   duel:
     usage: /duel <oyuncu>
+  arena:
+    usage: /arena <sub command> <arena>
