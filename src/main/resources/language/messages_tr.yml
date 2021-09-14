@@ -21,3 +21,4 @@ messages:
     wrong-usage: '%prefix% &cKomutu hatalı kullandınız.'
     created: '%prefix% &b%arena% &eadlı arena oluşturuldu. Geri kalan ayarlarını yapmayı unutmayın.'
     all-in-usage: '%prefix% &cŞu anda hiç müsait arena yok.'
+    already-exist: '%prefix% &cBu arena zaten mevcut.'

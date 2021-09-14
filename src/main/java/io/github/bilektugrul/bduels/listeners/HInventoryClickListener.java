@@ -31,9 +31,9 @@ public class HInventoryClickListener implements Listener {
         DuelRequestProcess process = duelManager.getProcess(user);
         HInventory playerHInventory = inventoryAPI.getInventoryManager().getPlayerInventory(clicker);
         if (process != null && playerHInventory != null) {
-            if (!e.getClickedInventory().equals(playerHInventory.getInventory())) { // KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
+            if (!e.getClickedInventory().equals(playerHInventory.getInventory())) { // TODO: KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
 
-            } else { // GUIYE TIKLADIĞINDA TIKLADIĞI İTEM BETLENEN İTEMLERDENSE SİLİNECEK
+            } else { // TODO: GUIYE TIKLADIĞINDA TIKLADIĞI İTEM BETLENEN İTEMLERDENSE SİLİNECEK
 
             }
         }
