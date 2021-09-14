@@ -4,17 +4,19 @@ import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
+import org.bukkit.Location;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class ArenaCreateCommand extends SubCommand {
+public class DefineEdgeLocationCommand extends SubCommand {
 
     private final ArenaManager arenaManager;
 
-    public ArenaCreateCommand(String name) {
-        super(name);
+    public DefineEdgeLocationCommand(String name, String aliases) {
+        super(name, aliases);
         this.arenaManager = plugin.getArenaManager();
     }
 
@@ -31,14 +33,29 @@ public class ArenaCreateCommand extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, String label) throws CommandException {
         String arenaName = args[0];
-        Arena arena = arenaManager.registerArena(arenaName);
-        if (arena != null) {
-            sender.sendMessage(Utils.getMessage("arenas.created", sender)
+        int whichEdge = Integer.parseInt(label.split("")[4]);
+
+        Arena arena = arenaManager.getArena(arenaName);
+        if (arena == null) {
+            sender.sendMessage(Utils.getMessage("arenas.not-found", sender)
                     .replace("%arena%", arenaName));
-        } else {
-            sender.sendMessage(Utils.getMessage("arenas.already-exist", sender)
-                    .replace("%arena%", arenaName));
+            return;
         }
+
+        Player player = (Player) sender;
+        Location location = player.getLocation();
+
+        switch (whichEdge) {
+            case 1:
+                arena.setEdge(location);
+                break;
+            case 2:
+                arena.setOtherEdge(location);
+                break;
+        }
+        sender.sendMessage(Utils.getMessage("arenas.edge-location-set", sender)
+                .replace("%no%", String.valueOf(whichEdge))
+                .replace("%arena%", arenaName));
     }
 
     @Override

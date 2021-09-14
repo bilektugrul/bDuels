@@ -1,6 +1,5 @@
 package io.github.bilektugrul.bduels.commands.arena;
 
-import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
@@ -9,11 +8,11 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class ArenaCreateCommand extends SubCommand {
+public class ArenaDeleteCommand extends SubCommand {
 
     private final ArenaManager arenaManager;
 
-    public ArenaCreateCommand(String name) {
+    public ArenaDeleteCommand(String name) {
         super(name);
         this.arenaManager = plugin.getArenaManager();
     }
@@ -31,12 +30,12 @@ public class ArenaCreateCommand extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, String label) throws CommandException {
         String arenaName = args[0];
-        Arena arena = arenaManager.registerArena(arenaName);
-        if (arena != null) {
-            sender.sendMessage(Utils.getMessage("arenas.created", sender)
+        boolean deleted = arenaManager.deleteArena(arenaName);
+        if (deleted) {
+            sender.sendMessage(Utils.getMessage("arenas.deleted", sender)
                     .replace("%arena%", arenaName));
         } else {
-            sender.sendMessage(Utils.getMessage("arenas.already-exist", sender)
+            sender.sendMessage(Utils.getMessage("arenas.could-not-deleted", sender)
                     .replace("%arena%", arenaName));
         }
     }

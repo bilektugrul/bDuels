@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.commands.arena.ArenaCreateCommand;
+import io.github.bilektugrul.bduels.commands.arena.ArenaDeleteCommand;
+import io.github.bilektugrul.bduels.commands.arena.DefineEdgeLocationCommand;
+import io.github.bilektugrul.bduels.commands.arena.DefinePlayerLocationCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.string.StringMatcher;
 import org.bukkit.ChatColor;
@@ -30,7 +33,11 @@ public class ArenaCommand implements CommandExecutor {
 
     public ArenaCommand(BDuels plugin) {
         this.plugin = plugin;
+
         registerSubCommand(new ArenaCreateCommand("oluştur"));
+        registerSubCommand(new ArenaDeleteCommand("sil"));
+        registerSubCommand(new DefinePlayerLocationCommand("p1", "p2"));
+        registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
     }
 
     public void registerSubCommand(SubCommand subCommand) {
@@ -74,7 +81,7 @@ public class ArenaCommand implements CommandExecutor {
 
                 if (args.length - 1 >= subCommand.getMinimumArguments()) {
                     try {
-                        subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
+                        subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length), args[0]);
                     } catch (CommandException e) {
                         sender.sendMessage(ChatColor.RED + e.getMessage());
                     }
@@ -91,6 +98,7 @@ public class ArenaCommand implements CommandExecutor {
         List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
 
         if (!matches.isEmpty()) {
+            sender.sendMessage(Utils.getMessage("did-you-mean").replace("%command%", label + " " + matches.get(0).getMatch()));
             return true;
         }
 

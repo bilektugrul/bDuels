@@ -27,6 +27,7 @@ public class ArenaManager {
         if (!isPresent(name)) {
             Arena arena = new Arena(name);
             arenas.add(arena);
+            return arena;
         }
         return null;
     }
@@ -37,6 +38,19 @@ public class ArenaManager {
             return true;
         }
         return false;
+    }
+
+    public boolean deleteArena(String name) {
+        return arenas.removeIf(arena -> arena.getName().equalsIgnoreCase(name) && arena.getState() == ArenaState.EMPTY);
+    }
+
+    public Arena getArena(String name) {
+        for (Arena arena : arenas) {
+            if (arena.getName().equalsIgnoreCase(name)) {
+                return arena;
+            }
+        }
+        return null;
     }
 
     public boolean isAnyArenaAvailable() {

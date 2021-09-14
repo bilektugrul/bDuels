@@ -46,7 +46,7 @@ public abstract class SubCommand {
 
     public abstract int getMinimumArguments();
 
-    public abstract void execute(CommandSender sender, String[] args) throws CommandException;
+    public abstract void execute(CommandSender sender, String[] args, String label) throws CommandException;
 
     public abstract List<String> getTutorial();
 

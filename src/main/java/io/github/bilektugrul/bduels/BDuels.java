@@ -18,7 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-// TODO: ÖDÜL OLAYLARINI, ARENA SİSTEMİNİ HALLET, DÜELLO İSTEĞİ OLAYINI HALLET
+// TODO: ÖDÜL OLAYLARINI, DÜELLO İSTEĞİ OLAYINI HALLET
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
