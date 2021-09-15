@@ -10,6 +10,19 @@ messages:
     player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
     not-now: '%prefix% &cŞu an duel atamazsın veya %rakip% şu an duel kabul edemez.'
+    win:
+      used-mode: TITLE
+      title:
+        title: '&c%loser% &bvs &d%winner%'
+        subtitle: '&bKazanan: &d%winner%'
+      chat: |
+        &m-----------------
+        Maç bitti!
+        Oyuncular: &c%loser%&b, &d%winner%
+        Kazanan: &d%winner%
+        &m-----------------
+      actionbar: '&c%loser% &bvs &d%winner% &7- &bKazanan: &d%winner%'
+    match-force-ended: '%prefix% &cBir yönetici düello sistemini yeniden başlattığı için tüm maçlar bitirildi.'
 
   arenas:
     help-message: |
