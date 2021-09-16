@@ -1,5 +1,5 @@
 //Copyright (C) 2020 Despical
-package io.github.bilektugrul.bduels.commands.base;
+package io.github.bilektugrul.bduels.commands.arena.base;
 
 import io.github.bilektugrul.bduels.BDuels;
 import org.bukkit.command.CommandException;

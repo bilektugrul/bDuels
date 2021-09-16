@@ -1,8 +1,8 @@
 package io.github.bilektugrul.bduels.utils;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.features.language.LanguageManager;
-import io.github.bilektugrul.bduels.features.placeholders.CustomPlaceholderManager;
+import io.github.bilektugrul.bduels.language.LanguageManager;
+import io.github.bilektugrul.bduels.placeholders.CustomPlaceholderManager;
 import io.github.bilektugrul.bduels.stuff.MessageType;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.compat.Titles;
@@ -27,8 +27,8 @@ public class Utils {
     private Utils() {}
 
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
-    private static final CustomPlaceholderManager placeholderManager = plugin.getManager().getPlaceholderManager();
-    private static final LanguageManager languageManager = plugin.getManager().getLanguageManager();
+    private static final CustomPlaceholderManager placeholderManager = plugin.getPlaceholderManager();
+    private static final LanguageManager languageManager = plugin.getLanguageManager();
 
     private static final boolean isPAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
@@ -147,19 +147,22 @@ public class Utils {
                 .replace("%loser%", loser.getName());
     }
 
-    public static void sendWinMessage(Player p, MessageType messageType, Player winner, Player loser) {
-        switch (messageType) {
-            case CHAT:
-                p.sendMessage(replaceWinnerAndLoser(getMessage("duel.win.chat", p), winner, loser));
-                break;
-            case TITLE:
-                String title = replaceWinnerAndLoser(getMessage("duel.win.title.title", p), winner, loser);
-                String subtitle = replaceWinnerAndLoser(getMessage("duel.win.title.subtitle", p), winner, loser);
-                Titles.sendTitle(p, title, subtitle, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"));
-                break;
-            case ACTIONBAR:
-                sendActionBar(p, replaceWinnerAndLoser(getMessage("duel.win.actionbar", p), winner, loser));
-                break;
+    public static void sendWinMessage(MessageType messageType, Player winner, Player loser) {
+        Player[] players = new Player[]{winner, loser};
+        for (Player p : players) {
+            switch (messageType) {
+                case CHAT:
+                    p.sendMessage(replaceWinnerAndLoser(getMessage("duel.win.chat", p), winner, loser));
+                    break;
+                case TITLE:
+                    String title = replaceWinnerAndLoser(getMessage("duel.win.title.title", p), winner, loser);
+                    String subtitle = replaceWinnerAndLoser(getMessage("duel.win.title.subtitle", p), winner, loser);
+                    Titles.sendTitle(p, title, subtitle, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"));
+                    break;
+                case ACTIONBAR:
+                    sendActionBar(p, replaceWinnerAndLoser(getMessage("duel.win.actionbar", p), winner, loser));
+                    break;
+            }
         }
     }
 

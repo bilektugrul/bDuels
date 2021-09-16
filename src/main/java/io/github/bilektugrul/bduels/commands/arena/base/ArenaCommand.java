@@ -1,5 +1,5 @@
 //Copyright (C) 2020 Despical
-package io.github.bilektugrul.bduels.commands.base;
+package io.github.bilektugrul.bduels.commands.arena.base;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.commands.arena.ArenaCreateCommand;
-import io.github.bilektugrul.bduels.commands.arena.ArenaDeleteCommand;
-import io.github.bilektugrul.bduels.commands.arena.DefineEdgeLocationCommand;
-import io.github.bilektugrul.bduels.commands.arena.DefinePlayerLocationCommand;
+import io.github.bilektugrul.bduels.commands.arena.*;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.string.StringMatcher;
 import org.bukkit.ChatColor;
@@ -19,6 +16,7 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
@@ -38,6 +36,7 @@ public class ArenaCommand implements CommandExecutor {
         registerSubCommand(new ArenaDeleteCommand("sil"));
         registerSubCommand(new DefinePlayerLocationCommand("p1", "p2"));
         registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
+        registerSubCommand(new ArenaListCommand("list", "liste"));
     }
 
     public void registerSubCommand(SubCommand subCommand) {
@@ -49,7 +48,7 @@ public class ArenaCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Utils.getMessage("only-players", sender));
             return true;
@@ -62,21 +61,11 @@ public class ArenaCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length <= 1) {
-            player.sendMessage(Utils.getMessage("arenas.help-message", player));
-            return true;
-        }
-
         for (SubCommand subCommand : subCommands) {
             if (subCommand.isValidTrigger(args[0])) {
                 if (!subCommand.hasPermission(sender)) {
                     Utils.noPermission(sender);
                     return true;
-                }
-
-                if (subCommand.getSenderType() == SubCommand.SenderType.PLAYER && !(sender instanceof Player)) {
-                    sender.sendMessage(Utils.getMessage("only-players", sender));
-                    return false;
                 }
 
                 if (args.length - 1 >= subCommand.getMinimumArguments()) {
@@ -87,7 +76,7 @@ public class ArenaCommand implements CommandExecutor {
                     }
                 } else {
                     if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-                        sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
+                        sender.sendMessage(ChatColor.RED + "Kullanım: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
                     }
                 }
 

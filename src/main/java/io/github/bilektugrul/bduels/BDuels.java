@@ -2,8 +2,9 @@ package io.github.bilektugrul.bduels;
 
 import com.hakan.inventoryapi.InventoryAPI;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
+import io.github.bilektugrul.bduels.commands.BDuelsCommand;
 import io.github.bilektugrul.bduels.commands.DuelCommand;
-import io.github.bilektugrul.bduels.commands.base.ArenaCommand;
+import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.economy.VaultEconomy;
@@ -17,6 +18,8 @@ import io.github.bilektugrul.bduels.economy.VaultManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
 
 // TODO: ÖDÜL OLAYLARINI, DÜELLO İSTEĞİ OLAYINI HALLET
 public final class BDuels extends JavaPlugin {
@@ -37,7 +40,7 @@ public final class BDuels extends JavaPlugin {
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
 
-        arenaManager = new ArenaManager();
+        arenaManager = new ArenaManager(this);
         customPlaceholderManager = new CustomPlaceholderManager(this);
         languageManager = new LanguageManager(this);
         userManager = new UserManager(this);
@@ -54,8 +57,18 @@ public final class BDuels extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);
 
+        getServer().getPluginCommand("bduels").setExecutor(new BDuelsCommand(this));
         getServer().getPluginCommand("duel").setExecutor(new DuelCommand(this));
         getServer().getPluginCommand("arena").setExecutor(new ArenaCommand(this));
+    }
+
+    @Override
+    public void onDisable() {
+        try {
+            arenaManager.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public CustomPlaceholderManager getPlaceholderManager() {
@@ -96,6 +109,15 @@ public final class BDuels extends JavaPlugin {
 
     public void setEconomyAdapter(EconomyAdapter economyAdapter) {
         this.economyAdapter = economyAdapter;
+    }
+
+    public void reload() {
+        arenaManager.loadArenas();
+        languageManager.loadLanguage();
+    }
+
+    public void save() throws IOException {
+        arenaManager.save();
     }
 
 }

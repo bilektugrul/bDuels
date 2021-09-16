@@ -7,6 +7,7 @@ import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
+import io.github.bilektugrul.bduels.stuff.MessageType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
@@ -156,6 +157,7 @@ public class DuelManager {
         duel.start();
     }
 
+    //TODO: BU METODA Bİ EL AT
     public void endMatch(Duel duel, User loser) {
         User winner = duel.getOpponentOf(loser);
         Arena arena = duel.getArena();
@@ -169,7 +171,8 @@ public class DuelManager {
             user.setDuel(null);
         }
         arena.setState(ArenaState.EMPTY);
-        Bukkit.broadcastMessage("winner " + winner.getName());
+        MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
+        Utils.sendWinMessage(messageType, winner.getBase(), loser.getBase());
     }
 
 }

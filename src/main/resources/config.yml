@@ -7,3 +7,8 @@ custom-placeholders:
   # PlaceholderAPI aracılığı ile başka eklentilerde de kullanabilirsiniz. (%bduels_custom_<placeholder adı>%)
   prefix: '&8[&abDuels&8]&r'
   #isim: içerik
+
+titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ayarlar.
+  fade-in: 5
+  stay: 30
+  fade-out: 5

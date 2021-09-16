@@ -5,6 +5,13 @@ messages:
   config-reloaded: '%prefix% &bAyarlar başarıyla yenilendi.'
   did-you-mean: '%prefix% &bKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: /%command%'
 
+  main-command:
+    wrong-usage: |
+      %prefix% &cKomutu hatalı kullandınız.
+      %prefix% &b/bduels <reload | save>
+    reloaded: '%prefix% &bEklenti verileri yenilendi.'
+    saved: '%prefix% &bEklenti verileri kaydedildi.'
+
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
     player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
@@ -26,15 +33,17 @@ messages:
 
   arenas:
     help-message: |
-
+      &r
       &m-----------------
       %prefix% &b/arena oluştur <arena ismi> &7| &bYeni bir arena oluşturur.
       %prefix% &b/arena sil <arena ismi> &7| &bYeni bir arena oluşturur.
+      %prefix% &b/arena liste &7| &bSohbetinize arena listesini gönderir.
       %prefix% &b/arena p1 <arena ismi> &7| &bArenanın 1. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.
       %prefix% &b/arena p2 <arena ismi> &7| &bArenanın 2. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.
       %prefix% &b/arena edge1 <arena ismi> &7| &bArenanın 1. köşesini bulunduğunuz lokasyon olarak ayarlar.
       %prefix% &b/arena edge2 <arena ismi> &7| &bArenanın 2. köşesini bulunduğunuz lokasyon olarak ayarlar.
       &m-----------------
+      &r
     wrong-usage: '%prefix% &cKomutu hatalı kullandınız.'
     not-found: '%prefix% &cAradığınız arena bulunamadı.'
     created: '%prefix% &b%arena% &eadlı arena oluşturuldu. Geri kalan ayarlarını yapmayı unutmayın.'
@@ -44,3 +53,17 @@ messages:
     could-not-deleted: '%prefix% &b%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'
     player-location-set: '%prefix% &b%no% &cnumaralı oyuncunun başlangıç noktası belirlendi.'
     edge-location-set: '%prefix% &b%no% &cnumaralı harita köşesi belirlendi.'
+    list:
+      start-message: |
+        &r
+        %prefix% &eArenalar
+        %prefix% &eKullanılan: %usedamount%
+        %prefix% &eMüsait: %emptyamount%
+        %prefix% &eTümü (&6%totalamount%&e):
+        &r
+      arena-format: ' &7- &b%arena% (&6%state%&b)'
+    states:
+      EMPTY: Boş
+      PRE_MATCH: Maç Öncesi
+      IN_MATCH: Kullanılıyor
+      POST_MATCH: Bitiyor

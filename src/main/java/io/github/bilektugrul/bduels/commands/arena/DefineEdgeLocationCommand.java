@@ -2,7 +2,7 @@ package io.github.bilektugrul.bduels.commands.arena;
 
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
-import io.github.bilektugrul.bduels.commands.base.SubCommand;
+import io.github.bilektugrul.bduels.commands.arena.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandException;
