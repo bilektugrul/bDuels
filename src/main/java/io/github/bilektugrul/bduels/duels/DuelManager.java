@@ -12,9 +12,11 @@ import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.compat.XMaterial;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -25,20 +27,25 @@ import java.util.Map;
 public class DuelManager {
 
     private final InventoryAPI inventoryAPI;
-    private final ArenaManager arenaManager;
+    private ArenaManager arenaManager;
 
     private final Map<User, User> duelRequests = new HashMap<>();
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<Duel> ongoingDuels = new ArrayList<>();
 
     private final int[] midGlasses = {13, 22, 31, 40, 49};
+    private final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
+    private final int[] opponentSide = {5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26, 32, 33, 34, 35, 41, 42, 43, 44, 51, 52, 53};
     private final ItemStack glass = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
     private final ItemStack greenGlass = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
     private final ItemStack redGlass = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
 
     public DuelManager(BDuels bDuels) {
         this.inventoryAPI = bDuels.getInventoryAPI();
-        this.arenaManager = bDuels.getArenaManager();
+    }
+
+    public void setArenaManager(ArenaManager arenaManager) {
+        this.arenaManager = arenaManager;
     }
 
     public User getOpponent(User user) {
@@ -95,12 +102,15 @@ public class DuelManager {
 
             HInventory inventory = inventoryAPI.getInventoryCreator().setTitle("Duel - " + senderName + " vs " + opponentName)
                     .setClosable(false)
-                    .setId(senderName + "-duel")
+                    .setId(senderName + "-bDuels")
                     .create();
+
+            inventory.guiAir();
 
             for (int i : midGlasses) {
                 inventory.setItem(i, ClickableItem.empty(glass));
             }
+
 
             inventory.setItem(4, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> cancel(process, false))));
 
@@ -140,26 +150,32 @@ public class DuelManager {
         }
         duelRequestProcesses.remove(requestProcess);
         duelRequests.remove(requestProcess.getPlayer());
-        if (!starting) {
-            // TODO: İLERDE DUEL CANCEL MESAJI FALAN BURAYA KNK
-        }
     }
 
     //TODO: BOŞ ARENA VAR MI KONTROLÜ EKLESEN İYİ OLUR
     public void startMatch(DuelRequestProcess requestProcess) {
         cancel(requestProcess, true);
 
-        Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();
-        matchArena.setState(ArenaState.PRE_MATCH);
+        if (arenaManager.isAnyArenaAvailable()) {
+            Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();
+            matchArena.setState(ArenaState.PRE_MATCH);
 
-        Duel duel = new Duel(requestProcess, matchArena);
-        ongoingDuels.add(duel);
-        duel.start();
+            Duel duel = new Duel(requestProcess, matchArena);
+            ongoingDuels.add(duel);
+            duel.start();
+        } else {
+            for (User user : requestProcess.getPlayers()) {
+                Player player = user.getBase();
+                player.sendMessage(Utils.getMessage("arenas.all-in-usage-2", player));
+            }
+        }
     }
 
-    //TODO: BU METODA Bİ EL AT
-    public void endMatch(Duel duel, User loser) {
-        User winner = duel.getOpponentOf(loser);
+    public void endMatch(Duel duel, DuelEndReason duelEndReason) {
+        User winner = duel.getWinner();
+        User loser = duel.getLoser();
+        boolean isReloaded = duelEndReason == DuelEndReason.RELOAD;
+
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
         ongoingDuels.remove(duel);
@@ -169,10 +185,53 @@ public class DuelManager {
             player.teleport(preDuelData.getLocation());
             user.setState(UserState.FREE);
             user.setDuel(null);
+            if (isReloaded) {
+                player.sendMessage(Utils.getMessage("match-force-ended", player));
+            }
         }
+
         arena.setState(ArenaState.EMPTY);
-        MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
-        Utils.sendWinMessage(messageType, winner.getBase(), loser.getBase());
+
+        Player winnerPlayer = winner.getBase();
+
+        if (!isReloaded) {
+            MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
+            Utils.sendWinMessage(messageType, winnerPlayer, loser.getBase());
+        }
+
+        DuelRewards rewards = duel.getRewardsOf(loser);
+        Inventory winnerInventory = winnerPlayer.getInventory();
+        World winnerWorld = winnerPlayer.getWorld();
+        Location winnerLocation = winnerPlayer.getLocation();
+
+        DuelRewards winnerRewards = duel.getRewardsOf(winner);
+
+        for (ItemStack item : rewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
+            if (Utils.hasSpace(winnerInventory, item)) {
+                winnerInventory.addItem(item);
+            } else {
+                winnerWorld.dropItem(winnerLocation, item);
+            }
+        }
+        for (ItemStack item : winnerRewards.getItemsBet()) { // Kazanan kişinin ortaya koyduğu eşyaları geri verir
+            if (Utils.hasSpace(winnerInventory, item)) {
+                winnerInventory.addItem(item);
+            } else {
+                winnerWorld.dropItem(winnerLocation, item);
+            }
+        }
+    }
+
+    public Map<User, User> getDuelRequests() {
+        return duelRequests;
+    }
+
+    public int[] getOpponentSide() {
+        return opponentSide;
+    }
+
+    public int[] getPlayerSide() {
+        return playerSide;
     }
 
 }

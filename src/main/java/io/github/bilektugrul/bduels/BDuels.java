@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
-// TODO: ÖDÜL OLAYLARINI, DÜELLO İSTEĞİ OLAYINI HALLET
+// TODO: DÜELLO İSTEĞİ OLAYINI HALLET, ÖDÜL OLAYLARI SAKAT
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
@@ -40,7 +40,10 @@ public final class BDuels extends JavaPlugin {
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
 
+        duelManager = new DuelManager(this);
         arenaManager = new ArenaManager(this);
+        duelManager.setArenaManager(arenaManager);
+        arenaManager.setDuelManager(this);
         customPlaceholderManager = new CustomPlaceholderManager(this);
         languageManager = new LanguageManager(this);
         userManager = new UserManager(this);
@@ -51,7 +54,6 @@ public final class BDuels extends JavaPlugin {
             userManager.loadUser(p);
         }
 
-        duelManager = new DuelManager(this);
         new PAPIPlaceholders(this).register();
         
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);

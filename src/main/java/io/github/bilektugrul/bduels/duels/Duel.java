@@ -4,7 +4,10 @@ import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
@@ -13,6 +16,8 @@ import java.util.Map;
 public class Duel {
 
     private final User player, opponent;
+    private User winner, loser;
+
     private final Arena arena;
     private final Map<User, DuelRewards> duelRewards;
 
@@ -42,13 +47,23 @@ public class Duel {
     public void start() {
         Player player1 = this.player.getBase();
         player1.teleport(arena.getPlayerLocation());
-        player.setState(UserState.IN_MATCH);
+        this.player.setState(UserState.IN_MATCH);
 
         Player opponentPlayer = this.opponent.getBase();
         opponentPlayer.teleport(arena.getOpponentLocation());
         opponent.setState(UserState.IN_MATCH);
 
         arena.setState(ArenaState.IN_MATCH);
+
+        for (User user : getPlayers()) {
+            Bukkit.broadcastMessage(user.getName());
+            DuelRewards rewards = getRewardsOf(user);
+            for (ItemStack item : rewards.getItemsBet()) {
+                Bukkit.broadcastMessage("selam " + user.getName() + "- " + item.toString());
+                Inventory userInventory = user.getBase().getInventory();
+                userInventory.remove(item);
+            }
+        }
     }
 
     public Map<User, DuelRewards> getDuelRewards() {
@@ -63,11 +78,21 @@ public class Duel {
         return new User[]{player, opponent};
     }
 
+    public PlayerType getPlayerType(User user) {
+        return user.equals(player)
+                ? PlayerType.PLAYER
+                : PlayerType.OPPONENT;
+    }
+
     public User getOpponentOf(User user) {
         for (User user2 : getPlayers()) {
             if (!user2.equals(user)) return user2;
         }
         return null;
+    }
+
+    public DuelRewards getRewardsOf(User user) {
+        return duelRewards.get(user);
     }
 
     public Arena getArena() {
@@ -80,6 +105,22 @@ public class Duel {
 
     public User getOpponent() {
         return opponent;
+    }
+
+    public User getWinner() {
+        return winner;
+    }
+
+    public User getLoser() {
+        return loser;
+    }
+
+    public void setWinner(User winner) {
+        this.winner = winner;
+    }
+
+    public void setLoser(User loser) {
+        this.loser = loser;
     }
 
 }

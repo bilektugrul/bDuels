@@ -48,6 +48,7 @@ messages:
     not-found: '%prefix% &cAradığınız arena bulunamadı.'
     created: '%prefix% &b%arena% &eadlı arena oluşturuldu. Geri kalan ayarlarını yapmayı unutmayın.'
     all-in-usage: '%prefix% &cŞu anda hiç müsait arena yok.'
+    all-in-usage-2: '%prefix% &cŞu anda hiç müsait arena yok. Düello iptal edildi, daha sonra tekrar deneyin.'
     already-exist: '%prefix% &cBu arena zaten mevcut.'
     deleted: '%prefix% &b%arena% isimli arena silindi.'
     could-not-deleted: '%prefix% &b%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'

@@ -1,6 +1,9 @@
 package io.github.bilektugrul.bduels.arenas;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.duels.Duel;
+import io.github.bilektugrul.bduels.duels.DuelEndReason;
+import io.github.bilektugrul.bduels.duels.DuelManager;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.Location;
@@ -13,17 +16,23 @@ import java.util.Set;
 public class ArenaManager {
 
     private final BDuels plugin;
-
     private final Set<Arena> arenas = new HashSet<>();
+
     private FileConfiguration arenasFile;
+    private DuelManager duelManager;
 
     public ArenaManager(BDuels plugin) {
         this.plugin = plugin;
+        this.duelManager = plugin.getDuelManager();
         loadArenas();
     }
 
     //TODO: ARENALAR LOADLANIRKEN DUELMANAGER İLE MAÇLAR FALAN BİTİRİLECEK
     public void loadArenas() {
+        for (Duel duel : duelManager.getOngoingDuels()) {
+            duelManager.endMatch(duel, DuelEndReason.RELOAD);
+        }
+
         arenasFile = ConfigUtils.getConfig(plugin, "arenas");
         arenas.clear();
         for (String name : arenasFile.getConfigurationSection("arenas").getKeys(false)) {
@@ -41,6 +50,10 @@ public class ArenaManager {
             arena.setOtherEdge(otherEdgeLocation);
             registerArena(arena);
         }
+    }
+
+    public void setDuelManager(BDuels plugin) {
+        this.duelManager = plugin.getDuelManager(); //gg
     }
 
     public Set<Arena> getArenas() {
@@ -118,6 +131,7 @@ public class ArenaManager {
             arenasFile.set(path + "edgeLocation", edgeLocation);
             arenasFile.set(path + "otherEdgeLocation", otherEdgeLocation);
         }
+        System.out.println("saving arenas");
         ConfigUtils.saveConfig(plugin, arenasFile, "arenas");
     }
 

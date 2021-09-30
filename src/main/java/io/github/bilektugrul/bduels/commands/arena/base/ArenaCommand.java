@@ -61,36 +61,41 @@ public class ArenaCommand implements CommandExecutor {
             return true;
         }
 
-        for (SubCommand subCommand : subCommands) {
-            if (subCommand.isValidTrigger(args[0])) {
-                if (!subCommand.hasPermission(sender)) {
-                    Utils.noPermission(sender);
+        if (args.length > 0) {
+            for (SubCommand subCommand : subCommands) {
+                if (subCommand.isValidTrigger(args[0])) {
+                    if (!subCommand.hasPermission(sender)) {
+                        Utils.noPermission(sender);
+                        return true;
+                    }
+
+                    if (args.length - 1 >= subCommand.getMinimumArguments()) {
+                        try {
+                            subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length), args[0]);
+                        } catch (CommandException e) {
+                            sender.sendMessage(ChatColor.RED + e.getMessage());
+                        }
+                    } else {
+                        if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
+                            sender.sendMessage(ChatColor.RED + "Kullanım: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
+                        }
+                    }
+
                     return true;
                 }
-
-                if (args.length - 1 >= subCommand.getMinimumArguments()) {
-                    try {
-                        subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length), args[0]);
-                    } catch (CommandException e) {
-                        sender.sendMessage(ChatColor.RED + e.getMessage());
-                    }
-                } else {
-                    if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-                        sender.sendMessage(ChatColor.RED + "Kullanım: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
-                    }
-                }
-
-                return true;
             }
-        }
 
-        List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
 
-        if (!matches.isEmpty()) {
-            sender.sendMessage(Utils.getMessage("did-you-mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+            List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
+
+            if (!matches.isEmpty()) {
+                sender.sendMessage(Utils.getMessage("did-you-mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+            }
             return true;
+        } else {
+            player.sendMessage(Utils.getMessage("arenas.help-message", player));
         }
-
         return true;
     }
+
 }

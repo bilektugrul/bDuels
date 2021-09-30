@@ -11,10 +11,13 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -226,6 +229,32 @@ public class Utils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static boolean hasSpace(Inventory inventory, ItemStack itemStack) {
+        int totalCount = 0;
+        for (int slot = 0; slot < inventory.getSize() * 9; slot++) {
+            ItemStack item = inventory.getItem(slot);
+            if (item == null) {
+                return true;
+            } else if (item.isSimilar(itemStack)) {
+                totalCount = totalCount + itemStack.getMaxStackSize() - item.getAmount();
+                if (totalCount > itemStack.getAmount()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int nextEmptySlot(int[] side, Inventory inventory) {
+        for (int i : side) {
+            ItemStack item = inventory.getItem(i);
+            if (item == null || item.getType().equals(Material.AIR)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

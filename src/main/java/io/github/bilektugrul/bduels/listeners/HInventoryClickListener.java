@@ -5,12 +5,18 @@ import com.hakan.inventoryapi.inventory.HInventory;
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
+import io.github.bilektugrul.bduels.duels.DuelRewards;
+import io.github.bilektugrul.bduels.duels.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
+import io.github.bilektugrul.bduels.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class HInventoryClickListener implements Listener {
 
@@ -24,19 +30,41 @@ public class HInventoryClickListener implements Listener {
         this.userManager = bDuels.getUserManager();
     }
 
+    //TODO: MONEY BET EKLENECEK VE ENVANTER DOLMASINA RAĞMEN ÖDÜL EKLENEBİLMESİ ENGELLENECEK
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         Player clicker = (Player) e.getWhoClicked();
-        User user = userManager.getUser(clicker);
-        DuelRequestProcess process = duelManager.getProcess(user);
         HInventory playerHInventory = inventoryAPI.getInventoryManager().getPlayerInventory(clicker);
-        if (process != null && playerHInventory != null) {
-            if (!e.getClickedInventory().equals(playerHInventory.getInventory())) { // TODO: KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
+        if (playerHInventory != null && playerHInventory.getId().contains("-bDuels")) {
+            ItemStack clicked = e.getCurrentItem();
+            if (clicked == null) return;
+            User user = userManager.getUser(clicker);
 
-            } else { // TODO: GUIYE TIKLADIĞINDA TIKLADIĞI İTEM BETLENEN İTEMLERDENSE SİLİNECEK
+            DuelRequestProcess process = duelManager.getProcess(user);
+            PlayerType clickerType = process.getPlayerType(user);
+            int[] side = clickerType == PlayerType.PLAYER ? duelManager.getPlayerSide() : duelManager.getOpponentSide();
+            DuelRewards rewards = process.getRewardsOf(user);
 
+            Inventory clickedInventory = e.getClickedInventory();
+            Inventory playerHInventoryOriginal = playerHInventory.getInventory();
+
+            if (!clickedInventory.equals(playerHInventoryOriginal)) { // KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
+                Bukkit.broadcastMessage("TEST 1");
+                if (rewards.containsItem(clicked)) return;
+
+                rewards.addItemToBet(clicked);
+                int slotToPut = Utils.nextEmptySlot(side, playerHInventoryOriginal);
+                playerHInventoryOriginal.setItem(slotToPut, clicked);
+            } else { // GUIYE TIKLADIĞINDA TIKLADIĞI İTEM BETLENEN İTEMLERDENSE SİLİNECEK
+                Bukkit.broadcastMessage("TEST 2");
+                if (!rewards.containsItem(clicked)) return;
+
+                rewards.removeItem(clicked);
+                clickedInventory.setItem(e.getSlot(), null);
             }
         }
+
+
     }
 
 }

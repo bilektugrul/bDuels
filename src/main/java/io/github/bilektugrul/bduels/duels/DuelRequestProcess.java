@@ -24,6 +24,12 @@ public class DuelRequestProcess {
         return new User[]{player, opponent};
     }
 
+    public PlayerType getPlayerType(User user) {
+        return user.equals(player)
+                ? PlayerType.PLAYER
+                : PlayerType.OPPONENT;
+    }
+
     public DuelRewards getRewardsOf(User name) {
         return duelRewards.get(name);
     }

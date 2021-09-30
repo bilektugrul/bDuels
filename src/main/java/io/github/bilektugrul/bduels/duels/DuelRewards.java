@@ -2,12 +2,13 @@ package io.github.bilektugrul.bduels.duels;
 
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DuelRewards {
 
-    private int moneyBet;
-    private List<ItemStack> itemsBet;
+    private int moneyBet = 0;
+    private List<ItemStack> itemsBet = new ArrayList<>();
 
     public DuelRewards() {}
 
@@ -29,6 +30,14 @@ public class DuelRewards {
 
     public void addItemToBet(ItemStack itemStack) {
         itemsBet.add(itemStack);
+    }
+
+    public void removeItem(ItemStack itemStack) {
+        itemsBet.remove(itemStack);
+    }
+
+    public boolean containsItem(ItemStack itemStack) {
+        return itemsBet.contains(itemStack);
     }
 
 }
