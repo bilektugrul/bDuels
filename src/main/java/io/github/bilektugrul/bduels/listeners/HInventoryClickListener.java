@@ -10,7 +10,6 @@ import io.github.bilektugrul.bduels.duels.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,36 +34,35 @@ public class HInventoryClickListener implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         Player clicker = (Player) e.getWhoClicked();
         HInventory playerHInventory = inventoryAPI.getInventoryManager().getPlayerInventory(clicker);
+
         if (playerHInventory != null && playerHInventory.getId().contains("-bDuels")) {
             ItemStack clicked = e.getCurrentItem();
             if (clicked == null) return;
-            User user = userManager.getUser(clicker);
 
+            User user = userManager.getUser(clicker);
             DuelRequestProcess process = duelManager.getProcess(user);
             PlayerType clickerType = process.getPlayerType(user);
             int[] side = clickerType == PlayerType.PLAYER ? duelManager.getPlayerSide() : duelManager.getOpponentSide();
             DuelRewards rewards = process.getRewardsOf(user);
 
             Inventory clickedInventory = e.getClickedInventory();
+            if (clickedInventory == null) return;
+
             Inventory playerHInventoryOriginal = playerHInventory.getInventory();
 
             if (!clickedInventory.equals(playerHInventoryOriginal)) { // KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
-                Bukkit.broadcastMessage("TEST 1");
-                if (rewards.containsItem(clicked)) return;
+                int slotToPut = Utils.nextEmptySlot(side, playerHInventoryOriginal);
+                if (rewards.containsItem(clicked) || slotToPut == -1) return;
 
                 rewards.addItemToBet(clicked);
-                int slotToPut = Utils.nextEmptySlot(side, playerHInventoryOriginal);
                 playerHInventoryOriginal.setItem(slotToPut, clicked);
             } else { // GUIYE TIKLADIĞINDA TIKLADIĞI İTEM BETLENEN İTEMLERDENSE SİLİNECEK
-                Bukkit.broadcastMessage("TEST 2");
                 if (!rewards.containsItem(clicked)) return;
 
                 rewards.removeItem(clicked);
                 clickedInventory.setItem(e.getSlot(), null);
             }
         }
-
-
     }
 
 }

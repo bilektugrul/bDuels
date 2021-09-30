@@ -1,11 +1,6 @@
 //Copyright (C) 2020 Despical
 package io.github.bilektugrul.bduels.commands.arena.base;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.commands.arena.*;
 import io.github.bilektugrul.bduels.utils.Utils;
@@ -17,6 +12,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -32,8 +32,8 @@ public class ArenaCommand implements CommandExecutor {
     public ArenaCommand(BDuels plugin) {
         this.plugin = plugin;
 
-        registerSubCommand(new ArenaCreateCommand("oluştur"));
         registerSubCommand(new ArenaDeleteCommand("sil"));
+        registerSubCommand(new ArenaCreateCommand("oluştur", "yarat"));
         registerSubCommand(new DefinePlayerLocationCommand("p1", "p2"));
         registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
         registerSubCommand(new ArenaListCommand("list", "liste"));

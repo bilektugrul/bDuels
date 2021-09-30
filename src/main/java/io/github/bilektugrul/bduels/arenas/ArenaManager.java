@@ -27,7 +27,6 @@ public class ArenaManager {
         loadArenas();
     }
 
-    //TODO: ARENALAR LOADLANIRKEN DUELMANAGER İLE MAÇLAR FALAN BİTİRİLECEK
     public void loadArenas() {
         for (Duel duel : duelManager.getOngoingDuels()) {
             duelManager.endMatch(duel, DuelEndReason.RELOAD);
@@ -131,7 +130,6 @@ public class ArenaManager {
             arenasFile.set(path + "edgeLocation", edgeLocation);
             arenasFile.set(path + "otherEdgeLocation", otherEdgeLocation);
         }
-        System.out.println("saving arenas");
         ConfigUtils.saveConfig(plugin, arenasFile, "arenas");
     }
 

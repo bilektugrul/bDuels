@@ -1,7 +1,6 @@
 package io.github.bilektugrul.bduels.duels;
 
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 public class DuelStartingTask extends BukkitRunnable {
 

@@ -112,7 +112,7 @@ public class DuelManager {
             }
 
 
-            inventory.setItem(4, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> cancel(process, false))));
+            inventory.setItem(4, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> cancel(process))));
 
             putAcceptItem(inventory, 48, sender, process);
             putAcceptItem(inventory, 50, opponent, process);
@@ -143,7 +143,7 @@ public class DuelManager {
         })));
     }
 
-    public void cancel(DuelRequestProcess requestProcess, boolean starting) {
+    public void cancel(DuelRequestProcess requestProcess) {
         for (User user : requestProcess.getPlayers()) {
             Player player = user.getBase();
             inventoryAPI.getInventoryManager().getPlayerInventory(player).close(player);
@@ -152,9 +152,8 @@ public class DuelManager {
         duelRequests.remove(requestProcess.getPlayer());
     }
 
-    //TODO: BOŞ ARENA VAR MI KONTROLÜ EKLESEN İYİ OLUR
     public void startMatch(DuelRequestProcess requestProcess) {
-        cancel(requestProcess, true);
+        cancel(requestProcess);
 
         if (arenaManager.isAnyArenaAvailable()) {
             Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();

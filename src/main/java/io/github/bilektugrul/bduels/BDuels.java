@@ -8,20 +8,20 @@ import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.economy.VaultEconomy;
+import io.github.bilektugrul.bduels.economy.VaultManager;
 import io.github.bilektugrul.bduels.language.LanguageManager;
 import io.github.bilektugrul.bduels.listeners.HInventoryClickListener;
 import io.github.bilektugrul.bduels.listeners.PlayerListener;
 import io.github.bilektugrul.bduels.placeholders.CustomPlaceholderManager;
 import io.github.bilektugrul.bduels.placeholders.PAPIPlaceholders;
 import io.github.bilektugrul.bduels.users.UserManager;
-import io.github.bilektugrul.bduels.economy.VaultManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
-// TODO: DÜELLO İSTEĞİ OLAYINI HALLET, ÖDÜL OLAYLARI SAKAT
+// TODO: DÜELLO İSTEĞİ OLAYINI HALLET, MONEY BET EKLE VE ÖDÜLLERİ TEST ET, GUİ DOLUYKEN HALEN EKLENİYO MU KONTROL ET
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;

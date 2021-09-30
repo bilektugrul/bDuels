@@ -13,8 +13,8 @@ public class ArenaCreateCommand extends SubCommand {
 
     private final ArenaManager arenaManager;
 
-    public ArenaCreateCommand(String name) {
-        super(name);
+    public ArenaCreateCommand(String name, String... aliases) {
+        super(name, aliases);
         this.arenaManager = plugin.getArenaManager();
     }
 
