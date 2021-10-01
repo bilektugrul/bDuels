@@ -24,6 +24,10 @@ public class DuelRewards {
         this.moneyBet = moneyBet;
     }
 
+    public void addMoneyToBet(int amount) {
+        this.moneyBet += amount;
+    }
+
     public void setItemsBet(List<ItemStack> itemsBet) {
         this.itemsBet = itemsBet;
     }

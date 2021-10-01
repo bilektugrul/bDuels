@@ -15,6 +15,7 @@ import me.despical.commons.compat.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -26,22 +27,43 @@ import java.util.Map;
 
 public class DuelManager {
 
+    private final BDuels plugin;
     private final InventoryAPI inventoryAPI;
     private ArenaManager arenaManager;
 
     private final Map<User, User> duelRequests = new HashMap<>();
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<Duel> ongoingDuels = new ArrayList<>();
+    private final List<MoneyBetSettings> moneyBetSettingsCache = new ArrayList<>();
 
-    private final int[] midGlasses = {13, 22, 31, 40, 49};
-    private final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
-    private final int[] opponentSide = {5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26, 32, 33, 34, 35, 41, 42, 43, 44, 51, 52, 53};
+//TODO: 12 VE 14. SLOTLARDA KAFALAR OLACAK PARALARI GÖSTERECEK
+
+    private final int[] midGlasses = {4, 13, 22, 31, 40};
+    private final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
+    private final int[] opponentSide = {5, 6, 7, 8, 15, 16, 17, 23, 24, 25, 26, 32, 33, 34, 35, 41, 42, 43, 44, 51, 52, 53};
+    private final int[] playerMoneySide = {0, 1, 2, 3};
+    private final int[] opponentMoneySide = {5, 6, 7, 8};
     private final ItemStack glass = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
     private final ItemStack greenGlass = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
     private final ItemStack redGlass = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
 
-    public DuelManager(BDuels bDuels) {
-        this.inventoryAPI = bDuels.getInventoryAPI();
+    public DuelManager(BDuels plugin) {
+        this.plugin = plugin;
+        this.inventoryAPI = plugin.getInventoryAPI();
+        prepareMoneyBetItems();
+    }
+
+    public void prepareMoneyBetItems() {
+        moneyBetSettingsCache.clear();
+        FileConfiguration config = plugin.getConfig();
+        for (String key : config.getConfigurationSection("money-bet").getKeys(false)) {
+            String path = "money-bet." + key + ".";
+            ItemStack item = XMaterial.valueOf(config.getString(path + "item")).parseItem();
+            int moneyToAdd = config.getInt(path + "money-to-add");
+            List<String> lore = config.getStringList(path + "lore");
+            MoneyBetSettings settings = new MoneyBetSettings(item, moneyToAdd, lore);
+            moneyBetSettingsCache.add(settings);
+        }
     }
 
     public void setArenaManager(ArenaManager arenaManager) {
@@ -112,15 +134,38 @@ public class DuelManager {
             }
 
 
-            inventory.setItem(4, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> cancel(process))));
+            inventory.setItem(49, ClickableItem.of(new ItemStack(Material.BARRIER), (event -> cancel(process))));
 
             putAcceptItem(inventory, 48, sender, process);
             putAcceptItem(inventory, 50, opponent, process);
+            putMoneyBetItems(inventory, playerMoneySide, sender, process);
+            putMoneyBetItems(inventory, opponentMoneySide, opponent, process);
 
             inventory.open(senderPlayer);
             inventory.open(opponentPlayer);
         } else {
             senderPlayer.sendMessage(Utils.getMessage("arenas.all-in-usage", senderPlayer));
+        }
+    }
+
+    //TODO: ÇALIŞIYO AMA PARA KONTROLÜ EKLE OLANDAN FAZLA BET KOYAMASINLAR
+    public void putMoneyBetItems(HInventory inventory, int[] side, User user, DuelRequestProcess process) {
+        int index = 0;
+        for (int i : side) {
+            MoneyBetSettings settings = moneyBetSettingsCache.get(index);
+            index++;
+            ItemStack item = settings.getItem();
+            int moneyToAdd = settings.getMoneyToAdd();
+            inventory.setItem(i, ClickableItem.of(item, (event -> {
+                Player clicker = (Player) event.getWhoClicked();
+                if (clicker.equals(user.getBase())) {
+                    DuelRewards rewards = process.getDuelRewards().get(user);
+                    rewards.addMoneyToBet(moneyToAdd);
+                    clicker.sendMessage(Utils.getMessage("duel.bet-money-added", clicker)
+                            .replace("%amount%", String.valueOf(moneyToAdd))
+                            .replace("%total%", String.valueOf(rewards.getMoneyBet())));
+                }
+            })));
         }
     }
 

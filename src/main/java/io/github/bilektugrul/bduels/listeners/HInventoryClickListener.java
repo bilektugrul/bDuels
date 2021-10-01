@@ -29,7 +29,6 @@ public class HInventoryClickListener implements Listener {
         this.userManager = bDuels.getUserManager();
     }
 
-    //TODO: MONEY BET EKLENECEK VE ENVANTER DOLMASINA RAĞMEN ÖDÜL EKLENEBİLMESİ ENGELLENECEK
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         Player clicker = (Player) e.getWhoClicked();

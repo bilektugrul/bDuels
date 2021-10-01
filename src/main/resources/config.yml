@@ -12,3 +12,33 @@ titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ay
   fade-in: 5
   stay: 30
   fade-out: 5
+
+money-bet:
+  1:
+    item: GRAY_DYE
+    money-to-add: 10
+    lore:
+      - Tıklayarak iddiaaya
+      - 10 TL
+      - ekle
+  2:
+    item: PINK_DYE
+    money-to-add: 100
+    lore:
+      - Tıklayarak iddiaaya
+      - 100 TL
+      - ekle
+  3:
+    item: LIGHT_BLUE_DYE
+    money-to-add: 1000
+    lore:
+      - Tıklayarak iddiaaya
+      - 1000 TL
+      - ekle
+  4:
+    item: LIME_DYE
+    money-to-add: 10000
+    lore:
+      - Tıklayarak iddiaaya
+      - 10000 TL
+      - ekle

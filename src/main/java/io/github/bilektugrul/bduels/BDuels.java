@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
-// TODO: DÜELLO İSTEĞİ OLAYINI HALLET, MONEY BET EKLE VE ÖDÜLLERİ TEST ET, GUİ DOLUYKEN HALEN EKLENİYO MU KONTROL ET
+// TODO: DÜELLO İSTEĞİ OLAYINI HALLET
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;

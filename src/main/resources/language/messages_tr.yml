@@ -17,6 +17,7 @@ messages:
     player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
     not-now: '%prefix% &cŞu an duel atamazsın veya %rakip% şu an duel kabul edemez.'
+    bet-money-added: '%prefix% &e%amount% &bmiktarda bet parası eklediniz. Toplam: %total%'
     win:
       used-mode: TITLE
       title:
