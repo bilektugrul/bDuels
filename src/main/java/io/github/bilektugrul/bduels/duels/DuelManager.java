@@ -7,6 +7,7 @@ import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
+import io.github.bilektugrul.bduels.economy.VaultEconomy;
 import io.github.bilektugrul.bduels.stuff.MessageType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
@@ -31,6 +32,7 @@ public class DuelManager {
 
     private final BDuels plugin;
     private final InventoryAPI inventoryAPI;
+    private final VaultEconomy vaultEconomy;
     private ArenaManager arenaManager;
 
     private final Map<User, User> duelRequests = new HashMap<>();
@@ -52,6 +54,7 @@ public class DuelManager {
     public DuelManager(BDuels plugin) {
         this.plugin = plugin;
         this.inventoryAPI = plugin.getInventoryAPI();
+        this.vaultEconomy = plugin.getVaultEconomy();
         reload();
     }
 
@@ -189,6 +192,15 @@ public class DuelManager {
     public void updateHeads(HInventory inventory, DuelRequestProcess process) {
         ItemStack playerSkull = XMaterial.PLAYER_HEAD.parseItem().clone();
         ItemStack opponentSkull = XMaterial.PLAYER_HEAD.parseItem().clone();
+        inventory.setItem(12, ClickableItem.empty(playerSkull));
+        inventory.setItem(14, ClickableItem.empty(opponentSkull));
+        updateMetas(inventory, process);
+    }
+
+    public void updateMetas(HInventory inventory, DuelRequestProcess process) {
+        Inventory original = inventory.getInventory();
+        ItemStack playerSkull = original.getItem(12);
+        ItemStack opponentSkull = original.getItem(14);
 
         User playerUser = process.getPlayer();
         Player player = playerUser.getBase();
@@ -200,24 +212,21 @@ public class DuelManager {
         List<String> opponentLore = Utils.getHeadInfo(opponent, process.getDuelRewards().get(opponentUser).getMoneyBet());
 
         ItemMeta playerMeta = playerSkull.getItemMeta();
-        ItemMeta opponentMeta = playerSkull.getItemMeta();
+        ItemMeta opponentMeta = opponentSkull.getItemMeta();
 
         playerMeta.setDisplayName(Utils.getMessage("duel.request-gui.heads-name", player));
         playerMeta.setLore(playerLore);
         SkullMeta skullMeta = (SkullMeta) playerMeta;
         skullMeta.setOwner(player.getName());
         playerSkull.setItemMeta(skullMeta);
-        inventory.setItem(12, ClickableItem.empty(playerSkull));
 
         opponentMeta.setDisplayName(Utils.getMessage("duel.request-gui.heads-name", opponent));
         opponentMeta.setLore(opponentLore);
         SkullMeta opponentSkullMeta = (SkullMeta) opponentMeta;
         opponentSkullMeta.setOwner(opponent.getName());
         opponentSkull.setItemMeta(opponentMeta);
-        inventory.setItem(14, ClickableItem.empty(opponentSkull));
     }
 
-    //TODO: ÇALIŞIYO AMA PARA KONTROLÜ EKLE OLANDAN FAZLA BET KOYAMASINLAR
     public void putMoneyBetItems(HInventory inventory, int[] side, User user, DuelRequestProcess process) {
         int index = 0;
         for (int i : side) {
@@ -227,10 +236,14 @@ public class DuelManager {
             int moneyToAdd = settings.getMoneyToAdd();
             inventory.setItem(i, ClickableItem.of(item, (event -> {
                 Player clicker = (Player) event.getWhoClicked();
+                DuelRewards rewards = process.getDuelRewards().get(user);
                 if (clicker.equals(user.getBase())) {
-                    DuelRewards rewards = process.getDuelRewards().get(user);
+                    if (!Utils.canPutMoreMoney(rewards.getMoneyBet(), moneyToAdd, clicker)) {
+                        clicker.sendMessage(Utils.getMessage("duel.not-enough-money", clicker));
+                        return;
+                    }
                     rewards.addMoneyToBet(moneyToAdd);
-                    updateHeads(inventory, process);
+                    updateMetas(inventory, process);
                     clicker.sendMessage(Utils.getMessage("duel.bet-money-added", clicker)
                             .replace("%amount%", String.valueOf(moneyToAdd))
                             .replace("%total%", String.valueOf(rewards.getMoneyBet())));
@@ -277,6 +290,9 @@ public class DuelManager {
             Duel duel = new Duel(requestProcess, matchArena);
             ongoingDuels.add(duel);
             duel.start();
+            for (User user : duel.getPlayers()) {
+                vaultEconomy.removeMoney(user.getBase(), duel.getDuelRewards().get(user).getMoneyBet());
+            }
         } else {
             for (User user : requestProcess.getPlayers()) {
                 Player player = user.getBase();
@@ -308,15 +324,16 @@ public class DuelManager {
 
         Player winnerPlayer = winner.getBase();
 
-        if (!isReloaded) {
-            MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
-            Utils.sendWinMessage(messageType, winnerPlayer, loser.getBase());
-        }
 
         DuelRewards rewards = duel.getRewardsOf(loser);
         Inventory winnerInventory = winnerPlayer.getInventory();
         World winnerWorld = winnerPlayer.getWorld();
         Location winnerLocation = winnerPlayer.getLocation();
+
+        if (!isReloaded) {
+            MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
+            Utils.sendWinMessage(messageType, winnerPlayer, loser.getBase(), rewards.getItemsBet().size(), rewards.getMoneyBet());
+        }
 
         DuelRewards winnerRewards = duel.getRewardsOf(winner);
 
@@ -328,6 +345,7 @@ public class DuelManager {
             }
         }
 
+        vaultEconomy.addMoney(winnerPlayer, rewards.getMoneyBet() + winnerRewards.getMoneyBet());
         for (ItemStack item : rewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
             if (Utils.hasSpace(winnerInventory, item)) {
                 winnerInventory.addItem(item);

@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.utils;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.economy.VaultEconomy;
 import io.github.bilektugrul.bduels.language.LanguageManager;
 import io.github.bilektugrul.bduels.placeholders.CustomPlaceholderManager;
 import io.github.bilektugrul.bduels.stuff.MessageType;
@@ -33,6 +34,7 @@ public class Utils {
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
     private static final CustomPlaceholderManager placeholderManager = plugin.getPlaceholderManager();
     private static final LanguageManager languageManager = plugin.getLanguageManager();
+    private static final VaultEconomy vaultEconomy = plugin.getVaultEconomy();
 
     private static final boolean isPAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
@@ -167,22 +169,51 @@ public class Utils {
                 .replace("%loser%", loser.getName());
     }
 
-    public static void sendWinMessage(MessageType messageType, Player winner, Player loser) {
+    public static void sendWinMessage(MessageType messageType, Player winner, Player loser, int itemAmount, int betPrice) {
         Player[] players = new Player[]{winner, loser};
         for (Player p : players) {
+            String chat = replaceWinnerAndLoser(getMessage("duel.win.chat", p), winner, loser)
+                    .replace("%itemamount%", String.valueOf(itemAmount))
+                    .replace("%betprice%", String.valueOf(betPrice));
+            String actionBar = replaceWinnerAndLoser(getMessage("duel.win.actionbar", p), winner, loser)
+                    .replace("%itemamount%", String.valueOf(itemAmount))
+                    .replace("%betprice%", String.valueOf(betPrice));
             switch (messageType) {
                 case CHAT:
-                    p.sendMessage(replaceWinnerAndLoser(getMessage("duel.win.chat", p), winner, loser));
+                    p.sendMessage(chat);
                     break;
                 case TITLE:
-                    String title = replaceWinnerAndLoser(getMessage("duel.win.title.title", p), winner, loser);
-                    String subtitle = replaceWinnerAndLoser(getMessage("duel.win.title.subtitle", p), winner, loser);
-                    Titles.sendTitle(p, title, subtitle, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"));
+                    sendTitle(players, winner, loser);
                     break;
                 case ACTIONBAR:
-                    sendActionBar(p, replaceWinnerAndLoser(getMessage("duel.win.actionbar", p), winner, loser));
+                    sendActionBar(p, actionBar);
+                    break;
+                case CHAT_AND_BAR:
+                    p.sendMessage(chat);
+                    sendActionBar(p, actionBar);
+                    break;
+                case BAR_AND_TITLE:
+                    sendActionBar(p, actionBar);
+                    sendTitle(players, winner, loser);
+                    break;
+                case CHAT_AND_TITLE:
+                    p.sendMessage(chat);
+                    sendTitle(players, winner, loser);
+                    break;
+                case ALL:
+                    p.sendMessage(chat);
+                    sendTitle(players, winner, loser);
+                    sendActionBar(p, actionBar);
                     break;
             }
+        }
+    }
+
+    public static void sendTitle(Player[] players, Player winner, Player loser) {
+        for (Player p : players) {
+            String title = replaceWinnerAndLoser(getMessage("duel.win.title.title", p), winner, loser);
+            String subtitle = replaceWinnerAndLoser(getMessage("duel.win.title.subtitle", p), winner, loser);
+            Titles.sendTitle(p, title, subtitle, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"));
         }
     }
 
@@ -280,6 +311,18 @@ public class Utils {
             strings.add(replacePlaceholders(value.replace("%money%", String.valueOf(money)), from, true, true));
         }
         return strings;
+    }
+
+    public static boolean canPutMoreMoney(int current, int toAdd, Player player) {
+        double currentMoney = vaultEconomy.getMoney(player);
+        int afterTotal = current + toAdd;
+        if (current == currentMoney) {
+            return false;
+        }
+        if (afterTotal > currentMoney) {
+            return false;
+        }
+        return true;
     }
 
 }

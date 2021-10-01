@@ -40,6 +40,8 @@ public final class BDuels extends JavaPlugin {
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
 
+        vaultManager = new VaultManager(this);
+        vaultEconomy = new VaultEconomy(this);
         customPlaceholderManager = new CustomPlaceholderManager(this);
         languageManager = new LanguageManager(this);
         duelManager = new DuelManager(this);
@@ -47,8 +49,6 @@ public final class BDuels extends JavaPlugin {
         duelManager.setArenaManager(arenaManager);
         arenaManager.setDuelManager(this);
         userManager = new UserManager(this);
-        vaultManager = new VaultManager(this);
-        vaultEconomy = new VaultEconomy(this);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(p);
