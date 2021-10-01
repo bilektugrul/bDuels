@@ -40,12 +40,12 @@ public final class BDuels extends JavaPlugin {
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
 
+        customPlaceholderManager = new CustomPlaceholderManager(this);
+        languageManager = new LanguageManager(this);
         duelManager = new DuelManager(this);
         arenaManager = new ArenaManager(this);
         duelManager.setArenaManager(arenaManager);
         arenaManager.setDuelManager(this);
-        customPlaceholderManager = new CustomPlaceholderManager(this);
-        languageManager = new LanguageManager(this);
         userManager = new UserManager(this);
         vaultManager = new VaultManager(this);
         vaultEconomy = new VaultEconomy(this);
@@ -114,7 +114,9 @@ public final class BDuels extends JavaPlugin {
     }
 
     public void reload() {
+        reloadConfig();
         arenaManager.loadArenas();
+        duelManager.reload();
         languageManager.loadLanguage();
     }
 

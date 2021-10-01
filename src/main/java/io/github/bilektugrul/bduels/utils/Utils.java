@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +42,22 @@ public class Utils {
 
     public static String getMessage(String string) {
         return getString(languageManager.getLanguage(), "messages." + string, null, false, false);
+    }
+
+    public static List<String> getMessageList(String string, CommandSender from) {
+        List<String> strings = new ArrayList<>();
+        for (String value : languageManager.getLanguage().getStringList("messages." + string)) {
+            strings.add(replacePlaceholders(value, from, false, false));
+        }
+        return strings;
+    }
+
+    public static List<String> getStringList(String string, CommandSender from) {
+        List<String> strings = new ArrayList<>();
+        for (String value : plugin.getConfig().getStringList(string)) {
+            strings.add(replacePlaceholders(value, from, false, false));
+        }
+        return strings;
     }
 
     public static String getMessage(String string, CommandSender from) {
@@ -255,6 +272,14 @@ public class Utils {
             }
         }
         return -1;
+    }
+
+    public static List<String> getHeadInfo(CommandSender from, int money) {
+        List<String> strings = new ArrayList<>();
+        for (String value : languageManager.getLanguage().getStringList("messages.duel.request-gui.heads-lore")) {
+            strings.add(replacePlaceholders(value.replace("%money%", String.valueOf(money)), from, true, true));
+        }
+        return strings;
     }
 
 }

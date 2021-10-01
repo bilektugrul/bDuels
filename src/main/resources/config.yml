@@ -13,32 +13,54 @@ titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ay
   stay: 30
   fade-out: 5
 
+request-gui-name: 'Duel - %player% vs %opponent%' # Düello menüsünün ismi
+
+request-cancel-item: # Düello menüsünde düelloyu iptal etmek için kullanılan eşyanın ayarları.
+  material: BARRIER
+  name: '&cDüelloyu iptal et'
+
+mid-item: # Düello menüsünü ortadan bölecek eşyanın ayarları.
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&f'
+
+not-ready-item: # Düello menüsünde oyuncular hazır değilken gözükecek eşyanın ayarları.
+  material: RED_STAINED_GLASS_PANE
+  name: '&cHazır değil'
+
+ready-item: # Düello menüsünde oyuncular hazırken gözükecek eşyanın ayarları.
+  material: GREEN_STAINED_GLASS_PANE
+  name: '&aHazır'
+
 money-bet:
   1:
     item: GRAY_DYE
     money-to-add: 10
+    name: '&b10 TL'
     lore:
-      - Tıklayarak iddiaaya
-      - 10 TL
-      - ekle
+      - '&eTıklayarak iddiaaya'
+      - '&b10 TL'
+      - '&eekle'
   2:
     item: PINK_DYE
     money-to-add: 100
+    name: '&b100 TL'
     lore:
-      - Tıklayarak iddiaaya
-      - 100 TL
-      - ekle
+      - '&eTıklayarak iddiaaya'
+      - '&b100 TL'
+      - '&eekle'
   3:
     item: LIGHT_BLUE_DYE
     money-to-add: 1000
+    name: '&b1000 TL'
     lore:
-      - Tıklayarak iddiaaya
-      - 1000 TL
-      - ekle
+      - '&eTıklayarak iddiaaya'
+      - '&b1000 TL'
+      - '&eekle'
   4:
     item: LIME_DYE
     money-to-add: 10000
+    name: '&b10000 TL'
     lore:
-      - Tıklayarak iddiaaya
-      - 10000 TL
-      - ekle
+      - '&eTıklayarak iddiaaya'
+      - '&b10000 TL'
+      - '&eekle'

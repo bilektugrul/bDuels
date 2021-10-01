@@ -18,6 +18,14 @@ messages:
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
     not-now: '%prefix% &cŞu an duel atamazsın veya %rakip% şu an duel kabul edemez.'
     bet-money-added: '%prefix% &e%amount% &bmiktarda bet parası eklediniz. Toplam: %total%'
+
+    request-gui:
+      heads-name: '&2%player%'
+      heads-lore:
+        -
+        - '&bYatırılan para: &e%money%'
+        -
+
     win:
       used-mode: TITLE
       title:
