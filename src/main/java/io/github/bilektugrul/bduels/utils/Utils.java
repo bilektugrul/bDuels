@@ -25,7 +25,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Utils {
 
@@ -215,16 +214,6 @@ public class Utils {
             String subtitle = replaceWinnerAndLoser(getMessage("duel.win.title.subtitle", p), winner, loser);
             Titles.sendTitle(p, title, subtitle, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"));
         }
-    }
-
-    public static boolean matchMode(String mode) {
-        mode = mode.toLowerCase(Locale.ROOT);
-        if (mode.contains("on") || mode.contains("true") || mode.contains("aç") || mode.contains("aktif")) {
-            return true;
-        } else if (mode.contains("off") || mode.contains("false") || mode.contains("kapat") || mode.contains("de-aktif") || mode.contains("deaktif")) {
-            return false;
-        }
-        return false;
     }
 
     public static String arrayToString(String[] array, CommandSender sender, boolean replacePersonalPlaceholders, boolean replacePAPI) {

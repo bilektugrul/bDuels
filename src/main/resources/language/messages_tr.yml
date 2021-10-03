@@ -16,7 +16,7 @@ messages:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
     player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
-    not-now: '%prefix% &cŞu an duel atamazsın veya %rakip% şu an duel kabul edemez.'
+    not-now: '%prefix% &cŞu an duel atamazsın veya %opponent% şu an duel kabul edemez.'
     bet-money-added: '%prefix% &e%amount% &bmiktarda bet parası eklediniz. Toplam: %total%'
     not-enough-money: '%prefix% &cYeterli miktarda paran olmadığı için daha fazla ekleyemezsin.'
     left-server: '%prefix% &cDüello isteği yolladığın/aldığın &b%opponent% &csunucudan çıktığı için istek iptal edildi.'

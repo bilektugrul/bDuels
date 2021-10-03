@@ -9,7 +9,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,12 +50,12 @@ public class ArenaManager {
         }
     }
 
-    public void setDuelManager(BDuels plugin) {
-        this.duelManager = plugin.getDuelManager(); //gg
+    public void setDuelManager(DuelManager duelManager) {
+        this.duelManager = duelManager;
     }
 
     public Set<Arena> getArenas() {
-        return arenas;
+        return new HashSet<>(arenas);
     }
 
     public boolean isPresent(String name) {
@@ -115,7 +114,7 @@ public class ArenaManager {
         return null;
     }
 
-    public void save() throws IOException {
+    public void save() {
         for (Arena arena : arenas) {
             String playerLocation = LocationSerializer.toString(arena.getPlayerLocation());
             String opponentLocation = LocationSerializer.toString(arena.getOpponentLocation());

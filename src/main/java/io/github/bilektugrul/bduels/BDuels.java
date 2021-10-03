@@ -21,8 +21,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
-
 // TODO: DÜELLO İSTEĞİ OLAYINI HALLET
 public final class BDuels extends JavaPlugin {
 
@@ -49,7 +47,7 @@ public final class BDuels extends JavaPlugin {
         duelManager = new DuelManager(this);
         arenaManager = new ArenaManager(this);
         duelManager.setArenaManager(arenaManager);
-        arenaManager.setDuelManager(this);
+        arenaManager.setDuelManager(duelManager);
         userManager = new UserManager(this);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -72,11 +70,7 @@ public final class BDuels extends JavaPlugin {
             duel.setWinner(duel.getPlayers()[0]);
             duelManager.endMatch(duel, DuelEndReason.SERVER_STOP);
         }
-        try {
-            save();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        save();
     }
 
     public CustomPlaceholderManager getPlaceholderManager() {
@@ -126,7 +120,7 @@ public final class BDuels extends JavaPlugin {
         languageManager.loadLanguage();
     }
 
-    public void save() throws IOException {
+    public void save() {
         arenaManager.save();
     }
 

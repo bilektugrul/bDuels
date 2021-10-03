@@ -56,7 +56,7 @@ public class PlayerListener implements Listener {
             opponentPlayer.sendMessage(Utils.getMessage("duel.left-server", opponentPlayer)
                     .replace("%opponent%", user.getName()));
         }
-        userManager.getUserList().remove(user);
+        userManager.removeUser(user);
     }
 
     @EventHandler

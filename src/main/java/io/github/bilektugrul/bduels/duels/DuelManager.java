@@ -7,7 +7,7 @@ import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
-import io.github.bilektugrul.bduels.economy.VaultEconomy;
+import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.stuff.MessageType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
@@ -32,7 +32,7 @@ public class DuelManager {
 
     private final BDuels plugin;
     private final InventoryAPI inventoryAPI;
-    private final VaultEconomy vaultEconomy;
+    private final EconomyAdapter economy;
     private ArenaManager arenaManager;
 
     private final Map<User, User> duelRequests = new HashMap<>();
@@ -54,7 +54,7 @@ public class DuelManager {
     public DuelManager(BDuels plugin) {
         this.plugin = plugin;
         this.inventoryAPI = plugin.getInventoryAPI();
-        this.vaultEconomy = plugin.getVaultEconomy();
+        this.economy = plugin.getEconomyAdapter();
         reload();
     }
 
@@ -65,10 +65,10 @@ public class DuelManager {
 
     public void prepareGuiItems() {
         FileConfiguration config = plugin.getConfig();
-        glass = XMaterial.valueOf(config.getString("mid-item.material")).parseItem();
-        greenGlass = XMaterial.valueOf(config.getString("ready-item.material")).parseItem();
-        redGlass = XMaterial.valueOf(config.getString("not-ready-item.material")).parseItem();
-        cancelItem = XMaterial.valueOf(config.getString("request-cancel-item.material")).parseItem();
+        XMaterial.matchXMaterial(config.getString("mid-item.material")).ifPresent(material -> glass = material.parseItem());
+        XMaterial.matchXMaterial(config.getString("ready-item.material")).ifPresent(material -> greenGlass = material.parseItem());
+        XMaterial.matchXMaterial(config.getString("not-ready-item.material")).ifPresent(material -> redGlass = material.parseItem());
+        XMaterial.matchXMaterial(config.getString("request-cancel-item.material")).ifPresent(material -> cancelItem = material.parseItem());
 
         ItemMeta glassMeta = glass.getItemMeta();
         glassMeta.setDisplayName(Utils.getString("mid-item.name", null));
@@ -94,7 +94,7 @@ public class DuelManager {
         for (String key : config.getConfigurationSection("money-bet").getKeys(false)) {
             String path = "money-bet." + key + ".";
 
-            ItemStack item = XMaterial.valueOf(config.getString(path + "item")).parseItem();
+            ItemStack item = XMaterial.matchXMaterial(config.getString(path + "item")).orElse(XMaterial.GRAY_DYE).parseItem();
             int moneyToAdd = Utils.getInt(path + "money-to-add");
             String name = Utils.getString(path + "name", null, false);
             List<String> lore = Utils.getStringList(path + "lore", null);
@@ -147,48 +147,47 @@ public class DuelManager {
 
         if (!canSendOrAcceptDuel(sender) || !canSendOrAcceptDuel(opponent)) {
             senderPlayer.sendMessage(Utils.getMessage("duel.not-now", senderPlayer)
-                    .replace("%rakip%", opponent.getName()));
+                    .replace("%opponent%", opponent.getName()));
             return;
         }
 
-        if (arenaManager.isAnyArenaAvailable()) {
-
-            String senderName = senderPlayer.getName();
-            String opponentName = opponentPlayer.getName();
-            duelRequests.put(sender, opponent);
-
-            DuelRequestProcess process = new DuelRequestProcess(sender, opponent);
-            sender.setRequestProcess(process);
-            opponent.setRequestProcess(process);
-            duelRequestProcesses.add(process);
-
-            HInventory inventory = inventoryAPI.getInventoryCreator()
-                    .setTitle(Utils.getString("request-gui-name", sender.getBase())
-                            .replace("%opponent%", opponentName))
-                    .setClosable(false)
-                    .setId(senderName + "-bDuels")
-                    .create();
-
-            inventory.guiAir();
-
-            for (int i : midGlasses) {
-                inventory.setItem(i, ClickableItem.empty(glass));
-            }
-
-
-            inventory.setItem(49, ClickableItem.of(cancelItem, event -> cancel(process)));
-
-            putAcceptItem(inventory, 48, sender, process);
-            putAcceptItem(inventory, 50, opponent, process);
-            putMoneyBetItems(inventory, playerMoneySide, sender, process);
-            putMoneyBetItems(inventory, opponentMoneySide, opponent, process);
-            updateHeads(inventory, process);
-
-            inventory.open(senderPlayer);
-            inventory.open(opponentPlayer);
-        } else {
+        if (!arenaManager.isAnyArenaAvailable()) {
             senderPlayer.sendMessage(Utils.getMessage("arenas.all-in-usage", senderPlayer));
+            return;
         }
+
+        String senderName = senderPlayer.getName();
+        String opponentName = opponentPlayer.getName();
+        duelRequests.put(sender, opponent);
+
+        DuelRequestProcess process = new DuelRequestProcess(sender, opponent);
+        sender.setRequestProcess(process);
+        opponent.setRequestProcess(process);
+        duelRequestProcesses.add(process);
+
+        HInventory inventory = inventoryAPI.getInventoryCreator()
+                .setTitle(Utils.getString("request-gui-name", sender.getBase())
+                        .replace("%opponent%", opponentName))
+                .setClosable(false)
+                .setId(senderName + "-bDuels")
+                .create();
+
+        inventory.guiAir();
+
+        for (int i : midGlasses) {
+            inventory.setItem(i, ClickableItem.empty(glass));
+        }
+
+        inventory.setItem(49, ClickableItem.of(cancelItem, event -> cancel(process)));
+
+        putAcceptItem(inventory, 48, sender, process);
+        putAcceptItem(inventory, 50, opponent, process);
+        putMoneyBetItems(inventory, playerMoneySide, sender, process);
+        putMoneyBetItems(inventory, opponentMoneySide, opponent, process);
+        updateHeads(inventory, process);
+
+        inventory.open(senderPlayer);
+        inventory.open(opponentPlayer);
     }
 
     public void updateHeads(HInventory inventory, DuelRequestProcess process) {
@@ -238,7 +237,7 @@ public class DuelManager {
             int moneyToAdd = settings.getMoneyToAdd();
             inventory.setItem(i, ClickableItem.of(item, event -> {
                 Player clicker = (Player) event.getWhoClicked();
-                DuelRewards rewards = process.getDuelRewards().get(user);
+                DuelRewards rewards = process.getRewardsOf(user);
                 if (clicker.equals(user.getBase())) {
                     if (!Utils.canPutMoreMoney(rewards.getMoneyBet(), moneyToAdd, clicker)) {
                         clicker.sendMessage(Utils.getMessage("duel.not-enough-money", clicker));
@@ -304,7 +303,7 @@ public class DuelManager {
 
         ongoingDuels.add(duel);
         for (User user : duel.getPlayers()) {
-            vaultEconomy.removeMoney(user.getBase(), duel.getDuelRewards().get(user).getMoneyBet());
+            economy.removeMoney(user.getBase(), duel.getRewardsOf(user).getMoneyBet());
         }
     }
 
@@ -361,8 +360,8 @@ public class DuelManager {
             winnerPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", winnerPlayer));
             loserPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", loserPlayer));
 
-            vaultEconomy.addMoney(winnerPlayer, winnerRewards.getMoneyBet());
-            vaultEconomy.addMoney(loserPlayer, loserRewards.getMoneyBet());
+            economy.addMoney(winnerPlayer, winnerRewards.getMoneyBet());
+            economy.addMoney(loserPlayer, loserRewards.getMoneyBet());
             return;
         }
 
@@ -377,7 +376,7 @@ public class DuelManager {
             }
         }
 
-        vaultEconomy.addMoney(winnerPlayer, loserRewards.getMoneyBet() + winnerRewards.getMoneyBet());
+        economy.addMoney(winnerPlayer, loserRewards.getMoneyBet() + winnerRewards.getMoneyBet());
         for (ItemStack item : loserRewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
             if (Utils.hasSpace(winnerInventory, item)) {
                 winnerInventory.addItem(item);

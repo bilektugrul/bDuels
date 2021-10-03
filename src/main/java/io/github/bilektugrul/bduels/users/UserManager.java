@@ -40,8 +40,12 @@ public class UserManager {
         return null;
     }
 
+    public void removeUser(User user) {
+        userList.remove(user);
+    }
+
     public Set<User> getUserList() {
-        return userList;
+        return new HashSet<>(userList);
     }
 
 }
