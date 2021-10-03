@@ -5,6 +5,8 @@ import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.BDuelsCommand;
 import io.github.bilektugrul.bduels.commands.DuelCommand;
 import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
+import io.github.bilektugrul.bduels.duels.Duel;
+import io.github.bilektugrul.bduels.duels.DuelEndReason;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.economy.VaultEconomy;
@@ -66,8 +68,12 @@ public final class BDuels extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for (Duel duel : duelManager.getOngoingDuels()) {
+            duel.setWinner(duel.getPlayers()[0]);
+            duelManager.endMatch(duel, DuelEndReason.SERVER_STOP);
+        }
         try {
-            arenaManager.save();
+            save();
         } catch (IOException e) {
             e.printStackTrace();
         }

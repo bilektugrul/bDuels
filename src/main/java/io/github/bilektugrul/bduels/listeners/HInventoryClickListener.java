@@ -6,7 +6,7 @@ import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.duels.DuelRewards;
-import io.github.bilektugrul.bduels.duels.PlayerType;
+import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.utils.Utils;

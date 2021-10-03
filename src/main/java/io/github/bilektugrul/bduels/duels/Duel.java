@@ -2,12 +2,10 @@ package io.github.bilektugrul.bduels.duels;
 
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
+import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
@@ -54,16 +52,6 @@ public class Duel {
         opponent.setState(UserState.IN_MATCH);
 
         arena.setState(ArenaState.IN_MATCH);
-
-        for (User user : getPlayers()) {
-            Bukkit.broadcastMessage(user.getName());
-            DuelRewards rewards = getRewardsOf(user);
-            for (ItemStack item : rewards.getItemsBet()) {
-                Bukkit.broadcastMessage("selam " + user.getName() + "- " + item.toString());
-                Inventory userInventory = user.getBase().getInventory();
-                userInventory.remove(item);
-            }
-        }
     }
 
     public Map<User, DuelRewards> getDuelRewards() {
@@ -117,6 +105,7 @@ public class Duel {
 
     public void setWinner(User winner) {
         this.winner = winner;
+        setLoser(getOpponentOf(winner));
     }
 
     public void setLoser(User loser) {

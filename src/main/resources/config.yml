@@ -13,6 +13,8 @@ titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ay
   stay: 30
   fade-out: 5
 
+start-countdown: 5 # Maç başlarken kaç saniye geri sayım yapılacağına dair ayar.
+
 request-gui-name: 'Duel - %player% vs %opponent%' # Düello menüsünün ismi
 
 request-cancel-item: # Düello menüsünde düelloyu iptal etmek için kullanılan eşyanın ayarları.

@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.duels.Duel;
+import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ public class User {
 
     private UserState state;
     private Duel duel;
+    private DuelRequestProcess requestProcess;
     private Location respawnLocation;
 
     public User(Player player) {
@@ -30,6 +32,14 @@ public class User {
 
     public void setDuel(Duel duel) {
         this.duel = duel;
+    }
+
+    public DuelRequestProcess getRequestProcess() {
+        return requestProcess;
+    }
+
+    public void setRequestProcess(DuelRequestProcess requestProcess) {
+        this.requestProcess = requestProcess;
     }
 
     public Location getRespawnLocation() {

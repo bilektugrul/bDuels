@@ -158,6 +158,8 @@ public class DuelManager {
             duelRequests.put(sender, opponent);
 
             DuelRequestProcess process = new DuelRequestProcess(sender, opponent);
+            sender.setRequestProcess(process);
+            opponent.setRequestProcess(process);
             duelRequestProcesses.add(process);
 
             HInventory inventory = inventoryAPI.getInventoryCreator()
@@ -174,7 +176,7 @@ public class DuelManager {
             }
 
 
-            inventory.setItem(49, ClickableItem.of(cancelItem, (event -> cancel(process))));
+            inventory.setItem(49, ClickableItem.of(cancelItem, event -> cancel(process)));
 
             putAcceptItem(inventory, 48, sender, process);
             putAcceptItem(inventory, 50, opponent, process);
@@ -234,7 +236,7 @@ public class DuelManager {
             index++;
             ItemStack item = settings.getItem();
             int moneyToAdd = settings.getMoneyToAdd();
-            inventory.setItem(i, ClickableItem.of(item, (event -> {
+            inventory.setItem(i, ClickableItem.of(item, event -> {
                 Player clicker = (Player) event.getWhoClicked();
                 DuelRewards rewards = process.getDuelRewards().get(user);
                 if (clicker.equals(user.getBase())) {
@@ -248,12 +250,12 @@ public class DuelManager {
                             .replace("%amount%", String.valueOf(moneyToAdd))
                             .replace("%total%", String.valueOf(rewards.getMoneyBet())));
                 }
-            })));
+            }));
         }
     }
 
     public void putAcceptItem(HInventory inventory, int slot, User user, DuelRequestProcess process) {
-        inventory.setItem(slot, ClickableItem.of(redGlass, (event -> {
+        inventory.setItem(slot, ClickableItem.of(redGlass, event -> {
             Player clicker = (Player) event.getWhoClicked();
             if (clicker.equals(user.getBase())) {
                 boolean newFinished = !process.isFinished(user);
@@ -268,13 +270,15 @@ public class DuelManager {
                     event.setCurrentItem(redGlass);
                 }
             }
-        })));
+        }));
     }
 
     public void cancel(DuelRequestProcess requestProcess) {
         for (User user : requestProcess.getPlayers()) {
+            user.setRequestProcess(null);
             Player player = user.getBase();
-            inventoryAPI.getInventoryManager().getPlayerInventory(player).close(player);
+            HInventory inventory = inventoryAPI.getInventoryManager().getPlayerInventory(player);
+            if (inventory != null) inventory.close(player);
         }
         duelRequestProcesses.remove(requestProcess);
         duelRequests.remove(requestProcess.getPlayer());
@@ -283,28 +287,30 @@ public class DuelManager {
     public void startMatch(DuelRequestProcess requestProcess) {
         cancel(requestProcess);
 
-        if (arenaManager.isAnyArenaAvailable()) {
-            Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();
-            matchArena.setState(ArenaState.PRE_MATCH);
-
-            Duel duel = new Duel(requestProcess, matchArena);
-            ongoingDuels.add(duel);
-            duel.start();
-            for (User user : duel.getPlayers()) {
-                vaultEconomy.removeMoney(user.getBase(), duel.getDuelRewards().get(user).getMoneyBet());
-            }
-        } else {
+        if (!arenaManager.isAnyArenaAvailable()) {
             for (User user : requestProcess.getPlayers()) {
                 Player player = user.getBase();
                 player.sendMessage(Utils.getMessage("arenas.all-in-usage-2", player));
             }
+            return;
+        }
+
+        Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();
+        matchArena.setState(ArenaState.PRE_MATCH);
+
+        Duel duel = new Duel(requestProcess, matchArena);
+        DuelStartingTask startingTask = new DuelStartingTask(plugin, duel);
+        startingTask.runTaskTimer(plugin, 0, 20L);
+
+        ongoingDuels.add(duel);
+        for (User user : duel.getPlayers()) {
+            vaultEconomy.removeMoney(user.getBase(), duel.getDuelRewards().get(user).getMoneyBet());
         }
     }
 
     public void endMatch(Duel duel, DuelEndReason duelEndReason) {
         User winner = duel.getWinner();
         User loser = duel.getLoser();
-        boolean isReloaded = duelEndReason == DuelEndReason.RELOAD;
 
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
@@ -312,30 +318,56 @@ public class DuelManager {
         for (User user : duel.getPlayers()) {
             PreDuelData preDuelData = duel.getPreDuelData().get(user);
             Player player = user.getBase();
+            player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
             player.teleport(preDuelData.getLocation());
             user.setState(UserState.FREE);
             user.setDuel(null);
-            if (isReloaded) {
-                player.sendMessage(Utils.getMessage("match-force-ended", player));
-            }
         }
 
         arena.setState(ArenaState.EMPTY);
 
         Player winnerPlayer = winner.getBase();
+        Player loserPlayer = loser.getBase();
 
+        DuelRewards loserRewards = duel.getRewardsOf(loser);
+        DuelRewards winnerRewards = duel.getRewardsOf(winner);
 
-        DuelRewards rewards = duel.getRewardsOf(loser);
         Inventory winnerInventory = winnerPlayer.getInventory();
-        World winnerWorld = winnerPlayer.getWorld();
-        Location winnerLocation = winnerPlayer.getLocation();
+        Inventory loserInventory = loserPlayer.getInventory();
 
-        if (!isReloaded) {
-            MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
-            Utils.sendWinMessage(messageType, winnerPlayer, loser.getBase(), rewards.getItemsBet().size(), rewards.getMoneyBet());
+        World winnerWorld = winnerPlayer.getWorld();
+        World loserWorld = loserPlayer.getWorld();
+
+        Location winnerLocation = winnerPlayer.getLocation();
+        Location loserLocation = loserPlayer.getLocation();
+
+        if (duelEndReason == DuelEndReason.RELOAD || duelEndReason == DuelEndReason.SERVER_STOP) {
+            for (ItemStack item : winnerRewards.getItemsBet()) { // ortaya koyduğu eşyaları geri veriyoz çünkü stoğ veya reload yedi
+                if (Utils.hasSpace(winnerInventory, item)) {
+                    winnerInventory.addItem(item);
+                } else {
+                    winnerWorld.dropItem(winnerLocation, item);
+                }
+            }
+
+            for (ItemStack item : loserRewards.getItemsBet()) { // Diğerinin eşyalarını da geri veriyoz çünkü reload veya stop yedi
+                if (Utils.hasSpace(loserInventory, item)) {
+                    loserInventory.addItem(item);
+                } else {
+                    loserWorld.dropItem(loserLocation, item);
+                }
+            }
+
+            winnerPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", winnerPlayer));
+            loserPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", loserPlayer));
+
+            vaultEconomy.addMoney(winnerPlayer, winnerRewards.getMoneyBet());
+            vaultEconomy.addMoney(loserPlayer, loserRewards.getMoneyBet());
+            return;
         }
 
-        DuelRewards winnerRewards = duel.getRewardsOf(winner);
+        MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
+        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, loserRewards.getItemsBet().size(), loserRewards.getMoneyBet());
 
         for (ItemStack item : winnerRewards.getItemsBet()) { // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli.
             if (Utils.hasSpace(winnerInventory, item)) {
@@ -345,8 +377,8 @@ public class DuelManager {
             }
         }
 
-        vaultEconomy.addMoney(winnerPlayer, rewards.getMoneyBet() + winnerRewards.getMoneyBet());
-        for (ItemStack item : rewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
+        vaultEconomy.addMoney(winnerPlayer, loserRewards.getMoneyBet() + winnerRewards.getMoneyBet());
+        for (ItemStack item : loserRewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
             if (Utils.hasSpace(winnerInventory, item)) {
                 winnerInventory.addItem(item);
             } else {

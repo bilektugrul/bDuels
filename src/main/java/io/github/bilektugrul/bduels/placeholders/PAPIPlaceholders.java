@@ -6,6 +6,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+//TODO: OYNANAN MAÇ SAYISI, RAKİP İSMİ, ARENA İSMİ VS. PLACEHOLDERLERİ
 public class PAPIPlaceholders extends PlaceholderExpansion {
 
     private final BDuels plugin;

@@ -1,4 +1,4 @@
-package io.github.bilektugrul.bduels.duels;
+package io.github.bilektugrul.bduels.stuff;
 
 public enum PlayerType {
 

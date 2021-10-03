@@ -3,6 +3,7 @@ package io.github.bilektugrul.bduels.duels;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
+//TODO: BU CLASSI SİL VEYA KULLANIM AMACI BUL, SADECE LOKASYON KULLANICAKSAN PEK GEREK YOK
 public class PreDuelData {
 
     private final Location location;

@@ -10,8 +10,6 @@ public class DuelRewards {
     private int moneyBet = 0;
     private List<ItemStack> itemsBet = new ArrayList<>();
 
-    public DuelRewards() {}
-
     public int getMoneyBet() {
         return moneyBet;
     }
