@@ -1,7 +1,7 @@
 package io.github.bilektugrul.bduels.utils;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.economy.VaultEconomy;
+import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.language.LanguageManager;
 import io.github.bilektugrul.bduels.placeholders.CustomPlaceholderManager;
 import io.github.bilektugrul.bduels.stuff.MessageType;
@@ -33,7 +33,7 @@ public class Utils {
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
     private static final CustomPlaceholderManager placeholderManager = plugin.getPlaceholderManager();
     private static final LanguageManager languageManager = plugin.getLanguageManager();
-    private static final VaultEconomy vaultEconomy = plugin.getVaultEconomy();
+    private static final EconomyAdapter economy = plugin.getEconomyAdapter();
 
     private static final boolean isPAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
@@ -303,7 +303,7 @@ public class Utils {
     }
 
     public static boolean canPutMoreMoney(int current, int toAdd, Player player) {
-        double currentMoney = vaultEconomy.getMoney(player);
+        double currentMoney = economy.getMoney(player);
         int afterTotal = current + toAdd;
         if (current == currentMoney) {
             return false;

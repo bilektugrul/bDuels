@@ -37,21 +37,13 @@ public class DuelStartingTask extends BukkitRunnable {
         Location playerLocation = duel.getArena().getPlayerLocation();
         Location opponentLocation = duel.getArena().getOpponentLocation();
 
-        if (!Utils.isSameLoc(playerLocation, player.getLocation())) {
-            player.teleport(playerLocation);
-        }
+        if (!Utils.isSameLoc(playerLocation, player.getLocation())) player.teleport(playerLocation);
 
-        if (player.getHealth() != 20) {
-            player.setHealth(20);
-        }
+        if (player.getHealth() != 20) player.setHealth(20);
 
-        if (!Utils.isSameLoc(opponentLocation, opponent.getLocation())) {
-            opponent.teleport(opponentLocation);
-        }
+        if (!Utils.isSameLoc(opponentLocation, opponent.getLocation())) opponent.teleport(opponentLocation);
 
-        if (opponent.getHealth() != 20) {
-            opponent.setHealth(20);
-        }
+        if (opponent.getHealth() != 20) opponent.setHealth(20);
 
         if (time == 0) {
             player.removeMetadata("god-mode-bduels", plugin);

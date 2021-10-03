@@ -5,8 +5,8 @@ import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,40 +14,38 @@ import java.util.Map;
 public class Duel {
 
     private final User player, opponent;
+    private final User[] players;
     private User winner, loser;
 
     private final Arena arena;
     private final Map<User, DuelRewards> duelRewards;
 
-    private final Map<User, PreDuelData> preDuelData = new HashMap<>();
+    private final Map<User, Location> preDuelLocations = new HashMap<>();
 
     public Duel(DuelRequestProcess requestProcess, Arena arena) {
         this.player = requestProcess.getPlayer();
         this.opponent = requestProcess.getOpponent();
+        this.players = new User[]{player, opponent};
+
         this.arena = arena;
         this.duelRewards = requestProcess.getDuelRewards();
 
-        player.setDuel(this);
-        opponent.setDuel(this);
+        this.player.setDuel(this);
+        this.opponent.setDuel(this);
 
         Player player = this.player.getBase();
         Player opponentPlayer = this.opponent.getBase();
 
-        PlayerInventory playerInventory = player.getInventory();
-        PlayerInventory opponentInventory = opponentPlayer.getInventory();
-
-        PreDuelData playerData = new PreDuelData(player.getLocation(), playerInventory.getContents(), playerInventory.getArmorContents());
-        PreDuelData opponentData = new PreDuelData(opponentPlayer.getLocation(), opponentInventory.getContents(), opponentInventory.getArmorContents());
-        preDuelData.put(this.player, playerData);
-        preDuelData.put(this.opponent, opponentData);
+        preDuelLocations.put(this.player, player.getLocation());
+        preDuelLocations.put(this.opponent, opponentPlayer.getLocation());
     }
 
     public void start() {
-        Player player1 = this.player.getBase();
-        player1.teleport(arena.getPlayerLocation());
-        this.player.setState(UserState.IN_MATCH);
+        Player requestSender = player.getBase();
+        requestSender.teleport(arena.getPlayerLocation());
+        player.setState(UserState.IN_MATCH);
 
-        Player opponentPlayer = this.opponent.getBase();
+        Player opponentPlayer = opponent.getBase();
         opponentPlayer.teleport(arena.getOpponentLocation());
         opponent.setState(UserState.IN_MATCH);
 
@@ -58,12 +56,12 @@ public class Duel {
         return duelRewards;
     }
 
-    public Map<User, PreDuelData> getPreDuelData() {
-        return preDuelData;
+    public Map<User, Location> getPreDuelLocations() {
+        return preDuelLocations;
     }
 
     public User[] getPlayers() {
-        return new User[]{player, opponent};
+        return players;
     }
 
     public PlayerType getPlayerType(User user) {

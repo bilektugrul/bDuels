@@ -65,7 +65,7 @@ public class PlayerListener implements Listener {
         if (user.getState() == UserState.IN_MATCH) {
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
-            user.setRespawnLocation(duel.getPreDuelData().get(user).getLocation());
+            user.setRespawnLocation(duel.getPreDuelLocations().get(user));
             duelManager.endMatch(duel, DuelEndReason.DEATH);
         }
     }

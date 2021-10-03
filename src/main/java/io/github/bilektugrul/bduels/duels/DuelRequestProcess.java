@@ -9,20 +9,24 @@ import java.util.Map;
 public class DuelRequestProcess {
 
     private final User player, opponent;
+    private final User[] players;
+
     private final Map<User, DuelRewards> duelRewards = new HashMap<>();
     private final Map<User, Boolean> finished = new HashMap<>();
 
     public DuelRequestProcess(User player, User opponent) {
         this.player = player;
         this.opponent = opponent;
-        for (User user : getPlayers()) {
+        this.players = new User[]{player, opponent};
+
+        for (User user : players) {
             duelRewards.put(user, new DuelRewards());
             finished.put(user, false);
         }
     }
 
     public User[] getPlayers() {
-        return new User[]{player, opponent};
+        return players;
     }
 
     public PlayerType getPlayerType(User user) {

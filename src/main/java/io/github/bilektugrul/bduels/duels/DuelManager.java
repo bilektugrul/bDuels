@@ -315,10 +315,10 @@ public class DuelManager {
         arena.setState(ArenaState.POST_MATCH);
         ongoingDuels.remove(duel);
         for (User user : duel.getPlayers()) {
-            PreDuelData preDuelData = duel.getPreDuelData().get(user);
+            Location preDuelLocation = duel.getPreDuelLocations().get(user);
             Player player = user.getBase();
             player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
-            player.teleport(preDuelData.getLocation());
+            player.teleport(preDuelLocation);
             user.setState(UserState.FREE);
             user.setDuel(null);
         }

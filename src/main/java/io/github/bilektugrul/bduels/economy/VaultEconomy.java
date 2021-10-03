@@ -8,8 +8,8 @@ public class VaultEconomy implements EconomyAdapter {
 
     private final VaultManager vaultHook;
 
-    public VaultEconomy(BDuels bDuels) {
-        this.vaultHook = bDuels.getVaultManager();
+    public VaultEconomy(BDuels plugin) {
+        this.vaultHook = plugin.getVaultManager();
     }
 
     @Override
