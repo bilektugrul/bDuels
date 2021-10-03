@@ -13,3 +13,6 @@ commands:
     usage: /duel <oyuncu>
   arena:
     usage: /arena <sub command> <arena>
+  accept:
+    aliases: /kabulet, /düellokabulet, /duelkabulet
+    usage: /accept

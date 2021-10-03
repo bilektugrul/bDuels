@@ -10,6 +10,7 @@ public class VaultEconomy implements EconomyAdapter {
 
     public VaultEconomy(BDuels plugin) {
         this.vaultHook = plugin.getVaultManager();
+        plugin.setEconomyAdapter(this);
     }
 
     @Override

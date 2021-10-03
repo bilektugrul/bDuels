@@ -3,6 +3,7 @@ package io.github.bilektugrul.bduels;
 import com.hakan.inventoryapi.InventoryAPI;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.BDuelsCommand;
+import io.github.bilektugrul.bduels.commands.DuelAcceptCommand;
 import io.github.bilektugrul.bduels.commands.DuelCommand;
 import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.duels.Duel;
@@ -21,7 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-// TODO: DÜELLO İSTEĞİ OLAYINI HALLET
+// TODO: ISTATISTIK SISTEMI EKLESEN GÜZEL OLUR
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
@@ -61,6 +62,7 @@ public final class BDuels extends JavaPlugin {
 
         getServer().getPluginCommand("bduels").setExecutor(new BDuelsCommand(this));
         getServer().getPluginCommand("duel").setExecutor(new DuelCommand(this));
+        getServer().getPluginCommand("accept").setExecutor(new DuelAcceptCommand(this));
         getServer().getPluginCommand("arena").setExecutor(new ArenaCommand(this));
     }
 
@@ -70,6 +72,7 @@ public final class BDuels extends JavaPlugin {
             duel.setWinner(duel.getPlayers()[0]);
             duelManager.endMatch(duel, DuelEndReason.SERVER_STOP);
         }
+        Bukkit.getScheduler().cancelTasks(this);
         save();
     }
 

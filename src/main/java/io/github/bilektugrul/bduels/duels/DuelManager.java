@@ -13,6 +13,7 @@ import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.compat.XMaterial;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -24,9 +25,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DuelManager {
 
@@ -35,7 +34,6 @@ public class DuelManager {
     private final EconomyAdapter economy;
     private ArenaManager arenaManager;
 
-    private final Map<User, User> duelRequests = new HashMap<>();
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<Duel> ongoingDuels = new ArrayList<>();
     private final List<MoneyBetSettings> moneyBetSettingsCache = new ArrayList<>();
@@ -108,19 +106,6 @@ public class DuelManager {
         this.arenaManager = arenaManager;
     }
 
-    public User getOpponent(User user) {
-        return duelRequests.get(user);
-    }
-
-    public User getRequestSender(User user) {
-        for (User user2 : duelRequests.keySet()) {
-            if (duelRequests.get(user2).equals(user)) {
-                return user2;
-            }
-        }
-        return null;
-    }
-
     public DuelRequestProcess getProcess(User player) {
         for (DuelRequestProcess process : duelRequestProcesses) {
             if (process.getPlayer().equals(player) || process.getOpponent().equals(player)) {
@@ -135,8 +120,7 @@ public class DuelManager {
     }
 
     public boolean canSendOrAcceptDuel(User user) {
-        return getOpponent(user) == null && getRequestSender(user) == null
-                && user.getState() == UserState.FREE;
+        return user.getRequestProcess() == null && user.getState() == UserState.FREE;
     }
 
     public void sendDuelRequest(User sender, User opponent) {
@@ -156,38 +140,62 @@ public class DuelManager {
             return;
         }
 
-        String senderName = senderPlayer.getName();
-        String opponentName = opponentPlayer.getName();
-        duelRequests.put(sender, opponent);
+        senderPlayer.sendMessage(Utils.getMessage("duel.request-sent", opponentPlayer)
+                .replace("%opponent%", opponentPlayer.getName()));
+        opponentPlayer.sendMessage(Utils.getMessage("duel.new-request", opponentPlayer)
+                .replace("%sender%", senderPlayer.getName()));
 
         DuelRequestProcess process = new DuelRequestProcess(sender, opponent);
         sender.setRequestProcess(process);
         opponent.setRequestProcess(process);
+
         duelRequestProcesses.add(process);
+    }
 
-        HInventory inventory = inventoryAPI.getInventoryCreator()
-                .setTitle(Utils.getString("request-gui-name", sender.getBase())
-                        .replace("%opponent%", opponentName))
-                .setClosable(false)
-                .setId(senderName + "-bDuels")
-                .create();
+    public void acceptDuelRequest(DuelRequestProcess process, List<String> timer) {
+        process.setRequestAccepted(true);
 
-        inventory.guiAir();
+        User sender = process.getPlayer();
+        User opponent = process.getOpponent();
 
-        for (int i : midGlasses) {
-            inventory.setItem(i, ClickableItem.empty(glass));
-        }
+        Player senderPlayer = sender.getBase();
+        Player opponentPlayer = opponent.getBase();
 
-        inventory.setItem(49, ClickableItem.of(cancelItem, event -> cancel(process)));
+        String senderName = senderPlayer.getName();
+        String opponentName = opponentPlayer.getName();
 
-        putAcceptItem(inventory, 48, sender, process);
-        putAcceptItem(inventory, 50, opponent, process);
-        putMoneyBetItems(inventory, playerMoneySide, sender, process);
-        putMoneyBetItems(inventory, opponentMoneySide, opponent, process);
-        updateHeads(inventory, process);
+        senderPlayer.sendMessage(Utils.getMessage("duel.request-accepted", senderPlayer)
+                .replace("%opponent%", opponentName));
+        opponentPlayer.sendMessage(Utils.getMessage("duel.request-accepted", opponentPlayer)
+                .replace("%opponent%", opponentName));
 
-        inventory.open(senderPlayer);
-        inventory.open(opponentPlayer);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            timer.remove(opponentName);
+            HInventory inventory = inventoryAPI.getInventoryCreator()
+                    .setTitle(Utils.getString("request-gui-name", sender.getBase())
+                            .replace("%opponent%", opponentName))
+                    .setClosable(false)
+                    .setId(senderName + "-bDuels")
+                    .create();
+
+            inventory.guiAir();
+
+            for (int i : midGlasses) {
+                inventory.setItem(i, ClickableItem.empty(glass));
+            }
+
+            inventory.setItem(49, ClickableItem.of(cancelItem, event -> cancel(process)));
+
+            putAcceptItem(inventory, 48, sender, process);
+            putAcceptItem(inventory, 50, opponent, process);
+            putMoneyBetItems(inventory, playerMoneySide, sender, process);
+            putMoneyBetItems(inventory, opponentMoneySide, opponent, process);
+            updateHeads(inventory, process);
+
+            inventory.open(senderPlayer);
+            inventory.open(opponentPlayer);
+        }, 60);
+
     }
 
     public void updateHeads(HInventory inventory, DuelRequestProcess process) {
@@ -280,7 +288,6 @@ public class DuelManager {
             if (inventory != null) inventory.close(player);
         }
         duelRequestProcesses.remove(requestProcess);
-        duelRequests.remove(requestProcess.getPlayer());
     }
 
     public void startMatch(DuelRequestProcess requestProcess) {
@@ -384,10 +391,6 @@ public class DuelManager {
                 winnerWorld.dropItem(winnerLocation, item);
             }
         }
-    }
-
-    public Map<User, User> getDuelRequests() {
-        return duelRequests;
     }
 
     public int[] getOpponentSide() {

@@ -2,24 +2,40 @@ messages:
 
   no-permission: '%prefix% &cÜzgünüm %player% ancak bunu yapamazsın.'
   only-players: '%prefix% &cSadece oyuncular bu komutu kullanabilir.'
-  config-reloaded: '%prefix% &bAyarlar başarıyla yenilendi.'
-  did-you-mean: '%prefix% &bKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: /%command%'
+  config-reloaded: '%prefix% &bAyarlar, mesajlar ve arenalar başarıyla yenilendi.'
+  did-you-mean: '%prefix% &bKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: &e/%command%'
 
   main-command:
     wrong-usage: |
       %prefix% &cKomutu hatalı kullandınız.
-      %prefix% &b/bduels <reload | save>
+      %prefix% &b/bduels &e<reload | save>
     reloaded: '%prefix% &bEklenti verileri yenilendi.'
     saved: '%prefix% &bEklenti verileri kaydedildi.'
 
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
     player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
+    request-sent: |
+      %prefix% &e%opponent% &bisimli oyuncuya düello isteği yolladın!
+      %prefix% &e15 saniye &biçerisinde kabul etmezse istek iptal edilecek.
+    new-request: |
+      %prefix% &e%sender% &bisimli oyuncu sana bir düello isteği yolladı!
+      %prefix% &e15 saniye &biçerisinde kabul etmezse istek iptal edilecek.
+      %prefix% &bKabul etmek için: &e/accept
+    request-cancelled: '%prefix% &e%user% &bisteği zamanında kabul etmediği için istek iptal edildi.'
+    no-request: '%prefix% &cSana kimse düello isteği yollamamış.'
+    use-again: '%prefix% &bIsteği kabul etmek istediğine eminsen komutu &e10 saniye &biçinde tekrar kullan.'
+    request-accepted: |
+      %prefix% &bIstek &e%opponent% &btarafından kabul edildi.
+      %prefix% &bAçıcak olan menüde yatırmak istediğiniz parayı ve eşyaları seçebilirsiniz.
+      %prefix% &bIkiniz de hazır olduğunuz zaman maç başlayacak, paralar ve eşyalar elinizden alınacaktır.
+      %prefix% &bKazanan kişi kendi eşyalarını ve kendi parasını geri alır.
+      %prefix% &bAyrıca rakibinin eşyalarını ve parasını da elde etmiş olur.
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
-    not-now: '%prefix% &cŞu an duel atamazsın veya %opponent% şu an duel kabul edemez.'
-    bet-money-added: '%prefix% &e%amount% &bmiktarda bet parası eklediniz. Toplam: %total%'
+    not-now: '%prefix% &cŞu an duel atamazsın veya &e%opponent% &cşu an duel kabul edemez.'
+    bet-money-added: '%prefix% &e%amount% &bmiktarda bet parası eklediniz. Toplam: &e%total%'
     not-enough-money: '%prefix% &cYeterli miktarda paran olmadığı için daha fazla ekleyemezsin.'
-    left-server: '%prefix% &cDüello isteği yolladığın/aldığın &b%opponent% &csunucudan çıktığı için istek iptal edildi.'
+    left-server: '%prefix% &bDüello isteği yolladığın/aldığın &e%opponent% &bsunucudan çıktığı için istek iptal edildi.'
 
     request-gui:
       heads-name: '&2%player%'
@@ -28,34 +44,34 @@ messages:
         - '&bYatırılan para: &e%money%'
         -
 
-    countdown: '%prefix% &bDüello &e%seconds% &bsaniye içerisinde başlıyor!'
+    countdown: '%prefix% &bDüello &e%seconds% saniye &biçerisinde başlıyor!'
 
     start-message: |
-      &a&l---------------------------------------------
-      &f&lDüello
-
-      &e&lRakibi öldür ve ödülleri kazan!
-      &e&lRakibinin ortaya koyduğu eşya miktarı: %opponentitems%
-      &e&lRakibinin ortaya koyduğu para miktarı: %opponentbet%
-
-      &e&lRakip: &c%opponent%
-
-      &a&l---------------------------------------------
+      &a&l&m---------------------------------------------&r
+      &6&lDüello
+      &f
+      &6&lRakibi öldür ve ödülleri kazan!
+      &6&lRakibinin ortaya koyduğu eşya miktarı: &3&l%opponentitems%
+      &6&lRakibinin ortaya koyduğu para miktarı: &3&l%opponentbet%
+      &f
+      &6&lRakip: &3%opponent%
+      &a&l&m---------------------------------------------
 
     win:
       used-mode: CHAT_AND_TITLE # Modlar: CHAT, TITLE, ACTIONBAR, CHAT_AND_TITLE, CHAT_AND_BAR, BAR_AND_TITLE, ALL
       title:
-        title: '&c%loser% &bvs &d%winner%'
-        subtitle: '&bKazanan: &d%winner%'
+        title: '&6%loser% &bvs &6%winner%'
+        subtitle: '&bKazanan: &e%winner%'
       chat: |
-        &m-----------------&r
-        &6Maç bitti!
-        &6Oyuncular: &c%loser%&b, &d%winner%
-        &6Kazanan: &d%winner%
-        &6Ödül: &d%itemamount% adet eşya ve %betprice% miktar para
-        &r&m-----------------&r
-      actionbar: '&c%loser% &bvs &d%winner% &7- &bKazanan: &d%winner%'
-    match-force-ended: '%prefix% &cMaç bitirildi, eşyalarınız ve paralarınız geri verildi.'
+        &a&l&m---------------------------------------------&r
+        &6&lMaç bitti!
+        &f
+        &6&lOyuncular: &3%loser%&b, &3%winner%
+        &6&lKazanan: &3%winner%
+        &6&lÖdül: &3%itemamount% &badet eşya ve &3%betprice% &bmiktar para
+        &a&l&m---------------------------------------------&r
+      actionbar: '&e%loser% &bvs &e%winner% &7- &bKazanan: &3%winner%'
+    match-force-ended: '%prefix% &bMaç bitirildi, eşyalarınız ve paralarınız geri verildi.'
 
   arenas:
     help-message: |
@@ -72,23 +88,23 @@ messages:
       &r
     wrong-usage: '%prefix% &cKomutu hatalı kullandınız.'
     not-found: '%prefix% &cAradığınız arena bulunamadı.'
-    created: '%prefix% &b%arena% &eadlı arena oluşturuldu. Geri kalan ayarlarını yapmayı unutmayın.'
+    created: '%prefix% &e%arena% &badlı arena oluşturuldu. Geri kalan ayarlarını yapmayı unutmayın.'
     all-in-usage: '%prefix% &cŞu anda hiç müsait arena yok.'
     all-in-usage-2: '%prefix% &cŞu anda hiç müsait arena yok. Düello iptal edildi, daha sonra tekrar deneyin.'
     already-exist: '%prefix% &cBu arena zaten mevcut.'
-    deleted: '%prefix% &b%arena% isimli arena silindi.'
-    could-not-deleted: '%prefix% &b%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'
-    player-location-set: '%prefix% &b%no% &cnumaralı oyuncunun başlangıç noktası belirlendi.'
-    edge-location-set: '%prefix% &b%no% &cnumaralı harita köşesi belirlendi.'
+    deleted: '%prefix% &e%arena% &bisimli arena silindi.'
+    could-not-deleted: '%prefix% &e%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'
+    player-location-set: '%prefix% &e%arena% &badlı arenada &e%%no% &bnumaralı oyuncunun başlangıç noktası belirlendi.'
+    edge-location-set: '%prefix% &e%arena% &badlı arenada &e%no% &bnumaralı harita köşesi belirlendi.'
     list:
       start-message: |
         &r
-        %prefix% &eArenalar
-        %prefix% &eKullanılan: %usedamount%
-        %prefix% &eMüsait: %emptyamount%
-        %prefix% &eTümü (&6%totalamount%&e):
+        %prefix% &bArenalar
+        %prefix% &bKullanılan: &e%usedamount%
+        %prefix% &bMüsait: &e%emptyamount%
+        %prefix% &bTümü (&e%totalamount%&e):
         &r
-      arena-format: ' &7- &b%arena% (&6%state%&b)'
+      arena-format: ' &7- &3%arena% (&9%state%&b)'
     states:
       EMPTY: Boş
       PRE_MATCH: Maç Öncesi

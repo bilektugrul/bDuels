@@ -14,6 +14,8 @@ public class DuelRequestProcess {
     private final Map<User, DuelRewards> duelRewards = new HashMap<>();
     private final Map<User, Boolean> finished = new HashMap<>();
 
+    private boolean requestAccepted = false;
+
     public DuelRequestProcess(User player, User opponent) {
         this.player = player;
         this.opponent = opponent;
@@ -56,6 +58,14 @@ public class DuelRequestProcess {
 
     public void setFinished(User user, boolean isFinished) {
         finished.put(user, isFinished);
+    }
+
+    public boolean isRequestAccepted() {
+        return requestAccepted;
+    }
+
+    public void setRequestAccepted(boolean requestAccepted) {
+        this.requestAccepted = requestAccepted;
     }
 
     public boolean isBothFinished() {

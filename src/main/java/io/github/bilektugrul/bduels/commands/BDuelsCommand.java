@@ -37,12 +37,8 @@ public class BDuelsCommand implements CommandExecutor {
                 sender.sendMessage(Utils.getMessage("main-command.reloaded", sender));
                 return true;
             case "save":
-                try {
-                    plugin.save();
-                    sender.sendMessage(Utils.getMessage("main-command.saved", sender));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                plugin.save();
+                sender.sendMessage(Utils.getMessage("main-command.saved", sender));
                 return true;
         }
         return true;

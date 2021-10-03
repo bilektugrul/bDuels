@@ -49,13 +49,16 @@ public class PlayerListener implements Listener {
         if (duel != null) {
             duel.setWinner(duel.getOpponentOf(user));
             duelManager.endMatch(duel, DuelEndReason.QUIT);
-        } else if (process != null) {
+        }
+
+        if (process != null) {
             duelManager.cancel(process);
             User opponent = process.getOpponentOf(user);
             Player opponentPlayer = opponent.getBase();
             opponentPlayer.sendMessage(Utils.getMessage("duel.left-server", opponentPlayer)
                     .replace("%opponent%", user.getName()));
         }
+
         userManager.removeUser(user);
     }
 
