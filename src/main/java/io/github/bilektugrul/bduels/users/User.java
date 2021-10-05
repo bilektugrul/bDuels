@@ -71,6 +71,10 @@ public class User {
         state = newState;
     }
 
+    public boolean doesAcceptDuelRequests() {
+        return getStat(StatisticType.DUEL_REQUESTS) == 1;
+    }
+
     public int getStat(StatisticType statisticType) {
         Integer statistic = stats.get(statisticType);
 
@@ -83,12 +87,13 @@ public class User {
     }
 
     public void setStat(StatisticType stat, int i) {
+        if (stat == StatisticType.DUEL_REQUESTS) i = i >= 1 ? 1 : 0;
         stats.put(stat, i);
     }
 
     public void addStat(StatisticType stat, int i) {
+        if (stat == StatisticType.DUEL_REQUESTS) return;
         stats.put(stat, getStat(stat) + i);
-
     }
 
     public void sendMessage(String message) {

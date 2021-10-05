@@ -27,10 +27,7 @@ public class ArenaManager {
     }
 
     public void loadArenas() {
-        for (Duel duel : duelManager.getOngoingDuels()) {
-            duelManager.endMatch(duel, DuelEndReason.RELOAD);
-        }
-
+        duelManager.endMatches(DuelEndReason.RELOAD);
         arenasFile = ConfigUtils.getConfig(plugin, "arenas");
         arenas.clear();
         for (String name : arenasFile.getConfigurationSection("arenas").getKeys(false)) {

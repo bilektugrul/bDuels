@@ -18,6 +18,7 @@ public class Duel {
     private User winner, loser;
 
     private final Arena arena;
+    private DuelStartingTask startingTask;
     private final Map<User, DuelRewards> duelRewards;
 
     private final Map<User, Location> preDuelLocations = new HashMap<>();
@@ -108,6 +109,14 @@ public class Duel {
 
     public void setLoser(User loser) {
         this.loser = loser;
+    }
+
+    public DuelStartingTask getStartingTask() {
+        return startingTask;
+    }
+
+    public void setStartingTask(DuelStartingTask startingTask) {
+        this.startingTask = startingTask;
     }
 
 }

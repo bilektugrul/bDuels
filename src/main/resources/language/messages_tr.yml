@@ -1,3 +1,4 @@
+# TODO: FIX EMPTY LINES NOT WORKING FOR MULTILINE MESSAGES
 messages:
 
   no-permission: '%prefix% &cÜzgünüm %player% ancak bunu yapamazsın.'
@@ -25,6 +26,12 @@ messages:
       &l&m-----&r &e%statplayer% &l&m-----
     cannot-check: '%prefix% &cBaşkalarının istatistiklerine bakma yetkin yok.'
 
+  request-toggle-command:
+    toggled: '%prefix% &6Artık düello isteklerini %newmode%&6.'
+    modes:
+      0: '&calmayacaksın'
+      1: '&ealıcaksın'
+
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
     request-sent: |
@@ -45,6 +52,7 @@ messages:
       %prefix% &bAyrıca rakibinin eşyalarını ve parasını da elde etmiş olur.
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
     not-now: '%prefix% &cŞu an duel atamazsın veya &e%opponent% &cşu an duel kabul edemez.'
+    does-not-accept: '%prefix% &e%opponent% &cdüello isteklerini kabul etmiyor.'
     bet-money-added: '%prefix% &e%amount% &bmiktarda bet parası eklediniz. Toplam: &e%total%'
     not-enough-money: '%prefix% &cYeterli miktarda paran olmadığı için daha fazla ekleyemezsin.'
     left-server: '%prefix% &bDüello isteği yolladığın/aldığın &e%opponent% &bsunucudan çıktığı için istek iptal edildi.'
@@ -60,13 +68,13 @@ messages:
 
     start-message: |
       &a&l&m---------------------------------------------&r
-      &6&lDüello
-      &f
-      &6&lRakibi öldür ve ödülleri kazan!
-      &6&lRakibinin ortaya koyduğu eşya miktarı: &3&l%opponentitems%
-      &6&lRakibinin ortaya koyduğu para miktarı: &3&l%opponentbet%
-      &f
-      &6&lRakip: &3%opponent%
+      &6Düello
+      %nl%
+      &6Rakibi öldür ve ödülleri kazan!
+      &6Rakibinin ortaya koyduğu eşya miktarı: &3%opponentitems%
+      &6Rakibinin ortaya koyduğu para miktarı: &3%opponentbet%
+      %nl%
+      &6Rakip: &3%opponent%
       &a&l&m---------------------------------------------
 
     win:
@@ -76,11 +84,11 @@ messages:
         subtitle: '&bKazanan: &e%winner%'
       chat: |
         &a&l&m---------------------------------------------&r
-        &6&lMaç bitti!
-        &f
-        &6&lOyuncular: &3%loser%&b, &3%winner%
-        &6&lKazanan: &3%winner%
-        &6&lÖdül: &3%itemamount% &badet eşya ve &3%betprice% &bmiktar para
+        &6Maç bitti!
+        %nl%
+        &6Oyuncular: &3%loser%&b, &3%winner%
+        &6Kazanan: &3%winner%
+        &6Ödül: &3%itemamount% &badet eşya ve &3%betprice% &bmiktar para
         &a&l&m---------------------------------------------&r
       actionbar: '&e%loser% &bvs &e%winner% &7- &bKazanan: &3%winner%'
     match-force-ended: '%prefix% &bMaç bitirildi, eşyalarınız ve paralarınız geri verildi.'

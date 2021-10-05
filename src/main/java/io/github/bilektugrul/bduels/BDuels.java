@@ -7,6 +7,7 @@ import io.github.bilektugrul.bduels.commands.DuelStatsCommand;
 import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelAcceptCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelCommand;
+import io.github.bilektugrul.bduels.commands.duel.ToggleDuelRequestsCommand;
 import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelEndReason;
 import io.github.bilektugrul.bduels.duels.DuelManager;
@@ -71,19 +72,17 @@ public final class BDuels extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);
 
+        getCommand("accept").setExecutor(new DuelAcceptCommand(this));
+        getCommand("arena").setExecutor(new ArenaCommand(this));
         getCommand("bduels").setExecutor(new BDuelsCommand(this));
         getCommand("duel").setExecutor(new DuelCommand(this));
-        getCommand("accept").setExecutor(new DuelAcceptCommand(this));
         getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
-        getCommand("arena").setExecutor(new ArenaCommand(this));
+        getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
     }
 
     @Override
     public void onDisable() {
-        for (Duel duel : duelManager.getOngoingDuels()) {
-            duel.setWinner(duel.getPlayers()[0]);
-            duelManager.endMatch(duel, DuelEndReason.SERVER_STOP);
-        }
+        duelManager.endMatches(DuelEndReason.SERVER_STOP);
         if (databaseEnabled) {
             saveAllUserStatistics();
             mysqlDatabase.shutdownConnPool();

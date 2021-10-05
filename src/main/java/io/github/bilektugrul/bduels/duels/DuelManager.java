@@ -136,6 +136,12 @@ public class DuelManager {
             return;
         }
 
+        if (!opponent.doesAcceptDuelRequests()) {
+            senderPlayer.sendMessage(Utils.getMessage("duel.does-not-accept", senderPlayer)
+                    .replace("%opponent%", opponentPlayer.getName()));
+            return;
+        }
+
         if (!arenaManager.isAnyArenaAvailable()) {
             senderPlayer.sendMessage(Utils.getMessage("arenas.all-in-usage", senderPlayer));
             return;
@@ -307,6 +313,7 @@ public class DuelManager {
 
         Duel duel = new Duel(requestProcess, matchArena);
         DuelStartingTask startingTask = new DuelStartingTask(plugin, duel);
+        duel.setStartingTask(startingTask);
         startingTask.runTaskTimer(plugin, 0, 20L);
 
         ongoingDuels.add(duel);
@@ -315,13 +322,16 @@ public class DuelManager {
         }
     }
 
-    public void endMatch(Duel duel, DuelEndReason duelEndReason) {
+    public void endMatch(Duel duel, DuelEndReason reason) {
         User winner = duel.getWinner();
         User loser = duel.getLoser();
 
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
-        ongoingDuels.remove(duel);
+
+        boolean isReloadOrStop = reason == DuelEndReason.RELOAD || reason == DuelEndReason.SERVER_STOP;
+        if (!isReloadOrStop) ongoingDuels.remove(duel);
+
         for (User user : duel.getPlayers()) {
             Location preDuelLocation = duel.getPreDuelLocations().get(user);
             Player player = user.getBase();
@@ -342,7 +352,6 @@ public class DuelManager {
 
         DuelRewards winnerRewards = duel.getRewardsOf(winner);
         int winnerMoneyBet = winnerRewards.getMoneyBet();
-        int winnerItemsPut = winnerRewards.getItemsBet().size();
 
         Inventory winnerInventory = winnerPlayer.getInventory();
         Inventory loserInventory = loserPlayer.getInventory();
@@ -353,7 +362,7 @@ public class DuelManager {
         Location winnerLocation = winnerPlayer.getLocation();
         Location loserLocation = loserPlayer.getLocation();
 
-        if (duelEndReason == DuelEndReason.RELOAD || duelEndReason == DuelEndReason.SERVER_STOP) {
+        if (isReloadOrStop) {
             for (ItemStack item : winnerRewards.getItemsBet()) { // ortaya koyduğu eşyaları geri veriyoz çünkü stoğ veya reload yedi
                 if (Utils.hasSpace(winnerInventory, item)) {
                     winnerInventory.addItem(item);
@@ -401,6 +410,15 @@ public class DuelManager {
                 winnerWorld.dropItem(winnerLocation, item);
             }
         }
+    }
+
+    public void endMatches(DuelEndReason reason) {
+        for (Duel duel : ongoingDuels) {
+            duel.setWinner(duel.getPlayers()[0]);
+            duel.getStartingTask().cancel();
+            endMatch(duel, reason);
+        }
+        ongoingDuels.clear();
     }
 
     public int[] getOpponentSide() {

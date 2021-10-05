@@ -17,4 +17,6 @@ commands:
     aliases: /kabulet, /düellokabulet, /duelkabulet
     usage: /accept
   duelstats:
-    aliases: [bduelstats, bduelsstats, düellostats, duelistatistikleri, düelloistatistikleri]
+    aliases: [bduelstats, bduelsstats, düellostats, duelistatistikleri, düelloistatistikleri, stats]
+  toggleduel:
+    aliases: [dd, düelloistekleri, duelrequests, toggleduelrequests]

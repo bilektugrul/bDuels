@@ -35,7 +35,8 @@ public class MySQLManager {
                         + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `total_earned_money` int(11) NOT NULL DEFAULT '0',\n"
-                        + "  `total_earned_item` int(11) NOT NULL DEFAULT '0'\n"
+                        + "  `total_earned_item` int(11) NOT NULL DEFAULT '0',\n"
+                        + "  `duel_requests` tinyint(1) NOT NULL DEFAULT '1'\n"
                         + ");");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -90,7 +91,7 @@ public class MySQLManager {
                     for (StatisticType stat : StatisticType.values()) {
                         if (!stat.isPersistent()) continue;
 
-                        user.setStat(stat, 0);
+                        user.setStat(stat, stat.getDefaultValue());
                     }
                 }
             } catch (SQLException e) {
