@@ -308,10 +308,7 @@ public class Utils {
         if (current == currentMoney) {
             return false;
         }
-        if (afterTotal > currentMoney) {
-            return false;
-        }
-        return true;
+        return !(afterTotal >= currentMoney);
     }
 
 }

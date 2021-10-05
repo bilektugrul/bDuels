@@ -10,10 +10,10 @@ custom-placeholders:
 
 database:
   enabled: false # true olarak ayarlarsanız istatistikler aşağıda bilgileri verilmiş MySQL veritabanında tutulur.
-  user: root
-  url: jdbc:mysql://localhost:3306/mysql?useSSL=false&autoReConnect=true
-  password: ''
-  table: bduelsStats
+  user: <user>
+  url: jdbc:mysql://localhost:3306/<databasename>?useSSL=false&autoReConnect=true
+  password: <password>
+  table: bduelsstats
 
 titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ayarlar.
   fade-in: 5

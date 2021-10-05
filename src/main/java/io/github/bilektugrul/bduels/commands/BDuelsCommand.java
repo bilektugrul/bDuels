@@ -56,7 +56,7 @@ public class BDuelsCommand implements CommandExecutor {
         return true;
     }
     
-    private class BDuelsCommandTabCompleter implements TabCompleter {
+    private static class BDuelsCommandTabCompleter implements TabCompleter {
 
         @Override
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {

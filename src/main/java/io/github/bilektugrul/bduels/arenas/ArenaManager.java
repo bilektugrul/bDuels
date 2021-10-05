@@ -1,7 +1,6 @@
 package io.github.bilektugrul.bduels.arenas;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelEndReason;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import me.despical.commons.configuration.ConfigUtils;

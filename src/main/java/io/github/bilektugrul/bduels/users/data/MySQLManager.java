@@ -23,7 +23,7 @@ public class MySQLManager {
 
     public MySQLManager(BDuels plugin) {
         this.plugin = plugin;
-        this.tableName = plugin.getConfig().getString("table", "bduelsStats");
+        this.tableName = plugin.getConfig().getString("table", "bduelsstats");
         this.database = plugin.getMySQLDatabase();
 
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {

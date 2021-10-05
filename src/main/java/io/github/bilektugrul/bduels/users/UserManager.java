@@ -10,12 +10,10 @@ import java.util.UUID;
 
 public class UserManager {
 
-    private final BDuels plugin;
     private final MySQLManager mysqlManager;
     private final Set<User> userList = new HashSet<>();
 
     public UserManager(BDuels plugin) {
-        this.plugin = plugin;
         this.mysqlManager = new MySQLManager(plugin);
     }
 

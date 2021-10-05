@@ -311,10 +311,8 @@ public class DuelManager {
         Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();
         matchArena.setState(ArenaState.PRE_MATCH);
 
-        Duel duel = new Duel(requestProcess, matchArena);
-        DuelStartingTask startingTask = new DuelStartingTask(plugin, duel);
-        duel.setStartingTask(startingTask);
-        startingTask.runTaskTimer(plugin, 0, 20L);
+        Duel duel = new Duel(plugin, requestProcess, matchArena);
+        duel.startCountdown();
 
         ongoingDuels.add(duel);
         for (User user : duel.getPlayers()) {
@@ -325,6 +323,8 @@ public class DuelManager {
     public void endMatch(Duel duel, DuelEndReason reason) {
         User winner = duel.getWinner();
         User loser = duel.getLoser();
+        Player winnerPlayer = winner.getBase();
+        Player loserPlayer = loser.getBase();
 
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
@@ -343,41 +343,18 @@ public class DuelManager {
 
         arena.setState(ArenaState.EMPTY);
 
-        Player winnerPlayer = winner.getBase();
-        Player loserPlayer = loser.getBase();
-
         DuelRewards loserRewards = duel.getRewardsOf(loser);
+        List<ItemStack> loserItemsPut = loserRewards.getItemsBet();
         int loserMoneyBet = loserRewards.getMoneyBet();
-        int loserItemsPut = loserRewards.getItemsBet().size();
+        int loserItemsPutSize = loserItemsPut.size();
 
         DuelRewards winnerRewards = duel.getRewardsOf(winner);
+        List<ItemStack> winnerItemsPut = winnerRewards.getItemsBet();
         int winnerMoneyBet = winnerRewards.getMoneyBet();
 
-        Inventory winnerInventory = winnerPlayer.getInventory();
-        Inventory loserInventory = loserPlayer.getInventory();
-
-        World winnerWorld = winnerPlayer.getWorld();
-        World loserWorld = loserPlayer.getWorld();
-
-        Location winnerLocation = winnerPlayer.getLocation();
-        Location loserLocation = loserPlayer.getLocation();
-
         if (isReloadOrStop) {
-            for (ItemStack item : winnerRewards.getItemsBet()) { // ortaya koyduğu eşyaları geri veriyoz çünkü stoğ veya reload yedi
-                if (Utils.hasSpace(winnerInventory, item)) {
-                    winnerInventory.addItem(item);
-                } else {
-                    winnerWorld.dropItem(winnerLocation, item);
-                }
-            }
-
-            for (ItemStack item : loserRewards.getItemsBet()) { // Diğerinin eşyalarını da geri veriyoz çünkü reload veya stop yedi
-                if (Utils.hasSpace(loserInventory, item)) {
-                    loserInventory.addItem(item);
-                } else {
-                    loserWorld.dropItem(loserLocation, item);
-                }
-            }
+            giveItems(winnerItemsPut, winnerPlayer); // ortaya koyduğu eşyaları geri veriyoz çünkü stop veya reload yedi
+            giveItems(loserItemsPut, loserPlayer); // / diğerinin eşyalarını da geri veriyoz çünkü stop veya reload yedi
 
             winnerPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", winnerPlayer));
             loserPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", loserPlayer));
@@ -388,26 +365,29 @@ public class DuelManager {
         }
 
         MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
-        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, loserItemsPut, loserMoneyBet);
+        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, loserItemsPutSize, loserMoneyBet);
 
-        for (ItemStack item : winnerRewards.getItemsBet()) { // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli.
-            if (Utils.hasSpace(winnerInventory, item)) {
-                winnerInventory.addItem(item);
-            } else {
-                winnerWorld.dropItem(winnerLocation, item);
-            }
-        }
+        giveItems(winnerItemsPut, winnerPlayer); // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli
 
         winner.addStat(StatisticType.WINS, 1);
         loser.addStat(StatisticType.LOSES, 1);
-        winner.addStat(StatisticType.TOTAL_EARNED_ITEM, loserItemsPut);
+        winner.addStat(StatisticType.TOTAL_EARNED_ITEM, loserItemsPutSize);
         winner.addStat(StatisticType.TOTAL_EARNED_MONEY, loserMoneyBet);
         economy.addMoney(winnerPlayer, loserMoneyBet + winnerMoneyBet);
-        for (ItemStack item : loserRewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
-            if (Utils.hasSpace(winnerInventory, item)) {
-                winnerInventory.addItem(item);
+
+        giveItems(loserItemsPut, winnerPlayer); // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
+    }
+
+    public void giveItems(List<ItemStack> items, Player player) {
+        Inventory inventory = player.getInventory();
+        World world = player.getWorld();
+        Location location = player.getLocation();
+
+        for (ItemStack item : items) {
+            if (Utils.hasSpace(inventory, item)) {
+                inventory.addItem(item);
             } else {
-                winnerWorld.dropItem(winnerLocation, item);
+                world.dropItem(location, item);
             }
         }
     }

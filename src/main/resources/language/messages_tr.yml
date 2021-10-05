@@ -122,7 +122,7 @@ messages:
         %prefix% &bArenalar
         %prefix% &bKullanılan: &e%usedamount%
         %prefix% &bMüsait: &e%emptyamount%
-        %prefix% &bTümü (&e%totalamount%&e):
+        %prefix% &bTümü (&e%totalamount%&b):
         &r
       arena-format: ' &7- &3%arena% (&9%state%&b)'
     states:

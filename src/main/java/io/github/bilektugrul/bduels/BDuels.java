@@ -8,7 +8,6 @@ import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelAcceptCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelCommand;
 import io.github.bilektugrul.bduels.commands.duel.ToggleDuelRequestsCommand;
-import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelEndReason;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;

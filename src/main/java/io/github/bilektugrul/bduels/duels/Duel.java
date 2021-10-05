@@ -1,5 +1,6 @@
 package io.github.bilektugrul.bduels.duels;
 
+import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.stuff.PlayerType;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 public class Duel {
 
+    private final BDuels plugin;
     private final User player, opponent;
     private final User[] players;
     private User winner, loser;
@@ -23,7 +25,8 @@ public class Duel {
 
     private final Map<User, Location> preDuelLocations = new HashMap<>();
 
-    public Duel(DuelRequestProcess requestProcess, Arena arena) {
+    public Duel(BDuels plugin, DuelRequestProcess requestProcess, Arena arena) {
+        this.plugin = plugin;
         this.player = requestProcess.getPlayer();
         this.opponent = requestProcess.getOpponent();
         this.players = new User[]{player, opponent};
@@ -39,6 +42,11 @@ public class Duel {
 
         preDuelLocations.put(this.player, player.getLocation());
         preDuelLocations.put(this.opponent, opponentPlayer.getLocation());
+    }
+
+    public void startCountdown() {
+        setStartingTask(new DuelStartingTask(plugin, this));
+        startingTask.runTaskTimer(plugin, 0, 20L);
     }
 
     public void start() {
