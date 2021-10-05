@@ -23,6 +23,7 @@ public class UserManager {
 
     public User loadUser(Player player, boolean keep) {
         User user = new User(player);
+        loadStatistics(user);
         if (keep) userList.add(user);
         return user;
     }

@@ -38,14 +38,14 @@ public class HInventoryClickListener implements Listener {
             ItemStack clicked = e.getCurrentItem();
             if (clicked == null) return;
 
+            Inventory clickedInventory = e.getClickedInventory();
+            if (clickedInventory == null) return;
+
             User user = userManager.getUser(clicker);
             DuelRequestProcess process = duelManager.getProcess(user);
             PlayerType clickerType = process.getPlayerType(user);
             int[] side = clickerType == PlayerType.PLAYER ? duelManager.getPlayerSide() : duelManager.getOpponentSide();
             DuelRewards rewards = process.getRewardsOf(user);
-
-            Inventory clickedInventory = e.getClickedInventory();
-            if (clickedInventory == null) return;
 
             Inventory playerHInventoryOriginal = playerHInventory.getInventory();
 

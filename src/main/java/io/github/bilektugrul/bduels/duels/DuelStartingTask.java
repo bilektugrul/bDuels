@@ -15,8 +15,7 @@ public class DuelStartingTask extends BukkitRunnable {
     private final BDuels plugin;
 
     private final Duel duel;
-    private final Player player;
-    private final Player opponent;
+    private final Player player, opponent;
     private int time;
 
     public DuelStartingTask(BDuels plugin, Duel duel) {

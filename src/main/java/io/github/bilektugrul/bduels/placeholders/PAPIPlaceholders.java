@@ -80,7 +80,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
         if (identifier.contains("opponent")) {
             DuelRequestProcess process = user.getRequestProcess();
             if (process != null)
-                return user.getRequestProcess().getOpponentOf(user).getName();
+                return process.getOpponentOf(user).getName();
             if (duel != null)
                 return duel.getOpponentOf(user).getName();
             return "";

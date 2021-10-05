@@ -14,16 +14,15 @@ import java.util.Map;
 
 public class Duel {
 
-    private final BDuels plugin;
-    private final User player, opponent;
-    private final User[] players;
-    private User winner, loser;
-
     private final Arena arena;
-    private DuelStartingTask startingTask;
+    private final BDuels plugin;
+    private final User[] players;
+    private final User player, opponent;
     private final Map<User, DuelRewards> duelRewards;
-
     private final Map<User, Location> preDuelLocations = new HashMap<>();
+
+    private User winner, loser;
+    private DuelStartingTask startingTask;
 
     public Duel(BDuels plugin, DuelRequestProcess requestProcess, Arena arena) {
         this.plugin = plugin;

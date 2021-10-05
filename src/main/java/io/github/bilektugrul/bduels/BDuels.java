@@ -62,8 +62,7 @@ public final class BDuels extends JavaPlugin {
         userManager = new UserManager(this);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
-            User user = userManager.loadUser(p);
-            userManager.loadStatistics(user);
+            userManager.loadUser(p);
         }
 
         new PAPIPlaceholders(this).register();
@@ -95,6 +94,11 @@ public final class BDuels extends JavaPlugin {
         if (mySQLManager == null) {
             return false;
         }
+
+        if (!databaseEnabled) {
+            return false;
+        }
+
         for (Player player : getServer().getOnlinePlayers()) {
             User user = userManager.getUser(player);
 

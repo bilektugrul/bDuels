@@ -2,8 +2,7 @@ package io.github.bilektugrul.bduels.placeholders;
 
 public class CustomPlaceholder {
 
-    private final String name;
-    private final String value;
+    private final String name, value;
 
     public CustomPlaceholder(String name, String value) {
         this.name = name;

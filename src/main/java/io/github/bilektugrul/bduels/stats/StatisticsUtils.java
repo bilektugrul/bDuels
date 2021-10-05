@@ -15,8 +15,8 @@ import java.util.UUID;
 
 /**
  * @author Despical
- */
-public class StatsStorage {
+**/
+public class StatisticsUtils {
 
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
 

@@ -302,13 +302,18 @@ public class Utils {
         return strings;
     }
 
+    /** GELECEK NESİLLER İÇİN BU METODU AÇIKLIYORUM, KURCALAYANLARA SELAM OLSUN
+     * current = BET OLARAK ORTAYA KOYULMUŞ PARA
+     * toAdd = OYUNCUNUN GUIDEN SEÇİP BET'İNE EKLEMEK İSTEDİĞİ PARA
+     * player = ÖZNEMİZ
+     * currentMoney = OYUNCUNUN HESABINDA BULUNAN TOPLAM PARA
+     * EĞER current, currentMoney'e EŞİT İSE DAHA FAZLA KOYAMAZ, KOYARSA HESABI - BAKİYEYE DÜŞER
+     * EĞER toAdd değişkenini, current değişkenine EKLEDİKTEN SONRA ÇIKAN SONUÇ, MEVCUT PARADAN BÜYÜKSE DAHA FAZLA KOYAMAZ, KOYARSA HESABI - BAKİYEYE DÜŞER
+    **/
     public static boolean canPutMoreMoney(int current, int toAdd, Player player) {
         double currentMoney = economy.getMoney(player);
-        int afterTotal = current + toAdd;
-        if (current == currentMoney) {
-            return false;
-        }
-        return !(afterTotal >= currentMoney);
+        return current != currentMoney && current + toAdd <= currentMoney;
     }
+
 
 }
