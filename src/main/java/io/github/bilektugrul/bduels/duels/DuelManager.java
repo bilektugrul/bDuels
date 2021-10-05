@@ -8,6 +8,7 @@ import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
+import io.github.bilektugrul.bduels.stats.StatisticType;
 import io.github.bilektugrul.bduels.stuff.MessageType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
@@ -336,7 +337,12 @@ public class DuelManager {
         Player loserPlayer = loser.getBase();
 
         DuelRewards loserRewards = duel.getRewardsOf(loser);
+        int loserMoneyBet = loserRewards.getMoneyBet();
+        int loserItemsPut = loserRewards.getItemsBet().size();
+
         DuelRewards winnerRewards = duel.getRewardsOf(winner);
+        int winnerMoneyBet = winnerRewards.getMoneyBet();
+        int winnerItemsPut = winnerRewards.getItemsBet().size();
 
         Inventory winnerInventory = winnerPlayer.getInventory();
         Inventory loserInventory = loserPlayer.getInventory();
@@ -367,13 +373,13 @@ public class DuelManager {
             winnerPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", winnerPlayer));
             loserPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", loserPlayer));
 
-            economy.addMoney(winnerPlayer, winnerRewards.getMoneyBet());
-            economy.addMoney(loserPlayer, loserRewards.getMoneyBet());
+            economy.addMoney(winnerPlayer, winnerMoneyBet);
+            economy.addMoney(loserPlayer, loserMoneyBet);
             return;
         }
 
         MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
-        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, loserRewards.getItemsBet().size(), loserRewards.getMoneyBet());
+        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, loserItemsPut, loserMoneyBet);
 
         for (ItemStack item : winnerRewards.getItemsBet()) { // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli.
             if (Utils.hasSpace(winnerInventory, item)) {
@@ -383,7 +389,11 @@ public class DuelManager {
             }
         }
 
-        economy.addMoney(winnerPlayer, loserRewards.getMoneyBet() + winnerRewards.getMoneyBet());
+        winner.addStat(StatisticType.WINS, 1);
+        loser.addStat(StatisticType.LOSES, 1);
+        winner.addStat(StatisticType.TOTAL_EARNED_ITEM, loserItemsPut);
+        winner.addStat(StatisticType.TOTAL_EARNED_MONEY, loserMoneyBet);
+        economy.addMoney(winnerPlayer, loserMoneyBet + winnerMoneyBet);
         for (ItemStack item : loserRewards.getItemsBet()) { // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
             if (Utils.hasSpace(winnerInventory, item)) {
                 winnerInventory.addItem(item);

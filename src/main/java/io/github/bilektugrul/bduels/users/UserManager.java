@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.users.data.MySQLManager;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -10,10 +11,12 @@ import java.util.UUID;
 public class UserManager {
 
     private final BDuels plugin;
+    private final MySQLManager mysqlManager;
     private final Set<User> userList = new HashSet<>();
 
     public UserManager(BDuels plugin) {
         this.plugin = plugin;
+        this.mysqlManager = new MySQLManager(plugin);
     }
 
     public User loadUser(Player p) {
@@ -46,6 +49,14 @@ public class UserManager {
 
     public Set<User> getUserList() {
         return new HashSet<>(userList);
+    }
+
+    public MySQLManager getMysqlManager() {
+        return mysqlManager;
+    }
+
+    public void loadStatistics(User user) {
+        mysqlManager.loadStatistics(user);
     }
 
 }

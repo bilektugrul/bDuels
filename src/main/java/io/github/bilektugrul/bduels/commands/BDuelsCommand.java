@@ -5,9 +5,12 @@ import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class BDuelsCommand implements CommandExecutor {
@@ -16,6 +19,7 @@ public class BDuelsCommand implements CommandExecutor {
 
     public BDuelsCommand(BDuels plugin) {
         this.plugin = plugin;
+        plugin.getCommand("bduels").setTabCompleter(new BDuelsCommandTabCompleter());
     }
 
     @Override
@@ -40,8 +44,25 @@ public class BDuelsCommand implements CommandExecutor {
                 plugin.save();
                 sender.sendMessage(Utils.getMessage("main-command.saved", sender));
                 return true;
+            case "save-stats":
+                if (plugin.isDatabaseEnabled()) {
+                    if (plugin.saveAllUserStatistics())
+                        sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
+                    else
+                        sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
+                }
+                return true;
         }
         return true;
+    }
+    
+    private class BDuelsCommandTabCompleter implements TabCompleter {
+
+        @Override
+        public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+            return Arrays.asList("reload", "save", "save-stats");
+        }
+
     }
 
 }

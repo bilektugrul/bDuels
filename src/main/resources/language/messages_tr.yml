@@ -4,17 +4,29 @@ messages:
   only-players: '%prefix% &cSadece oyuncular bu komutu kullanabilir.'
   config-reloaded: '%prefix% &bAyarlar, mesajlar ve arenalar başarıyla yenilendi.'
   did-you-mean: '%prefix% &bKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: &e/%command%'
+  player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
 
   main-command:
     wrong-usage: |
       %prefix% &cKomutu hatalı kullandınız.
-      %prefix% &b/bduels &e<reload | save>
+      %prefix% &b/bduels &e<reload | save | save-stats>
     reloaded: '%prefix% &bEklenti verileri yenilendi.'
     saved: '%prefix% &bEklenti verileri kaydedildi.'
+    saved-stats: '%prefix% &bOyuncu istatistikleri veritabanına kaydedildi.'
+    could-not-saved: '%prefix% &bOyuncu istatistikleri veritabanına kaydedilemedi. Veritabanı ayarlarınızı kontrol edin.'
+
+  stats-command:
+    command: |
+      &l&m-----&r &e%statplayer% &l&m-----
+      &6Kazanma: &e%wins%
+      &6Kaybetme: &e%loses%
+      &6Kazanılan para: &e%money%
+      &6Kazanılan eşya sayısı: &e%item%
+      &l&m-----&r &e%statplayer% &l&m-----
+    cannot-check: '%prefix% &cBaşkalarının istatistiklerine bakma yetkin yok.'
 
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
-    player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
     request-sent: |
       %prefix% &e%opponent% &bisimli oyuncuya düello isteği yolladın!
       %prefix% &e15 saniye &biçerisinde kabul etmezse istek iptal edilecek.

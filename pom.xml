@@ -49,6 +49,14 @@
                                     <pattern>com.hakan.inventoryapi</pattern>
                                     <shadedPattern>io.github.bilektugrul.bduels.internal.hinventoryapi</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>io.github.bilektugrul.bduels.internal.slf4j</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>io.github.bilektugrul.bduels.internal.hikari</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
@@ -108,12 +116,6 @@
             <artifactId>Commons</artifactId>
             <version>1.3.9</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>HikariCP</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>

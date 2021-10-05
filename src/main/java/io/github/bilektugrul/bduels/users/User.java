@@ -2,10 +2,13 @@ package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
+import io.github.bilektugrul.bduels.stats.StatisticType;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class User {
@@ -16,6 +19,8 @@ public class User {
     private Duel duel;
     private DuelRequestProcess requestProcess;
     private Location respawnLocation;
+
+    private final Map<StatisticType, Integer> stats = new EnumMap<>(StatisticType.class);
 
     public User(Player player) {
         this.base = player;
@@ -64,6 +69,26 @@ public class User {
 
     public void setState(UserState newState) {
         state = newState;
+    }
+
+    public int getStat(StatisticType statisticType) {
+        Integer statistic = stats.get(statisticType);
+
+        if (statistic == null) {
+            stats.put(statisticType, 0);
+            return 0;
+        }
+
+        return statistic;
+    }
+
+    public void setStat(StatisticType stat, int i) {
+        stats.put(stat, i);
+    }
+
+    public void addStat(StatisticType stat, int i) {
+        stats.put(stat, getStat(stat) + i);
+
     }
 
     public void sendMessage(String message) {

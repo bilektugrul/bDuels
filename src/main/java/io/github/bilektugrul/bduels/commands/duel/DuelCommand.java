@@ -1,4 +1,4 @@
-package io.github.bilektugrul.bduels.commands;
+package io.github.bilektugrul.bduels.commands.duel;
 
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.duels.DuelManager;
@@ -12,8 +12,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Arrays;
 
 public class DuelCommand implements CommandExecutor {
 
@@ -44,7 +42,7 @@ public class DuelCommand implements CommandExecutor {
         Player opponentPlayer = Bukkit.getPlayer(args[0]);
 
         if (opponentPlayer == null) {
-            sender.sendMessage(Utils.getMessage("duel.player-not-found", sender));
+            sender.sendMessage(Utils.getMessage("player-not-found", sender));
             return true;
         }
 

@@ -8,12 +8,22 @@ custom-placeholders:
   prefix: '&8[&abDuels&8]&r'
   #isim: içerik
 
+database:
+  enabled: false # true olarak ayarlarsanız istatistikler aşağıda bilgileri verilmiş MySQL veritabanında tutulur.
+  user: root
+  url: jdbc:mysql://localhost:3306/mysql?useSSL=false&autoReConnect=true
+  password: ''
+  table: bduelsStats
+
 titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ayarlar.
   fade-in: 5
   stay: 30
   fade-out: 5
 
 start-countdown: 5 # Maç başlarken kaç saniye geri sayım yapılacağına dair ayar.
+other-stats-require-permission: true # true olarak kalırsa oyuncular
+                                     # /duelstats komutuyla başkalarının istatistiklerine bakmak istediklerinde
+                                     # bduels.otherstats yetkisine sahip olmaları gerekir.
 
 request-gui-name: 'Duel - %player% vs %opponent%' # Düello menüsünün ismi
 

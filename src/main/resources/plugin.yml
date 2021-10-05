@@ -16,3 +16,5 @@ commands:
   accept:
     aliases: /kabulet, /düellokabulet, /duelkabulet
     usage: /accept
+  duelstats:
+    aliases: [bduelstats, bduelsstats, düellostats, duelistatistikleri, düelloistatistikleri]

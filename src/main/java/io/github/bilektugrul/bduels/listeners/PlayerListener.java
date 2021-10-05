@@ -36,7 +36,8 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         player.removeMetadata("god-mode-bduels", plugin);
-        userManager.loadUser(player);
+        User user = userManager.loadUser(player);
+        userManager.loadStatistics(user);
     }
 
     @EventHandler
@@ -59,6 +60,7 @@ public class PlayerListener implements Listener {
                     .replace("%opponent%", user.getName()));
         }
 
+        userManager.getMysqlManager().saveAllStatistic(user, true);
         userManager.removeUser(user);
     }
 
