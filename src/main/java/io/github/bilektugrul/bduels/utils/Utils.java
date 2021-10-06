@@ -70,43 +70,42 @@ public class Utils {
     }
 
     public static String getString(String string, CommandSender from) {
-        return replacePlaceholders(plugin.getConfig().getString(string), from, true);
+        return replacePlaceholders(plugin.getConfig().get(string), from, true);
     }
 
     public static String getString(String string, CommandSender from, boolean replacePersonalPlaceholders) {
-        return replacePlaceholders(plugin.getConfig().getString(string), from, replacePersonalPlaceholders);
+        return replacePlaceholders(plugin.getConfig().get(string), from, replacePersonalPlaceholders);
     }
 
     public static String getString(FileConfiguration file, String string, CommandSender from) {
-        return replacePlaceholders(file.getString(string), from, true);
+        return replacePlaceholders(file.get(string), from, true);
     }
 
     public static String getString(FileConfiguration file, String string, CommandSender from, boolean replacePersonalPlaceholders) {
-        return replacePlaceholders(file.getString(string), from, replacePersonalPlaceholders);
+        return replacePlaceholders(file.get(string), from, replacePersonalPlaceholders);
     }
 
     public static String getString(FileConfiguration file, String string, CommandSender from, boolean replacePersonalPlaceholders, boolean replacePAPI) {
-        return replacePlaceholders(file.getString(string), from, replacePersonalPlaceholders, replacePAPI);
+        return replacePlaceholders(file.get(string), from, replacePersonalPlaceholders, replacePAPI);
     }
 
-    public static String replacePlaceholders(String msg, CommandSender from, boolean replacePersonalPlaceholders, boolean replacePAPI) {
-        boolean isPlayer = from instanceof Player;
-        if (msg == null) {
+    public static String replacePlaceholders(Object originalMsg, CommandSender from, boolean replacePersonalPlaceholders, boolean replacePAPI) {
+        if (originalMsg == null) {
             plugin.getLogger().warning(org.bukkit.ChatColor.RED + "Your language file[s] is/are corrupted or old. Please reset or update them.");
             return "";
         }
-        msg = placeholderManager.replacePlaceholders(Strings.format(msg))
-                .replace("%nl%", "\n");
-        if (replacePersonalPlaceholders) {
+
+        String msg = originalMsg instanceof List ? listToString((List) originalMsg) : (String) originalMsg;
+        msg = placeholderManager.replacePlaceholders(Strings.format(msg)).replace("%nl%", "\n");
+
+        if (replacePersonalPlaceholders)
             msg = msg.replace("%player%", matchName(from));
-        }
-        if (isPAPIEnabled && replacePAPI) {
-            return PlaceholderAPI.setPlaceholders(isPlayer ? (Player) from : null, msg);
-        }
+        if (isPAPIEnabled && replacePAPI)
+            return PlaceholderAPI.setPlaceholders(from instanceof Player ? (Player) from : null, msg);
         return msg;
     }
 
-    public static String replacePlaceholders(String msg, CommandSender from, boolean replacePersonalPlaceholders) {
+    public static String replacePlaceholders(Object msg, CommandSender from, boolean replacePersonalPlaceholders) {
         return replacePlaceholders(msg, from, replacePersonalPlaceholders, true);
     }
 
@@ -221,10 +220,16 @@ public class Utils {
         return replacePlaceholders(str, sender, replacePersonalPlaceholders, replacePAPI);
     }
 
-    public static String listToString(List<String> list) {
+    public static String listToString(List<Object> list) {
         StringBuilder builder = new StringBuilder();
-        for (String s : list) {
-            builder.append(s).append("\n");
+        int max = list.size() - 1;
+        int i = 0;
+        for (Object s : list) {
+            builder.append((String) s);
+            if (i != max) {
+                builder.append('\n');
+                i++;
+            }
         }
         return builder.toString();
     }
