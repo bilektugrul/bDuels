@@ -53,7 +53,7 @@ public class PlayerListener implements Listener {
         }
 
         if (process != null) {
-            duelManager.cancel(null, process);
+            duelManager.cancel(null, process, true);
             User opponent = process.getOpponentOf(user);
             Player opponentPlayer = opponent.getBase();
             opponentPlayer.sendMessage(Utils.getMessage("duel.left-server", opponentPlayer)

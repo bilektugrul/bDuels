@@ -61,7 +61,7 @@ public class DuelCommand implements CommandExecutor {
             DuelRequestProcess process = playerUser.getRequestProcess();
             if (process != null) {
                 if (Collections.contains(opponent, process.getPlayers()) && !process.isRequestAccepted()) {
-                    duelManager.cancel(null, process);
+                    duelManager.cancel(null, process, true);
                     player.sendMessage(Utils.getMessage("duel.request-cancelled", player)
                             .replace("%user%", opponentPlayer.getName()));
                     opponentPlayer.sendMessage(Utils.getMessage("duel.request-cancelled", opponentPlayer)

@@ -58,6 +58,8 @@ public class DuelManager {
     }
 
     public void reload() {
+        endProcesses();
+        endMatches(DuelEndReason.RELOAD);
         prepareMoneyBetItems();
         prepareGuiItems();
     }
@@ -202,7 +204,7 @@ public class DuelManager {
             }
 
             inventory.setItem(49, ClickableItem.of(replaceLoreAndName(cancelItem, process, null),
-                    event -> cancel((Player) event.getWhoClicked(), process)));
+                    event -> cancel((Player) event.getWhoClicked(), process, true)));
 
             putAcceptItem(inventory, 48, sender, process);
             putAcceptItem(inventory, 50, opponent, process);
@@ -320,7 +322,7 @@ public class DuelManager {
         }));
     }
 
-    public void cancel(Player canceller, DuelRequestProcess requestProcess) {
+    public void cancel(Player canceller, DuelRequestProcess requestProcess, boolean remove) {
         for (User user : requestProcess.getPlayers()) {
             user.setRequestProcess(null);
             user.setState(UserState.FREE);
@@ -331,11 +333,11 @@ public class DuelManager {
                     .replace("%who%", canceller.getName()));
 
         }
-        duelRequestProcesses.remove(requestProcess);
+        if (remove) duelRequestProcesses.remove(requestProcess);
     }
 
     public void startMatch(DuelRequestProcess requestProcess) {
-        cancel(null, requestProcess);
+        cancel(null, requestProcess, true);
 
         if (!arenaManager.isAnyArenaAvailable()) {
             for (User user : requestProcess.getPlayers()) {
@@ -438,6 +440,13 @@ public class DuelManager {
             endMatch(duel, reason);
         }
         ongoingDuels.clear();
+    }
+
+    public void endProcesses() {
+        for (DuelRequestProcess process : duelRequestProcesses) {
+            cancel(null, process, false);
+        }
+        duelRequestProcesses.clear();
     }
 
     public int[] getOpponentSide() {
