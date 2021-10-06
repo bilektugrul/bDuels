@@ -30,18 +30,34 @@ request-gui-name: 'Duel - %player% vs %opponent%' # Düello menüsünün ismi
 request-cancel-item: # Düello menüsünde düelloyu iptal etmek için kullanılan eşyanın ayarları.
   material: BARRIER
   name: '&cDüelloyu iptal et'
+  lore:
+    - ' '
+    - '&cTıklayarak düelloyu iptal edebilirsin.'
+    - ' '
 
 mid-item: # Düello menüsünü ortadan bölecek eşyanın ayarları.
   material: BLACK_STAINED_GLASS_PANE
   name: '&f'
+  lore:
+    - ' '
+    - '&a%sender% &7&m<-----&r-> &c%opponent%'
+    - ' '
 
 not-ready-item: # Düello menüsünde oyuncular hazır değilken gözükecek eşyanın ayarları.
   material: RED_STAINED_GLASS_PANE
   name: '&cHazır değil'
+  lore:
+    - ' '
+    - '&3%who% &6hazır değil.'
+    - ' '
 
 ready-item: # Düello menüsünde oyuncular hazırken gözükecek eşyanın ayarları.
   material: GREEN_STAINED_GLASS_PANE
   name: '&aHazır'
+  lore:
+    - ' '
+    - '&3%who% &6hazır.'
+    - ' '
 
 money-bet:
   1:

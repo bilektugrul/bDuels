@@ -33,7 +33,6 @@ public class HInventoryClickListener implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         Player clicker = (Player) e.getWhoClicked();
         HInventory playerHInventory = inventoryAPI.getInventoryManager().getPlayerInventory(clicker);
-
         if (playerHInventory != null && playerHInventory.getId().contains("-bDuels")) {
             ItemStack clicked = e.getCurrentItem();
             if (clicked == null) return;
@@ -43,6 +42,8 @@ public class HInventoryClickListener implements Listener {
 
             User user = userManager.getUser(clicker);
             DuelRequestProcess process = duelManager.getProcess(user);
+            if (process.isFinished(user)) return;
+
             PlayerType clickerType = process.getPlayerType(user);
             int[] side = clickerType == PlayerType.PLAYER ? duelManager.getPlayerSide() : duelManager.getOpponentSide();
             DuelRewards rewards = process.getRewardsOf(user);

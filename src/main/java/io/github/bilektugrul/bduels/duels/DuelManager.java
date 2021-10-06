@@ -71,15 +71,19 @@ public class DuelManager {
 
         ItemMeta glassMeta = glass.getItemMeta();
         glassMeta.setDisplayName(Utils.getString("mid-item.name", null));
+        glassMeta.setLore(Utils.getStringList("mid-item.lore", null));
 
         ItemMeta greenGlassMeta = glass.getItemMeta();
         greenGlassMeta.setDisplayName(Utils.getString("ready-item.name", null));
+        greenGlassMeta.setLore(Utils.getStringList("ready-item.lore", null));
 
         ItemMeta redGlassMeta = glass.getItemMeta();
         redGlassMeta.setDisplayName(Utils.getString("not-ready-item.name", null));
+        redGlassMeta.setLore(Utils.getStringList("not-ready-item.lore", null));
 
         ItemMeta cancelItemMeta = cancelItem.getItemMeta();
         cancelItemMeta.setDisplayName(Utils.getString("request-cancel-item.name", null));
+        cancelItemMeta.setLore(Utils.getStringList("request-cancel-item.lore", null));
 
         glass.setItemMeta(glassMeta);
         greenGlass.setItemMeta(greenGlassMeta);
@@ -142,6 +146,12 @@ public class DuelManager {
             return;
         }
 
+        if (!sender.doesAcceptDuelRequests()) {
+            senderPlayer.sendMessage(Utils.getMessage("duel.do-not-accept", senderPlayer)
+                    .replace("%opponent%", opponentPlayer.getName()));
+            return;
+        }
+
         if (!arenaManager.isAnyArenaAvailable()) {
             senderPlayer.sendMessage(Utils.getMessage("arenas.all-in-usage", senderPlayer));
             return;
@@ -188,10 +198,11 @@ public class DuelManager {
             inventory.guiAir();
 
             for (int i : midGlasses) {
-                inventory.setItem(i, ClickableItem.empty(glass));
+                inventory.setItem(i, ClickableItem.empty(replaceLoreAndName(glass, process, null)));
             }
 
-            inventory.setItem(49, ClickableItem.of(cancelItem, event -> cancel(process)));
+            inventory.setItem(49, ClickableItem.of(replaceLoreAndName(cancelItem, process, null),
+                    event -> cancel((Player) event.getWhoClicked(), process)));
 
             putAcceptItem(inventory, 48, sender, process);
             putAcceptItem(inventory, 50, opponent, process);
@@ -201,15 +212,36 @@ public class DuelManager {
 
             inventory.open(senderPlayer);
             inventory.open(opponentPlayer);
-        }, 60);
+        }, 40);
 
+    }
+
+    public ItemStack replaceLoreAndName(ItemStack itemStack, DuelRequestProcess process, Player who) {
+        ItemStack newItem = itemStack.clone();
+        ItemMeta meta = newItem.getItemMeta();
+        List<String> oldLore = meta.getLore();
+
+        if (oldLore == null) return itemStack;
+
+        List<String> newLore = new ArrayList<>();
+        for (String string : oldLore) {
+            string = string.replace("%sender%", process.getPlayer().getName())
+                    .replace("%opponent%", process.getOpponent().getName());
+            if (who != null) {
+                string = string.replace("%who%", who.getName());
+            }
+            newLore.add(string);
+        }
+        meta.setLore(newLore);
+        newItem.setItemMeta(meta);
+        return newItem;
     }
 
     public void updateHeads(HInventory inventory, DuelRequestProcess process) {
         ItemStack playerSkull = XMaterial.PLAYER_HEAD.parseItem().clone();
         ItemStack opponentSkull = XMaterial.PLAYER_HEAD.parseItem().clone();
-        inventory.setItem(12, ClickableItem.empty(playerSkull));
-        inventory.setItem(14, ClickableItem.empty(opponentSkull));
+        inventory.setItem(12, ClickableItem.empty(replaceLoreAndName(playerSkull, process, null)));
+        inventory.setItem(14, ClickableItem.empty(replaceLoreAndName(opponentSkull, process, null)));
         updateMetas(inventory, process);
     }
 
@@ -248,7 +280,7 @@ public class DuelManager {
         for (int i : side) {
             MoneyBetSettings settings = moneyBetSettingsCache.get(index);
             index++;
-            ItemStack item = settings.getItem();
+            ItemStack item = replaceLoreAndName(settings.getItem(), process, null);
             int moneyToAdd = settings.getMoneyToAdd();
             inventory.setItem(i, ClickableItem.of(item, event -> {
                 Player clicker = (Player) event.getWhoClicked();
@@ -269,37 +301,41 @@ public class DuelManager {
     }
 
     public void putAcceptItem(HInventory inventory, int slot, User user, DuelRequestProcess process) {
-        inventory.setItem(slot, ClickableItem.of(redGlass, event -> {
+        Player player = user.getBase();
+        inventory.setItem(slot, ClickableItem.of(replaceLoreAndName(redGlass, process, player), event -> {
             Player clicker = (Player) event.getWhoClicked();
-            if (clicker.equals(user.getBase())) {
+            if (clicker.equals(player)) {
                 boolean newFinished = !process.isFinished(user);
                 process.setFinished(user, newFinished);
                 if (newFinished) {
-                    event.setCurrentItem(greenGlass);
+                    event.setCurrentItem(replaceLoreAndName(greenGlass, process, clicker));
                     if (process.isBothFinished()) {
                         inventory.setClosable(true);
                         startMatch(process);
                     }
                 } else {
-                    event.setCurrentItem(redGlass);
+                    event.setCurrentItem(replaceLoreAndName(redGlass, process, player));
                 }
             }
         }));
     }
 
-    public void cancel(DuelRequestProcess requestProcess) {
+    public void cancel(Player canceller, DuelRequestProcess requestProcess) {
         for (User user : requestProcess.getPlayers()) {
             user.setRequestProcess(null);
             user.setState(UserState.FREE);
             Player player = user.getBase();
             HInventory inventory = inventoryAPI.getInventoryManager().getPlayerInventory(player);
             if (inventory != null) inventory.close(player);
+            if (canceller != null) player.sendMessage(Utils.getMessage("duel.cancelled", player)
+                    .replace("%who%", canceller.getName()));
+
         }
         duelRequestProcesses.remove(requestProcess);
     }
 
     public void startMatch(DuelRequestProcess requestProcess) {
-        cancel(requestProcess);
+        cancel(null, requestProcess);
 
         if (!arenaManager.isAnyArenaAvailable()) {
             for (User user : requestProcess.getPlayers()) {

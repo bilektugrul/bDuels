@@ -77,10 +77,6 @@ public class DuelRequestProcess {
         return true;
     }
 
-    public Map<User, Boolean> getFinished() {
-        return finished;
-    }
-
     public User getPlayer() {
         return player;
     }

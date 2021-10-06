@@ -63,9 +63,11 @@ messages:
     not-yourself: '%prefix% &cKendin dışında düello atacak birilerini bulmalısın.'
     not-now: '%prefix% &cŞu an duel atamazsın veya &3%opponent% &cşu an duel kabul edemez.'
     does-not-accept: '%prefix% &3%opponent% &cdüello isteklerini kabul etmiyor.'
+    do-not-accept: '%prefix% &cDüello isteklerini kabul etmediğin için düello isteği yollayamazsın.'
     bet-money-added: '%prefix% &3%amount% &6miktarda bet parası eklediniz. Toplam: &3%total%'
     not-enough-money: '%prefix% &cYeterli miktarda paran olmadığı için daha fazla ekleyemezsin.'
     left-server: '%prefix% &6Düello isteği yolladığın/aldığın &3%opponent% &6sunucudan çıktığı için istek iptal edildi.'
+    cancelled: '%prefix% &3%who% &cdüelloyu iptal etti.'
 
     request-gui:
       heads-name: '&2%player%'
