@@ -96,7 +96,8 @@ messages:
     help-message:
       - '&b&m-----------------'
       - '%prefix% &6/arena oluştur <arena ismi> &7| &3Yeni bir arena oluşturur.'
-      - '%prefix% &6/arena sil <arena ismi> &7| &3Yeni bir arena oluşturur.'
+      - '%prefix% &6/arena sil <arena ismi> &7| &3Var olan bir arenayı siler.'
+      - '%prefix% &6/arena bilgi <arena ismi> &7| &3Girilen arenanın bilgilerini gösterir.'
       - '%prefix% &6/arena liste &7| &3Sohbetinize arena listesini gönderir.'
       - '%prefix% &6/arena p1 <arena ismi> &7| &3Arenanın 1. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
       - '%prefix% &6/arena p2 <arena ismi> &7| &3Arenanın 2. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
@@ -115,13 +116,22 @@ messages:
     edge-location-set: '%prefix% &3%arena% &6adlı arenada &3%no% &6numaralı harita köşesi belirlendi.'
     list:
       start-message:
-        - '&r'
+        - '%prefix%'
         - '&6Arenalar:'
         - '     &6Kullanılan: &3%usedamount%'
         - '     &6Müsait: &3%emptyamount%'
         - '     &6Tümü (&3%totalamount%&6):'
-        - '&r'
+        - '%prefix%'
       arena-format: '     &7- &6%arena% (&3%state%&6)'
+    info:
+      - '%prefix%'
+      - '   &6Arena hakkında &7- &3%arena%'
+      - '       &6Oyuncu 1 lokasyonu: &3%p1loc%'
+      - '       &6Oyuncu 2 lokasyonu: &3%p2loc%'
+      - '       &6Köşe 1 lokasyonu: &3%edge1loc%'
+      - '       &6Köşe 2 lokasyonu: &3%edge2loc%'
+      - '       &6Durumu: &3%state%'
+      - '%prefix%'
     states:
       EMPTY: Boş
       PRE_MATCH: Maç Öncesi

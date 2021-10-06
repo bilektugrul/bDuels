@@ -3,10 +3,10 @@ package io.github.bilektugrul.bduels;
 import com.hakan.inventoryapi.InventoryAPI;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.BDuelsCommand;
-import io.github.bilektugrul.bduels.commands.DuelStatsCommand;
 import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelAcceptCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelCommand;
+import io.github.bilektugrul.bduels.commands.duel.DuelStatsCommand;
 import io.github.bilektugrul.bduels.commands.duel.ToggleDuelRequestsCommand;
 import io.github.bilektugrul.bduels.duels.DuelEndReason;
 import io.github.bilektugrul.bduels.duels.DuelManager;
@@ -71,7 +71,7 @@ public final class BDuels extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);
 
         getCommand("accept").setExecutor(new DuelAcceptCommand(this));
-        getCommand("arena").setExecutor(new ArenaCommand(this));
+        getCommand("arena").setExecutor(new ArenaCommand());
         getCommand("bduels").setExecutor(new BDuelsCommand(this));
         getCommand("duel").setExecutor(new DuelCommand(this));
         getCommand("duelstats").setExecutor(new DuelStatsCommand(this));

@@ -1,7 +1,6 @@
 package io.github.bilektugrul.bduels.commands.arena;
 
 import io.github.bilektugrul.bduels.arenas.Arena;
-import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
 import io.github.bilektugrul.bduels.commands.arena.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
@@ -13,11 +12,8 @@ import java.util.Set;
 
 public class ArenaListCommand extends SubCommand {
 
-    private final ArenaManager arenaManager;
-
     public ArenaListCommand(String name, String... aliases) {
         super(name, aliases);
-        arenaManager = plugin.getArenaManager();
     }
 
     @Override
@@ -51,7 +47,7 @@ public class ArenaListCommand extends SubCommand {
         for (Arena arena : arenas) {
             sender.sendMessage(arenaFormat
                     .replace("%arena%", arena.getName())
-                    .replace("%state%", Utils.getMessage("arenas.states." + arena.getState().toString()))
+                    .replace("%state%", Utils.getMessage("arenas.states." + arena.getState().name()))
             );
         }
     }

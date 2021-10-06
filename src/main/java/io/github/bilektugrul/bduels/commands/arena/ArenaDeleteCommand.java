@@ -1,6 +1,5 @@
 package io.github.bilektugrul.bduels.commands.arena;
 
-import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.arena.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.command.CommandException;
@@ -10,11 +9,8 @@ import java.util.List;
 
 public class ArenaDeleteCommand extends SubCommand {
 
-    private final ArenaManager arenaManager;
-
     public ArenaDeleteCommand(String name) {
         super(name);
-        this.arenaManager = plugin.getArenaManager();
     }
 
     @Override
@@ -30,6 +26,12 @@ public class ArenaDeleteCommand extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, String label) throws CommandException {
         String arenaName = args[0];
+
+        if (!arenaManager.isPresent(arenaName)) {
+            sender.sendMessage(Utils.getMessage("arenas.not-found", sender));
+            return;
+        }
+
         boolean deleted = arenaManager.deleteArena(arenaName);
         if (deleted) {
             sender.sendMessage(Utils.getMessage("arenas.deleted", sender)

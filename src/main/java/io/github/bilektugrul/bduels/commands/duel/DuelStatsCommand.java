@@ -1,4 +1,4 @@
-package io.github.bilektugrul.bduels.commands;
+package io.github.bilektugrul.bduels.commands.duel;
 
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.stats.StatisticType;

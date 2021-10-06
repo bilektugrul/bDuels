@@ -3,55 +3,46 @@ package io.github.bilektugrul.bduels.commands.arena;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.commands.arena.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
-import org.bukkit.Location;
+import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class DefinePlayerLocationCommand extends SubCommand {
+public class ArenaInfoCommand extends SubCommand {
 
-    public DefinePlayerLocationCommand(String name, String aliases) {
+    public ArenaInfoCommand(String name, String... aliases) {
         super(name, aliases);
     }
 
     @Override
     public String getPossibleArguments() {
-        return "";
+        return null;
     }
 
     @Override
     public int getMinimumArguments() {
-        return 1;
+        return 0;
     }
 
     @Override
     public void execute(CommandSender sender, String[] args, String label) throws CommandException {
         String arenaName = args[0];
-        int whichPlayer = Integer.parseInt(label.split("")[1]);
-
         Arena arena = arenaManager.getArena(arenaName);
+
         if (arena == null) {
-            sender.sendMessage(Utils.getMessage("arenas.not-found", sender)
-                    .replace("%arena%", arenaName));
+            sender.sendMessage(Utils.getMessage("arenas.not-found", sender));
             return;
         }
 
-        Player player = (Player) sender;
-        Location location = player.getLocation();
-
-        switch (whichPlayer) {
-            case 1:
-                arena.setPlayerLocation(location);
-                break;
-            case 2:
-                arena.setOpponentLocation(location);
-                break;
-        }
-        sender.sendMessage(Utils.getMessage("arenas.player-location-set", sender)
-                .replace("%no%", String.valueOf(whichPlayer))
-                .replace("%arena%", arenaName));
+        String message = Utils.getMessage("arenas.info", sender)
+                .replace("%arena%", arena.getName())
+                .replace("%p1loc%", LocationSerializer.toString(arena.getPlayerLocation()))
+                .replace("%p2loc%", LocationSerializer.toString(arena.getOpponentLocation()))
+                .replace("%edge1loc%", LocationSerializer.toString(arena.getEdge()))
+                .replace("%edge2loc%", LocationSerializer.toString(arena.getOtherEdge()))
+                .replace("%state%", Utils.getMessage("arenas.states." + arena.getState().name()));
+        sender.sendMessage(message);
     }
 
     @Override
@@ -61,7 +52,7 @@ public class DefinePlayerLocationCommand extends SubCommand {
 
     @Override
     public CommandType getType() {
-        return CommandType.GENERIC;
+        return CommandType.HIDDEN;
     }
 
     @Override

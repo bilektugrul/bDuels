@@ -1,7 +1,6 @@
 //Copyright (C) 2020 Despical
 package io.github.bilektugrul.bduels.commands.arena.base;
 
-import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.commands.arena.*;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.string.StringMatcher;
@@ -27,12 +26,13 @@ public class ArenaCommand implements CommandExecutor {
 
     private final List<SubCommand> subCommands = new ArrayList<>();
 
-    public ArenaCommand(BDuels plugin) {
+    public ArenaCommand() {
         registerSubCommand(new ArenaDeleteCommand("sil"));
         registerSubCommand(new ArenaCreateCommand("oluştur", "yarat"));
         registerSubCommand(new DefinePlayerLocationCommand("p1", "p2"));
         registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
         registerSubCommand(new ArenaListCommand("list", "liste"));
+        registerSubCommand(new ArenaInfoCommand("info", "bilgi"));
     }
 
     public void registerSubCommand(SubCommand subCommand) {

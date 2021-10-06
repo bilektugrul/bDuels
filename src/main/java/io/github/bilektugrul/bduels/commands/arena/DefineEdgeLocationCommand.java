@@ -1,7 +1,6 @@
 package io.github.bilektugrul.bduels.commands.arena;
 
 import io.github.bilektugrul.bduels.arenas.Arena;
-import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.arena.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
@@ -13,11 +12,8 @@ import java.util.List;
 
 public class DefineEdgeLocationCommand extends SubCommand {
 
-    private final ArenaManager arenaManager;
-
     public DefineEdgeLocationCommand(String name, String aliases) {
         super(name, aliases);
-        this.arenaManager = plugin.getArenaManager();
     }
 
     @Override

@@ -2,6 +2,7 @@
 package io.github.bilektugrul.bduels.commands.arena.base;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,7 @@ import java.util.List;
 public abstract class SubCommand {
 
     protected final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
+    protected final ArenaManager arenaManager = plugin.getArenaManager();
     private final String name;
     private String permission;
     private final String[] aliases;
