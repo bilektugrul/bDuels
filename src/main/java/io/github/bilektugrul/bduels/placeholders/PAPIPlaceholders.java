@@ -66,7 +66,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
             return String.valueOf(duelManager.getOngoingDuels().size() * 2);
         }
 
-        boolean userRequired = identifier.contains("stat") || identifier.contains("opponent");
+        boolean userRequired = identifier.contains("stat") || identifier.contains("opponent") || identifier.contains("arena");
         if (!userRequired) return "";
 
         User user = userManager.getUser(player);

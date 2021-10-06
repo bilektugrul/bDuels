@@ -34,8 +34,11 @@ public class MySQLManager {
                         + "  `name` varchar(32) NOT NULL,\n"
                         + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
+                        + "  `total_matches` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `total_earned_money` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `total_earned_item` int(11) NOT NULL DEFAULT '0',\n"
+                        + "  `total_lost_money` int(11) NOT NULL DEFAULT '0',\n"
+                        + "  `total_lost_item` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `duel_requests` tinyint(1) NOT NULL DEFAULT '1'\n"
                         + ");");
             } catch (SQLException e) {

@@ -370,9 +370,11 @@ public class DuelManager {
         giveItems(winnerItemsPut, winnerPlayer); // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli
 
         winner.addStat(StatisticType.WINS, 1);
-        loser.addStat(StatisticType.LOSES, 1);
         winner.addStat(StatisticType.TOTAL_EARNED_ITEM, loserItemsPutSize);
         winner.addStat(StatisticType.TOTAL_EARNED_MONEY, loserMoneyBet);
+        loser.addStat(StatisticType.TOTAL_LOST_ITEM, loserItemsPutSize);
+        loser.addStat(StatisticType.TOTAL_LOST_MONEY, loserMoneyBet);
+        loser.addStat(StatisticType.LOSES, 1);
         economy.addMoney(winnerPlayer, loserMoneyBet + winnerMoneyBet);
 
         giveItems(loserItemsPut, winnerPlayer); // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir

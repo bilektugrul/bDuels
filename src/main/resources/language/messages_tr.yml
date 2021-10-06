@@ -18,10 +18,15 @@ messages:
   stats-command:
     command:
       - '&b&l&m-----&r &3%statplayer% &b&l&m-----'
+      - '&6Toplam maç sayısı: &e%totalmatches%'
       - '&6Kazanma: &e%wins%'
       - '&6Kaybetme: &e%loses%'
       - '&6Kazanılan para: &e%money%'
+      - '&6Kaybedilen para: &e%lostmoney%'
       - '&6Kazanılan eşya sayısı: &e%item%'
+      - '&6Kaybedilen eşya sayısı: &e%lostitem%'
+      - ' '
+      - '&6Düello istekleri: &e%requests%'
       - '&b&l&m-----&r &3%statplayer% &b&l&m-----'
     cannot-check: '%prefix% &cBaşkalarının istatistiklerine bakma yetkin yok.'
 
@@ -29,7 +34,7 @@ messages:
     toggled: '%prefix% &6Artık düello isteklerini %newmode%&6.'
     modes:
       0: '&calmayacaksın'
-      1: '&ealıcaksın'
+      1: '&ealacaksın'
 
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
@@ -59,20 +64,20 @@ messages:
     request-gui:
       heads-name: '&2%player%'
       heads-lore:
-        - ''
+        - ' '
         - '&bYatırılan para: &e%money%'
-        - ''
+        - ' '
 
     countdown: '%prefix% &6Düello &3%seconds% saniye &6içerisinde başlıyor!'
 
     start-message:
       - '&a&l&m---------------------------------------------&r'
       - '&6Düello'
-      -  ''
+      -  ' '
       - '&6Rakibi öldür ve ödülleri kazan!'
       - '&6Rakibinin ortaya koyduğu eşya miktarı: &3%opponentitems%'
       - '&6Rakibinin ortaya koyduğu para miktarı: &3%opponentbet%'
-      - ''
+      - ' '
       - '&6Rakip: &3%opponent%'
       - '&a&l&m---------------------------------------------'
 
@@ -84,7 +89,7 @@ messages:
       chat:
         - '&a&l&m---------------------------------------------&r'
         - '&6Maç bitti!'
-        - ''
+        - ' '
         - '&6Oyuncular: &3%loser%&6, &3%winner%'
         - '&6Kazanan: &3%winner%'
         - '&6Ödül: &3%itemamount% &6adet eşya ve &3%betprice% &6miktar para'

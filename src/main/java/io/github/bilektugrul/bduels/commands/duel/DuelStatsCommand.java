@@ -24,7 +24,6 @@ public class DuelStatsCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player statPlayer = args.length > 0 ? Bukkit.getPlayer(args[0]) : sender instanceof Player ? (Player) sender : null;
 
-
         if (statPlayer == null) {
             sender.sendMessage(Utils.getMessage("player-not-found", sender));
             return true;
@@ -38,10 +37,14 @@ public class DuelStatsCommand implements CommandExecutor {
         User statUser = userManager.getUser(statPlayer);
         String message = Utils.getMessage("stats-command.command", sender)
                 .replace("%statplayer%", statPlayer.getName())
+                .replace("%totalmatches%", String.valueOf(statUser.getStat(StatisticType.TOTAL_MATCHES)))
                 .replace("%wins%", String.valueOf(statUser.getStat(StatisticType.WINS)))
                 .replace("%loses%", String.valueOf(statUser.getStat(StatisticType.LOSES)))
                 .replace("%money%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_MONEY)))
-                .replace("%item%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_ITEM)));
+                .replace("%lostmoney%", String.valueOf(statUser.getStat(StatisticType.TOTAL_LOST_MONEY)))
+                .replace("%item%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_ITEM)))
+                .replace("%lostitem%", String.valueOf(statUser.getStat(StatisticType.TOTAL_LOST_ITEM)))
+                .replace("%requests%", Utils.getMessage("request-toggle-command.modes." + statUser.getStat(StatisticType.DUEL_REQUESTS), sender));
         sender.sendMessage(message);
 
         return true;

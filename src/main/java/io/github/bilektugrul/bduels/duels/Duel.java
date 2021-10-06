@@ -3,6 +3,7 @@ package io.github.bilektugrul.bduels.duels;
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
+import io.github.bilektugrul.bduels.stats.StatisticType;
 import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
@@ -35,6 +36,8 @@ public class Duel {
 
         this.player.setDuel(this);
         this.opponent.setDuel(this);
+        this.player.addStat(StatisticType.TOTAL_MATCHES, 1);
+        this.opponent.addStat(StatisticType.TOTAL_MATCHES, 1);
 
         Player player = this.player.getBase();
         Player opponentPlayer = this.opponent.getBase();
