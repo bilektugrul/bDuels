@@ -47,6 +47,9 @@ public class Duel {
     }
 
     public void startCountdown() {
+        for (User user : players) {
+            user.setState(UserState.STARTING_MATCH);
+        }
         setStartingTask(new DuelStartingTask(plugin, this));
         startingTask.runTaskTimer(plugin, 0, 20L);
     }

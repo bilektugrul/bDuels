@@ -7,6 +7,7 @@ import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.stats.StatisticType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
+import io.github.bilektugrul.bduels.utils.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +72,10 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
 
         User user = userManager.getUser(player);
         Duel duel = user.getDuel();
+
+        if (identifier.contains("state")) {
+            return Utils.getMessage("user-states." + user.getState().name(), player);
+        }
 
         if (identifier.contains("stat")) {
             String statName = identifier.substring(identifier.indexOf("stat_") + 5);

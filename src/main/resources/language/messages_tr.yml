@@ -6,6 +6,12 @@ messages:
   did-you-mean: '%prefix% &cKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: &3/%command%'
   player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
 
+  user-states:
+    FREE: Müsait
+    HAS_REQUEST: Düello isteği var
+    STARTING_MATCH: Maça başlıyor
+    IN_MATCH: Maçta
+
   main-command:
     wrong-usage:
       - '%prefix% &cKomutu hatalı kullandınız.'

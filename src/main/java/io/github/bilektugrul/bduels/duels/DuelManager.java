@@ -290,6 +290,7 @@ public class DuelManager {
     public void cancel(DuelRequestProcess requestProcess) {
         for (User user : requestProcess.getPlayers()) {
             user.setRequestProcess(null);
+            user.setState(UserState.FREE);
             Player player = user.getBase();
             HInventory inventory = inventoryAPI.getInventoryManager().getPlayerInventory(player);
             if (inventory != null) inventory.close(player);

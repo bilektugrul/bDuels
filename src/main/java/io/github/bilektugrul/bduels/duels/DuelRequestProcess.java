@@ -2,6 +2,7 @@ package io.github.bilektugrul.bduels.duels;
 
 import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
+import io.github.bilektugrul.bduels.users.UserState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class DuelRequestProcess {
         for (User user : players) {
             duelRewards.put(user, new DuelRewards());
             finished.put(user, false);
+            user.setState(UserState.HAS_REQUEST);
         }
     }
 
