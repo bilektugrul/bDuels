@@ -1,7 +1,7 @@
 package io.github.bilektugrul.bduels.commands.duel;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.stats.StatisticType;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.utils.Utils;

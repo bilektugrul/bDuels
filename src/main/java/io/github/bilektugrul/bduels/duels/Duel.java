@@ -3,7 +3,7 @@ package io.github.bilektugrul.bduels.duels;
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaState;
-import io.github.bilektugrul.bduels.stats.StatisticType;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;

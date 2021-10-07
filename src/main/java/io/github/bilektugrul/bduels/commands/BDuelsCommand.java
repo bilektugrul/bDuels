@@ -1,11 +1,14 @@
 package io.github.bilektugrul.bduels.commands;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.features.leaderboards.Leaderboard;
+import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardManager;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,9 +19,11 @@ import java.util.Locale;
 public class BDuelsCommand implements CommandExecutor {
 
     private final BDuels plugin;
+    private final LeaderboardManager leaderboardManager;
 
     public BDuelsCommand(BDuels plugin) {
         this.plugin = plugin;
+        this.leaderboardManager = plugin.getLeaderboardManager();
         plugin.getCommand("bduels").setTabCompleter(new BDuelsCommandTabCompleter());
     }
 
@@ -52,6 +57,26 @@ public class BDuelsCommand implements CommandExecutor {
                         sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
                 }
                 return true;
+            case "leaderboardholo":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Utils.getMessage("only-players", sender));
+                    return true;
+                }
+                Player player = (Player) sender;
+                if (!(args.length < 3)) {
+                    player.sendMessage(Utils.getMessage("leaderboard-holograms.type-leaderboard-name", player));
+                    return true;
+                }
+                String leaderboardName = args[1];
+                Leaderboard leaderboard = leaderboardManager.getFromName(leaderboardName);
+                if (leaderboard == null) {
+                    player.sendMessage(Utils.getMessage("leaderboard-holograms.not-found", player));
+                    return true;
+                }
+                leaderboard.createHologram(plugin, player.getLocation());
+                leaderboardManager.save();
+                leaderboardManager.updateHologram(leaderboard);
+                player.sendMessage(Utils.getMessage("leaderboard-holograms.location-changed", player));
         }
         return true;
     }

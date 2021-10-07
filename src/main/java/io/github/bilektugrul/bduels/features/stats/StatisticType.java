@@ -1,4 +1,4 @@
-package io.github.bilektugrul.bduels.stats;
+package io.github.bilektugrul.bduels.features.stats;
 
 public enum StatisticType {
 

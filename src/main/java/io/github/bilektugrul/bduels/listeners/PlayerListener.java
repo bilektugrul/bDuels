@@ -39,7 +39,6 @@ public class PlayerListener implements Listener {
         userManager.loadUser(player);
     }
 
-    //TODO: TEST THIS
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();

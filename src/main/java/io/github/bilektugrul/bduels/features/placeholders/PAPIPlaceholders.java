@@ -1,10 +1,10 @@
-package io.github.bilektugrul.bduels.placeholders;
+package io.github.bilektugrul.bduels.features.placeholders;
 
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
-import io.github.bilektugrul.bduels.stats.StatisticType;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.utils.Utils;

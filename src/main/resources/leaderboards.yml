@@ -1,0 +1,24 @@
+leaderboards:
+  # kullanabileceğiniz tipler: TOTAL_MATCHES, WINS, LOSES, TOTAL_EARNED_MONEY, TOTAL_EARNED_ITEM, TOTAL_LOST_ITEM, TOTAL_LOST_MONEY
+  win_leaderboard:
+    name: Kazanma Sıralaması
+    type: WINS # kazanmaları sıralayacaktır
+    how: HIGH_TO_LOW # LOW_TO_HIGH olarak değişirseniz düşükten yükseğe sıralar
+    hologram-location: '' # oyun içerisinde /bduels leaderboardholo win_leaderboard yazarak ayarlayabilirsiniz.
+    max-size: 5 # 20'den daha uzun sıralama yapılamaz.
+    leaderboard:
+      1:
+        name: 'BOŞ'
+        value: 5
+      2:
+        name: 'BOŞ'
+        value: 4
+      3:
+        name: 'BOŞ'
+        value: 3
+      4:
+        name: 'BOŞ'
+        value: 2
+      5:
+        name: 'BOŞ'
+        value: 1

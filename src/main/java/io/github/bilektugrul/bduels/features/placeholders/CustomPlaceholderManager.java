@@ -1,4 +1,4 @@
-package io.github.bilektugrul.bduels.placeholders;
+package io.github.bilektugrul.bduels.features.placeholders;
 
 import io.github.bilektugrul.bduels.BDuels;
 import org.bukkit.ChatColor;

@@ -6,6 +6,15 @@ prefix: bDuels
 authors: [ bilektugrul ]
 description: Acayip özelliklerle dolu mükemmel bir düello eklentisi!
 
+softdepend:
+  - PlaceholderAPI
+  - Vault
+  - HolographicDisplays
+  # Farklı dünyalar oluşturan eklentiler
+  - Multiverse-Core
+  - PlotSquared
+  - PlotMe
+
 commands:
   bduels:
     usage: /bduels <reload | save>
@@ -14,7 +23,7 @@ commands:
   arena:
     usage: /arena <sub command> <arena>
   accept:
-    aliases: /kabulet, /düellokabulet, /duelkabulet
+    aliases: [/kabulet, /düellokabulet, /duelkabulet]
     usage: /accept
   duelstats:
     aliases: [bduelstats, bduelsstats, düellostats, duelistatistikleri, düelloistatistikleri, stats]

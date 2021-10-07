@@ -42,6 +42,27 @@ messages:
       0: '&calmayacaksın'
       1: '&ealacaksın'
 
+  leaderboard-holograms:
+    type-leaderboard-name: '%prefix% &cBir sıralama ismi girmelisin.'
+    not-found: '%prefix% &cBu sıralama bulunamadı.'
+    date-format: 'dd/MM/yyyy HH:mm:ss'
+    location-changed: '%prefix% &6Hologram lokasyonu değiştirildi.'
+    type-names:
+      TOTAL_MATCHES: Toplam Maç
+      WINS: Kazanma
+      LOSES: Kaybetme
+      TOTAL_EARNED_MONEY: Toplam Kazanılmış Para
+      TOTAL_LOST_MONEY: Toplam Kaybedilmiş Para
+      TOTAL_EARNED_ITEM: Toplam Kazanılmış Eşya
+      TOTAL_LOST_ITEM: Toplam Kaybedilmiş Eşya
+    before-leaderboard:
+      - '&6%leaderboardname%'
+      - '&aSon yenilenme tarihi: &3%lastrenew%'
+    after-leaderboard:
+      - '&6%leaderboardname%'
+      - '&aSon yenilenme tarihi: &3%lastrenew%'
+    entry-format: '#&6%#% &b%name% &7- &b%value% %type%' # örnek: '1. mSquid_ - 1 Kazanma
+
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
     request-sent:

@@ -3,7 +3,7 @@
 package io.github.bilektugrul.bduels.users.data;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.stats.StatisticType;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.users.User;
 import me.despical.commons.database.MysqlDatabase;
 

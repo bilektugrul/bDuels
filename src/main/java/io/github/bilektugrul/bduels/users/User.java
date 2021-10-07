@@ -2,7 +2,7 @@ package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
-import io.github.bilektugrul.bduels.stats.StatisticType;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

@@ -13,20 +13,23 @@ import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.economy.VaultEconomy;
 import io.github.bilektugrul.bduels.economy.VaultManager;
-import io.github.bilektugrul.bduels.language.LanguageManager;
+import io.github.bilektugrul.bduels.features.language.LanguageManager;
+import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardManager;
+import io.github.bilektugrul.bduels.features.placeholders.CustomPlaceholderManager;
+import io.github.bilektugrul.bduels.features.placeholders.PAPIPlaceholders;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.listeners.HInventoryClickListener;
 import io.github.bilektugrul.bduels.listeners.PlayerListener;
-import io.github.bilektugrul.bduels.placeholders.CustomPlaceholderManager;
-import io.github.bilektugrul.bduels.placeholders.PAPIPlaceholders;
-import io.github.bilektugrul.bduels.stats.StatisticType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
 import me.despical.commons.database.MysqlDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+// TODO: AsyncStatisticSaveThread
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
@@ -38,18 +41,27 @@ public final class BDuels extends JavaPlugin {
     private VaultEconomy vaultEconomy;
     private DuelManager duelManager;
     private MysqlDatabase mysqlDatabase;
+    private LeaderboardManager leaderboardManager;
 
     private InventoryAPI inventoryAPI;
 
     private boolean databaseEnabled = false;
+    private boolean hologramsEnabled = false;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
 
-        vaultManager = new VaultManager(this);
-        vaultEconomy = new VaultEconomy(this);
+        PluginManager pluginManager = getServer().getPluginManager();
+        if (pluginManager.isPluginEnabled("Vault")) {
+            vaultManager = new VaultManager(this);
+            vaultEconomy = new VaultEconomy(this);
+        } else {
+            getLogger().warning("Sunucunuzda Vault kurulu değil, BDuels'in çalışması için Vault gereklidir.");
+            setEnabled(false);
+        }
+
         databaseEnabled = getConfig().getBoolean("database.enabled");
         if (databaseEnabled)
             mysqlDatabase = new MysqlDatabase(getConfig().getString("database.user"), getConfig().getString("database.password"), getConfig().getString("database.url"));
@@ -57,16 +69,26 @@ public final class BDuels extends JavaPlugin {
         languageManager = new LanguageManager(this);
         duelManager = new DuelManager(this);
         arenaManager = new ArenaManager(this);
+        userManager = new UserManager(this);
         duelManager.setArenaManager(arenaManager);
         arenaManager.setDuelManager(duelManager);
-        userManager = new UserManager(this);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(p);
         }
 
-        new PAPIPlaceholders(this).register();
-        
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
+            new PAPIPlaceholders(this).register();
+        } else {
+            getLogger().warning("Sunucunuzda PlaceholderAPI kurulu değil, ona bağlı özellikleri kullanamayacaksınız.");
+        }
+
+        hologramsEnabled = pluginManager.isPluginEnabled("HolographicDisplays");
+        if (!hologramsEnabled)
+            getLogger().warning("HolographicDisplays bulunamadı, sıralama hologramı çalışmayacak.");
+
+        if (databaseEnabled) leaderboardManager = new LeaderboardManager(this);
+
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);
 
@@ -160,6 +182,14 @@ public final class BDuels extends JavaPlugin {
         this.economyAdapter = economyAdapter;
     }
 
+    public LeaderboardManager getLeaderboardManager() {
+        return leaderboardManager;
+    }
+
+    public boolean isHologramsEnabled() {
+        return hologramsEnabled;
+    }
+
     public boolean isDatabaseEnabled() {
         return databaseEnabled;
     }
@@ -170,13 +200,15 @@ public final class BDuels extends JavaPlugin {
 
     public void reload() {
         reloadConfig();
+        languageManager.loadLanguage();
         arenaManager.loadArenas();
         duelManager.reload();
-        languageManager.loadLanguage();
+        leaderboardManager.reloadSettings();
     }
 
     public void save() {
         arenaManager.save();
+        leaderboardManager.save();
     }
 
 }

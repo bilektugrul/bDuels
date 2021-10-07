@@ -1,8 +1,7 @@
-package io.github.bilektugrul.bduels.language;
+package io.github.bilektugrul.bduels.features.language;
 
 import io.github.bilektugrul.bduels.BDuels;
 import me.despical.commons.configuration.ConfigUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -24,11 +23,12 @@ public class LanguageManager {
         languageString = plugin.getConfig().getString("language").toLowerCase(Locale.ROOT);
         String s = File.separator;
         try {
-            language = ConfigUtils.getConfig(plugin, "language" + s + "messages_" + languageString);
+            language = ConfigUtils.getConfig(plugin, "language" + s + "language_" + languageString);
         } catch (IllegalArgumentException ignored) {
-            plugin.getLogger().warning(ChatColor.RED + "You have chosen a non-existent language. Please check our Spigot page and use one of available languages. Plugin will use EN language.");
+            plugin.getLogger().warning("Olmayan bir seçtiniz, mevcut dilleri kontrol etmek için eklentinin .jar dosyasını açıp languages klasörüne göz atın");
+            plugin.getLogger().warning("Eklenti Türkçe dilini kullanacak.");
             languageString = "tr";
-            language = ConfigUtils.getConfig(plugin, "language" + s + "messages_" + languageString);
+            language = ConfigUtils.getConfig(plugin, "language" + s + "language_" + languageString);
         }
     }
 

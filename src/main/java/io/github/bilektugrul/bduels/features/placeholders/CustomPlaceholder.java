@@ -1,4 +1,4 @@
-package io.github.bilektugrul.bduels.placeholders;
+package io.github.bilektugrul.bduels.features.placeholders;
 
 public class CustomPlaceholder {
 
