@@ -19,11 +19,11 @@ import java.util.Locale;
 public class BDuelsCommand implements CommandExecutor {
 
     private final BDuels plugin;
-    private final LeaderboardManager leaderboardManager;
+    private LeaderboardManager leaderboardManager;
 
     public BDuelsCommand(BDuels plugin) {
         this.plugin = plugin;
-        this.leaderboardManager = plugin.getLeaderboardManager();
+        if (plugin.isLeaderboardManagerReady()) this.leaderboardManager = plugin.getLeaderboardManager();
         plugin.getCommand("bduels").setTabCompleter(new BDuelsCommandTabCompleter());
     }
 
@@ -45,6 +45,7 @@ public class BDuelsCommand implements CommandExecutor {
                 plugin.reload();
                 sender.sendMessage(Utils.getMessage("main-command.reloaded", sender));
                 return true;
+            // TODO: save <veri türü> sub command olarak
             case "save":
                 plugin.save();
                 sender.sendMessage(Utils.getMessage("main-command.saved", sender));
@@ -58,6 +59,7 @@ public class BDuelsCommand implements CommandExecutor {
                 }
                 return true;
             case "leaderboardholo":
+                if (!plugin.isLeaderboardManagerReady()) return true;
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(Utils.getMessage("only-players", sender));
                     return true;

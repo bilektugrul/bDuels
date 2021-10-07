@@ -59,7 +59,7 @@ public class PlayerListener implements Listener {
                     .replace("%opponent%", user.getName()));
         }
 
-        userManager.getMysqlManager().saveAllStatistic(user, true);
+        userManager.saveStatistics(user, false);
         userManager.removeUser(user);
     }
 

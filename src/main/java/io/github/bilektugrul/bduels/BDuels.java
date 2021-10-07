@@ -113,11 +113,7 @@ public final class BDuels extends JavaPlugin {
 
     public boolean saveAllUserStatistics() {
         MySQLManager mySQLManager = userManager.getMysqlManager();
-        if (mySQLManager == null) {
-            return false;
-        }
-
-        if (!databaseEnabled) {
+        if (mySQLManager == null || !databaseEnabled) {
             return false;
         }
 
@@ -186,6 +182,10 @@ public final class BDuels extends JavaPlugin {
         return leaderboardManager;
     }
 
+    public boolean isLeaderboardManagerReady() {
+        return leaderboardManager != null;
+    }
+
     public boolean isHologramsEnabled() {
         return hologramsEnabled;
     }
@@ -203,12 +203,12 @@ public final class BDuels extends JavaPlugin {
         languageManager.loadLanguage();
         arenaManager.loadArenas();
         duelManager.reload();
-        leaderboardManager.reloadSettings();
+        if (isLeaderboardManagerReady()) leaderboardManager.reloadSettings();
     }
 
     public void save() {
         arenaManager.save();
-        leaderboardManager.save();
+        if (isLeaderboardManagerReady()) leaderboardManager.save();
     }
 
 }

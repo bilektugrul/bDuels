@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public class UserManager {
 
-    private final MySQLManager mysqlManager;
+    private MySQLManager mysqlManager;
     private final Set<User> userList = new HashSet<>();
 
     public UserManager(BDuels plugin) {
-        this.mysqlManager = new MySQLManager(plugin);
+        if (plugin.isDatabaseEnabled()) this.mysqlManager = new MySQLManager(plugin);
     }
 
     public User loadUser(Player p) {
@@ -54,8 +54,16 @@ public class UserManager {
         return mysqlManager;
     }
 
+    public boolean isMysqlManagerReady() {
+        return mysqlManager != null;
+    }
+
     public void loadStatistics(User user) {
-        mysqlManager.loadStatistics(user);
+        if (isMysqlManagerReady()) mysqlManager.loadStatistics(user);
+    }
+
+    public void saveStatistics(User user, boolean sync) {
+        if (isMysqlManagerReady()) mysqlManager.saveAllStatistic(user, sync);
     }
 
 }
