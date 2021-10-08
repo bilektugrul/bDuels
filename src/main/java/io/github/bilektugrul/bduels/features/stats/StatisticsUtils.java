@@ -23,7 +23,8 @@ public class StatisticsUtils {
 
     public static List<LeaderboardEntry> getStats(StatisticType stat) {
         UserManager userManager = plugin.getUserManager();
-        if (!plugin.isDatabaseEnabled() || userManager.isMysqlManagerReady()) {
+        if (!plugin.isDatabaseEnabled() || !userManager.isMysqlManagerReady()) {
+            plugin.getLogger().warning(stat.name() + " için tüm istatistikler istendi ama bir hata oluştu.");
             return null;
         }
 

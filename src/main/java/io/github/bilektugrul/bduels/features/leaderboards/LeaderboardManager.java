@@ -29,7 +29,7 @@ public class LeaderboardManager {
     public void reloadSettings() {
         clear();
         file = ConfigUtils.getConfig(plugin, "leaderboards");
-        formatter = new SimpleDateFormat(Utils.getMessage("leaderboard-holograms.date-format", null));
+        formatter = new SimpleDateFormat(Utils.getMessage("leaderboards.date-format", null));
         for (String key : file.getConfigurationSection("leaderboards").getKeys(false)) {
             String path = "leaderboards." + key + ".";
             String name = file.getString(path + "name");
@@ -67,15 +67,6 @@ public class LeaderboardManager {
         leaderboards.clear();
     }
 
-    public Leaderboard getFromType(StatisticType type) {
-        for (Leaderboard leaderboard : leaderboards) {
-            if (leaderboard.getType().equals(type)) {
-                return leaderboard;
-            }
-        }
-        return null;
-    }
-
     public Leaderboard getFromName(String name) {
         for (Leaderboard leaderboard : leaderboards) {
             if (leaderboard.getId().equals(name)) {
@@ -104,7 +95,7 @@ public class LeaderboardManager {
         if (hologram != null) {
             hologram.clearLines();
             Date date = new Date();
-            for (String value : Utils.getMessageList("leaderboard-holograms.before-leaderboard", null)) {
+            for (String value : Utils.getMessageList("leaderboards.before-leaderboard", null)) {
                 value = value.replace("%leaderboardname%", leaderboard.getName())
                                 .replace("%lastrenew%", formatter.format(date));
                 hologram.appendTextLine(value);
@@ -112,15 +103,15 @@ public class LeaderboardManager {
 
             int i = 1;
             for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
-                hologram.appendTextLine(Utils.getMessage("leaderboard-holograms.entry-format")
+                hologram.appendTextLine(Utils.getMessage("leaderboards.entry-format")
                         .replace("%#%", String.valueOf(i++))
                         .replace("%name%", entry.getName())
                         .replace("%value%", String.valueOf(entry.getValue()))
-                        .replace("%type%", Utils.getMessage("leaderboard-holograms.type-names." + leaderboard.getType().name()))
+                        .replace("%type%", Utils.getMessage("leaderboards.type-names." + leaderboard.getType().name()))
                 );
             }
 
-            for (String value : Utils.getMessageList("leaderboard-holograms.after-leaderboard", null)) {
+            for (String value : Utils.getMessageList("leaderboards.after-leaderboard", null)) {
                 value = value.replace("%leaderboardname%", leaderboard.getName())
                         .replace("%lastrenew%", formatter.format(date));
                 hologram.appendTextLine(value);
@@ -128,7 +119,7 @@ public class LeaderboardManager {
         }
     }
 
-    public void save() {
+    public boolean save() {
         for (Leaderboard leaderboard : leaderboards) {
             String leaderboardName = leaderboard.getId();
             String path = "leaderboards." + leaderboardName + ".";
@@ -142,6 +133,7 @@ public class LeaderboardManager {
             }
         }
         ConfigUtils.saveConfig(plugin, file, "leaderboards");
+        return true;
     }
 
     public List<Leaderboard> getLeaderboards() {

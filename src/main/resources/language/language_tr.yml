@@ -15,11 +15,20 @@ messages:
   main-command:
     wrong-usage:
       - '%prefix% &cKomutu hatalı kullandınız.'
-      - '%prefix% &6/bduels &3<reload | save | save-stats>'
+      - '%prefix% &6/bduels &3<alt komut>'
+      - '%prefix% &6Alt komutlar:'
+      - '%prefix% &7- &3reload'
+      - '%prefix% &7- &3leaderboardholo <sıralama ismi> &7| &3Girilen sıralamanın hologram lokasyonunu bulunduğunuz lokasyon olarak ayarlar.'
+      - '%prefix% &7- &3save <veri türü> &7| &3Girilen verileri gerekli yerlere kaydeder.'
+      - '%prefix% &6Veri türleri:'
+      - '%prefix% &7- &3stats &7| &3Aktif oyuncuların istatistiklerini kapsar.'
+      - '%prefix% &7- &3leaderboards &7| &3Tüm mevcut sıralamaları kapsar.'
+      - '%prefix% &7- &3all &7| &3Tüm veri türlerini kapsar.'
     reloaded: '%prefix% &6Eklenti verileri yenilendi.'
     saved: '%prefix% &6Eklenti verileri kaydedildi.'
     saved-stats: '%prefix% &6Oyuncu istatistikleri veritabanına kaydedildi.'
     could-not-saved: '%prefix% &cOyuncu istatistikleri veritabanına kaydedilemedi. Veritabanı ayarlarınızı kontrol edin.'
+    database-disabled: '%prefix% &cVeritabanı kapalı olduğu için verileri kaydedemezsin.'
 
   stats-command:
     command:
@@ -42,11 +51,13 @@ messages:
       0: '&calmayacaksın'
       1: '&ealacaksın'
 
-  leaderboard-holograms:
+  leaderboards:
     type-leaderboard-name: '%prefix% &cBir sıralama ismi girmelisin.'
     not-found: '%prefix% &cBu sıralama bulunamadı.'
     date-format: 'dd/MM/yyyy HH:mm:ss'
     location-changed: '%prefix% &6Hologram lokasyonu değiştirildi.'
+    saved: '%prefix% &6Sıralamalar dosyaya kaydedildi.'
+    not-active: '%prefix% &cSıralama sistemi aktif değil. Aktif olması için veritabanının çalışır durumda olması gerekir.'
     type-names:
       TOTAL_MATCHES: Toplam Maç
       WINS: Kazanma

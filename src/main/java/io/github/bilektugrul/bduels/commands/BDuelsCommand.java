@@ -45,49 +45,81 @@ public class BDuelsCommand implements CommandExecutor {
                 plugin.reload();
                 sender.sendMessage(Utils.getMessage("main-command.reloaded", sender));
                 return true;
-            // TODO: save <veri türü> sub command olarak
             case "save":
-                plugin.save();
-                sender.sendMessage(Utils.getMessage("main-command.saved", sender));
-                return true;
-            case "save-stats":
-                if (plugin.isDatabaseEnabled()) {
-                    if (plugin.saveAllUserStatistics())
-                        sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
-                    else
-                        sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
-                }
+                save(sender, args);
                 return true;
             case "leaderboardholo":
-                if (!plugin.isLeaderboardManagerReady()) return true;
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(Utils.getMessage("only-players", sender));
-                    return true;
-                }
-                Player player = (Player) sender;
-                if (!(args.length < 3)) {
-                    player.sendMessage(Utils.getMessage("leaderboard-holograms.type-leaderboard-name", player));
-                    return true;
-                }
-                String leaderboardName = args[1];
-                Leaderboard leaderboard = leaderboardManager.getFromName(leaderboardName);
-                if (leaderboard == null) {
-                    player.sendMessage(Utils.getMessage("leaderboard-holograms.not-found", player));
-                    return true;
-                }
-                leaderboard.createHologram(plugin, player.getLocation());
-                leaderboardManager.save();
-                leaderboardManager.updateHologram(leaderboard);
-                player.sendMessage(Utils.getMessage("leaderboard-holograms.location-changed", player));
+                setLeaderboardHologramLocation(sender, args);
+                return true;
+            default:
+                sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
         }
         return true;
+    }
+
+    private void save(CommandSender sender, String[] args) {
+        if (!(args.length < 3)) {
+            sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
+            return;
+        }
+        switch (args[1]) {
+            case "stats":
+            case "stat":
+            case "istatistik":    
+            case "istatistikler":
+                if (!plugin.isDatabaseEnabled()) sender.sendMessage(Utils.getMessage("main-command.database-disabled", sender));
+                else if (plugin.saveAllUserStatistics()) sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
+                else sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
+                return;
+            case "leaderboards":    
+            case "sıralama":    
+            case "sıralamalar":
+                boolean saved = false;
+                if (!plugin.isLeaderboardManagerReady()) sender.sendMessage(Utils.getMessage("leaderboards.not-active", sender));
+                else saved = leaderboardManager.save();
+                if (saved) sender.sendMessage(Utils.getMessage("leaderboards.saved", sender));
+                return;
+            case "all":
+            case "hepsi":
+            case "herşey":
+                plugin.save();
+                sender.sendMessage(Utils.getMessage("main-command.saved", sender));
+                return;
+            default:
+                sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
+        }
+    }
+
+    private void setLeaderboardHologramLocation(CommandSender sender, String[] args) {
+        if (!plugin.isLeaderboardManagerReady()) return;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Utils.getMessage("only-players", sender));
+            return;
+        }
+        Player player = (Player) sender;
+        if (!(args.length < 3)) {
+            player.sendMessage(Utils.getMessage("leaderboards.type-leaderboard-name", player));
+            return;
+        }
+        String leaderboardName = args[1];
+        Leaderboard leaderboard = leaderboardManager.getFromName(leaderboardName);
+        if (leaderboard == null) {
+            player.sendMessage(Utils.getMessage("leaderboards.not-found", player));
+            return;
+        }
+        leaderboard.createHologram(plugin, player.getLocation());
+        leaderboardManager.save();
+        leaderboardManager.updateHologram(leaderboard);
+        player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
     }
     
     private static class BDuelsCommandTabCompleter implements TabCompleter {
 
         @Override
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-            return Arrays.asList("reload", "save", "save-stats");
+            if (args.length > 1 && args[0].equalsIgnoreCase("save"))
+                return Arrays.asList("stats", "leaderboards", "all");
+            return Arrays.asList("reload", "save", "save");
         }
 
     }
