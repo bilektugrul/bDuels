@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 public class LeaderboardCommand implements CommandExecutor {
 
     private final LeaderboardManager leaderboardManager;
@@ -30,7 +32,8 @@ public class LeaderboardCommand implements CommandExecutor {
             return true;
         }
 
-        Leaderboard leaderboard = leaderboardManager.getFromID(args[0]);
+        String name = Utils.arrayToString(Arrays.copyOfRange(args, 0, args.length), sender, false, false);
+        Leaderboard leaderboard = leaderboardManager.getFromID(name);
         if (leaderboard == null) {
             sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
             return true;

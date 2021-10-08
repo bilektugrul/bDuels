@@ -171,7 +171,7 @@ public class LeaderboardManager {
     public String getReadableLeaderboards() {
         StringBuilder builder = new StringBuilder();
         leaderboards.forEach(leaderboard -> builder.append(leaderboard.getId()).append(", "));
-        return builder.toString();
+        return builder.substring(0, builder.length() - 2);
     }
 
     public boolean isReversed(SortingType type) {

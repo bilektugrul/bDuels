@@ -24,7 +24,7 @@ public class Leaderboard {
         this.name = name;
         this.type = type;
         this.sortingType = sortingType;
-        this.maxSize = maxSize;
+        this.maxSize = Math.min(maxSize, 20);
     }
 
     public String getId() {
