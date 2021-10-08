@@ -8,6 +8,7 @@ import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.text.SimpleDateFormat;
@@ -67,7 +68,7 @@ public class LeaderboardManager {
         leaderboards.clear();
     }
 
-    public Leaderboard getFromName(String name) {
+    public Leaderboard getFromID(String name) {
         for (Leaderboard leaderboard : leaderboards) {
             if (leaderboard.getId().equals(name)) {
                 return leaderboard;
@@ -95,7 +96,7 @@ public class LeaderboardManager {
         if (hologram != null) {
             hologram.clearLines();
             Date date = new Date();
-            for (String value : Utils.getMessageList("leaderboards.before-leaderboard", null)) {
+            for (String value : Utils.getMessageList("leaderboards.hologram.before-leaderboard", null)) {
                 value = value.replace("%leaderboardname%", leaderboard.getName())
                                 .replace("%lastrenew%", formatter.format(date));
                 hologram.appendTextLine(value);
@@ -103,7 +104,7 @@ public class LeaderboardManager {
 
             int i = 1;
             for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
-                hologram.appendTextLine(Utils.getMessage("leaderboards.entry-format")
+                hologram.appendTextLine(Utils.getMessage("leaderboards.hologram.entry-format")
                         .replace("%#%", String.valueOf(i++))
                         .replace("%name%", entry.getName())
                         .replace("%value%", String.valueOf(entry.getValue()))
@@ -111,12 +112,39 @@ public class LeaderboardManager {
                 );
             }
 
-            for (String value : Utils.getMessageList("leaderboards.after-leaderboard", null)) {
+            for (String value : Utils.getMessageList("leaderboards.hologram.after-leaderboard", null)) {
                 value = value.replace("%leaderboardname%", leaderboard.getName())
                         .replace("%lastrenew%", formatter.format(date));
                 hologram.appendTextLine(value);
             }
         }
+    }
+
+    public void leaderboardToChatMessage(Leaderboard leaderboard, CommandSender sender) {
+        List<String> messages = new ArrayList<>();
+        Date date = new Date();
+        for (String value : Utils.getMessageList("leaderboards.chat.before-leaderboard", sender)) {
+            value = value.replace("%leaderboardname%", leaderboard.getName())
+                    .replace("%lastrenew%", formatter.format(date));
+            messages.add(value);
+        }
+
+        int i = 1;
+        for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
+            messages.add(Utils.getMessage("leaderboards.chat.entry-format", sender)
+                    .replace("%#%", String.valueOf(i++))
+                    .replace("%name%", entry.getName())
+                    .replace("%value%", String.valueOf(entry.getValue()))
+                    .replace("%type%", Utils.getMessage("leaderboards.type-names." + leaderboard.getType().name()))
+            );
+        }
+
+        for (String value : Utils.getMessageList("leaderboards.chat.after-leaderboard", sender)) {
+            value = value.replace("%leaderboardname%", leaderboard.getName())
+                    .replace("%lastrenew%", formatter.format(date));
+            messages.add(value);
+        }
+        sender.sendMessage(Utils.listToString(messages));
     }
 
     public boolean save() {
@@ -138,6 +166,12 @@ public class LeaderboardManager {
 
     public List<Leaderboard> getLeaderboards() {
         return new ArrayList<>(leaderboards);
+    }
+
+    public String getReadableLeaderboards() {
+        StringBuilder builder = new StringBuilder();
+        leaderboards.forEach(leaderboard -> builder.append(leaderboard.getId()).append(", "));
+        return builder.toString();
     }
 
     public boolean isReversed(SortingType type) {

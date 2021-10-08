@@ -29,3 +29,5 @@ commands:
     aliases: [bduelstats, bduelsstats, düellostats, duelistatistikleri, düelloistatistikleri, stats]
   toggleduel:
     aliases: [dd, düelloistekleri, duelrequests, toggleduelrequests]
+  leaderboards:
+    aliases: [leaderboard, sıralama, sıralamalar]

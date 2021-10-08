@@ -3,6 +3,7 @@ package io.github.bilektugrul.bduels;
 import com.hakan.inventoryapi.InventoryAPI;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.BDuelsCommand;
+import io.github.bilektugrul.bduels.commands.LeaderboardCommand;
 import io.github.bilektugrul.bduels.commands.arena.base.ArenaCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelAcceptCommand;
 import io.github.bilektugrul.bduels.commands.duel.DuelCommand;
@@ -97,6 +98,7 @@ public final class BDuels extends JavaPlugin {
         getCommand("duel").setExecutor(new DuelCommand(this));
         getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
         getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
+        getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
     }
 
     @Override

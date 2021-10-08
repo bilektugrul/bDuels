@@ -102,7 +102,7 @@ public class BDuelsCommand implements CommandExecutor {
             return;
         }
         String leaderboardName = args[1];
-        Leaderboard leaderboard = leaderboardManager.getFromName(leaderboardName);
+        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardName);
         if (leaderboard == null) {
             player.sendMessage(Utils.getMessage("leaderboards.not-found", player));
             return;

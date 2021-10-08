@@ -220,7 +220,7 @@ public class Utils {
         return replacePlaceholders(str, sender, replacePersonalPlaceholders, replacePAPI);
     }
 
-    public static String listToString(List<Object> list) {
+    public static String listToString(List<?> list) {
         StringBuilder builder = new StringBuilder();
         int max = list.size() - 1;
         int i = 0;

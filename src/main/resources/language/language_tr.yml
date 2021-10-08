@@ -67,13 +67,25 @@ messages:
       TOTAL_LOST_MONEY: Toplam Kaybedilmiş Para
       TOTAL_EARNED_ITEM: Toplam Kazanılmış Eşya
       TOTAL_LOST_ITEM: Toplam Kaybedilmiş Eşya
-    before-leaderboard:
-      - '&6%leaderboardname%'
-      - '&aSon yenilenme tarihi: &3%lastrenew%'
-    after-leaderboard:
-      - '&6%leaderboardname%'
-      - '&aSon yenilenme tarihi: &3%lastrenew%'
-    entry-format: '#&6%#% &b%name% &7- &b%value% %type%' # örnek: '1. mSquid_ - 1 Kazanma
+    hologram:
+      before-leaderboard:
+        - '&6%leaderboardname%'
+        - '&aSon yenilenme tarihi: &3%lastrenew%'
+      after-leaderboard:
+        - '&6%leaderboardname%'
+        - '&aSon yenilenme tarihi: &3%lastrenew%'
+      entry-format: '&f#%#% &b%name% &7- &b%value% %type%'
+    chat:
+      before-leaderboard:
+        - '&6%leaderboardname%'
+      after-leaderboard:
+        - '&aSon yenilenme tarihi: &3%lastrenew%'
+      entry-format: '&f#%#% &b%name% &7- &b%value% %type%'
+    command:
+      wrong-usage:
+        - '%prefix% &cKomutu hatalı kullandınız.'
+        - '%prefix% &cDoğru kullanım: &6/sıralama <sıralama ismi>'
+        - '%prefix% &cTüm sıralamalar: &6%leaderboards%'
 
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'
