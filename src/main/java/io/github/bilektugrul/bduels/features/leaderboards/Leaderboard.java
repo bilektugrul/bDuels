@@ -14,14 +14,16 @@ public class Leaderboard {
     private final String id;
     private final String name;
     private final StatisticType type;
+    private final SortingType sortingType;
     private final int maxSize;
     private Hologram hologram;
     private List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
 
-    public Leaderboard(String id, String name, StatisticType type, int maxSize) {
+    public Leaderboard(String id, String name, StatisticType type, SortingType sortingType, int maxSize) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.sortingType = sortingType;
         this.maxSize = maxSize;
     }
 
@@ -35,6 +37,10 @@ public class Leaderboard {
 
     public StatisticType getType() {
         return type;
+    }
+
+    public SortingType getSortingType() {
+        return sortingType;
     }
 
     public int getMaxSize() {

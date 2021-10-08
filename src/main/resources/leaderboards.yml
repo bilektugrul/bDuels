@@ -1,5 +1,6 @@
 leaderboards:
   # kullanabileceğiniz tipler: TOTAL_MATCHES, WINS, LOSES, TOTAL_EARNED_MONEY, TOTAL_EARNED_ITEM, TOTAL_LOST_ITEM, TOTAL_LOST_MONEY
+  # sıralamalar, otomatik istatistik kayıt sistemi ile senkronize çalışır. istatistikler kaydedildikten hemen sonra sıralamalar yenilenir
   win_leaderboard:
     name: Kazanma Sıralaması
     type: WINS # kazanmaları sıralayacaktır

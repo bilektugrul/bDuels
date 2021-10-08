@@ -29,7 +29,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-// TODO: AsyncStatisticSaveThread
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
@@ -117,22 +116,7 @@ public final class BDuels extends JavaPlugin {
             return false;
         }
 
-        for (Player player : getServer().getOnlinePlayers()) {
-            User user = userManager.getUser(player);
-
-            StringBuilder update = new StringBuilder(" SET ");
-
-            for (StatisticType stat : StatisticType.values()) {
-                if (!stat.isPersistent()) continue;
-                if (update.toString().equalsIgnoreCase(" SET ")) {
-                    update.append(stat.getName()).append("'='").append(user.getStat(stat));
-                }
-
-                update.append(", ").append(stat.getName()).append("'='").append(user.getStat(stat));
-            }
-
-            String finalUpdate = update.toString();
-            mySQLManager.getDatabase().executeUpdate("UPDATE " + mySQLManager.getTableName() + finalUpdate + " WHERE UUID='" + user.getUUID().toString() + "';");
+        for (User user : userManager.getUserList()) {
             mySQLManager.saveAllStatistic(user, true);
         }
         return true;
@@ -203,6 +187,7 @@ public final class BDuels extends JavaPlugin {
         languageManager.loadLanguage();
         arenaManager.loadArenas();
         duelManager.reload();
+        userManager.prepareSaveProcess();
         if (isLeaderboardManagerReady()) leaderboardManager.reloadSettings();
     }
 

@@ -2,6 +2,7 @@ package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
+import io.github.bilektugrul.bduels.users.data.StatisticSaveProcess;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -10,11 +11,25 @@ import java.util.UUID;
 
 public class UserManager {
 
-    private MySQLManager mysqlManager;
+    private final BDuels plugin;
     private final Set<User> userList = new HashSet<>();
+    private MySQLManager mysqlManager;
+    private StatisticSaveProcess statisticSaveProcess;
 
     public UserManager(BDuels plugin) {
-        if (plugin.isDatabaseEnabled()) this.mysqlManager = new MySQLManager(plugin);
+        this.plugin = plugin;
+        if (plugin.isDatabaseEnabled()) {
+            this.mysqlManager = new MySQLManager(plugin);
+            prepareSaveProcess();
+        }
+    }
+
+    public void prepareSaveProcess() {
+        if (isMysqlManagerReady()) {
+            if (statisticSaveProcess != null) statisticSaveProcess.cancel();
+            statisticSaveProcess = new StatisticSaveProcess(plugin);
+            statisticSaveProcess.start();
+        }
     }
 
     public User loadUser(Player p) {

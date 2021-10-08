@@ -5,6 +5,7 @@ messages:
   config-reloaded: '%prefix% &6Ayarlar, mesajlar ve arenalar başarıyla yenilendi.'
   did-you-mean: '%prefix% &cKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: &3/%command%'
   player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
+  saving-statistics: '%prefix% &6Tüm istatistikler kaydediliyor...'
 
   user-states:
     FREE: Müsait

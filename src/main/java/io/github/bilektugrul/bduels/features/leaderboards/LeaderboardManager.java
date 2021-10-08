@@ -36,12 +36,12 @@ public class LeaderboardManager {
             int max = file.getInt(path + "max-size");
             StatisticType type = StatisticType.valueOf(file.getString(path + "type").toUpperCase(Locale.ROOT));
             Location hologramLocation = LocationSerializer.fromString(file.getString(path + "hologram-location"));
-            Leaderboard leaderboard = new Leaderboard(key, name, type, max);
+            Leaderboard leaderboard = new Leaderboard(key, name, type, SortingType.valueOf(file.getString(path + "how")), max);
             prepareEntries(leaderboard);
             leaderboards.add(leaderboard);
             if (plugin.isHologramsEnabled() && hologramLocation != null) {
                 leaderboard.createHologram(plugin, hologramLocation);
-                sort(leaderboard, type, max, SortingType.valueOf(file.getString(path + "how")));
+                sort(leaderboard);
             }
         }
     }
@@ -76,17 +76,17 @@ public class LeaderboardManager {
         return null;
     }
 
-    public void sort(Leaderboard leaderboard, StatisticType type, int max, SortingType sortingType) {
-        List<LeaderboardEntry> leaderboardEntries = StatisticsUtils.getStats(type)
+    public void sort(Leaderboard leaderboard) {
+        List<LeaderboardEntry> leaderboardEntries = StatisticsUtils.getStats(leaderboard.getType())
                 .stream()
-                .sorted(isReversed(sortingType)
+                .sorted(isReversed(leaderboard.getSortingType())
                         ? Comparator.comparingInt(LeaderboardEntry::getValue).reversed()
                         : Comparator.comparingInt(LeaderboardEntry::getValue))
-                .limit(max)
+                .limit(leaderboard.getMaxSize())
                 .collect(Collectors.toList());
 
         leaderboard.setLeaderboardEntries(leaderboardEntries);
-        updateHologram(leaderboard);
+        plugin.getServer().getScheduler().runTask(plugin, () -> updateHologram(leaderboard));
     }
 
     public void updateHologram(Leaderboard leaderboard) {
