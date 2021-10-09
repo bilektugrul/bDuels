@@ -26,7 +26,7 @@ public class StatisticSaveProcess extends BukkitRunnable {
         console.sendMessage(Utils.getMessage("saving-statistics", console));
         plugin.saveAllUserStatistics();
         LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
-        leaderboardManager.getLeaderboards().forEach(leaderboardManager::sort);
+        leaderboardManager.sortEveryLeaderboard();
         console.sendMessage(Utils.getMessage("main-command.saved-stats", console));
     }
 

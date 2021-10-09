@@ -1,11 +1,11 @@
 leaderboards:
   # kullanabileceğiniz tipler: TOTAL_MATCHES, WINS, LOSES, TOTAL_EARNED_MONEY, TOTAL_EARNED_ITEM, TOTAL_LOST_ITEM, TOTAL_LOST_MONEY
   # sıralamalar, otomatik istatistik kayıt sistemi ile senkronize çalışır. istatistikler kaydedildikten hemen sonra sıralamalar yenilenir
-  win_leaderboard:
+  "Kazanma Sıralaması":
     name: Kazanma Sıralaması
     type: WINS # kazanmaları sıralayacaktır
     how: HIGH_TO_LOW # LOW_TO_HIGH olarak değişirseniz düşükten yükseğe sıralar
-    hologram-location: '' # oyun içerisinde /bduels leaderboardholo win_leaderboard yazarak ayarlayabilirsiniz.
+    hologram-location: '' # oyun içerisinde /bduels leaderboardholo Kazanma Sıralaması yazarak ayarlayabilirsiniz.
     max-size: 5 # 20'den daha uzun sıralama yapılamaz.
     leaderboard:
       1:

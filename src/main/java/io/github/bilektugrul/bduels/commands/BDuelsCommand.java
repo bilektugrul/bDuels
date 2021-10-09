@@ -34,22 +34,25 @@ public class BDuelsCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length <= 0) {
+        if (args.length == 0) {
             sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
             return true;
         }
 
-        String execute = args[0].toLowerCase(Locale.ROOT);
-        switch (execute) {
+        switch (args[0].toLowerCase(Locale.ROOT)) {
             case "reload":
                 plugin.reload();
                 sender.sendMessage(Utils.getMessage("main-command.reloaded", sender));
                 return true;
-            case "save":
-                save(sender, args);
+            case "refresh-leaderboard":
+            case "refresh-leaderboards":
+                refreshLeaderboard(sender, args);
                 return true;
             case "leaderboardholo":
                 setLeaderboardHologramLocation(sender, args);
+                return true;
+            case "save":
+                save(sender, args);
                 return true;
             default:
                 sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
@@ -57,22 +60,71 @@ public class BDuelsCommand implements CommandExecutor {
         return true;
     }
 
+    private void refreshLeaderboard(CommandSender sender, String[] args) {
+        if (!plugin.isLeaderboardManagerReady()) return;
+        boolean all = true;
+        String toRefresh = "";
+
+        if (args.length >= 2) {
+            all = false;
+            toRefresh = Utils.arrayToString(Arrays.copyOfRange(args, 1, args.length), sender, false, false);
+        }
+
+        if (all) {
+            leaderboardManager.sortEveryLeaderboard();
+            sender.sendMessage(Utils.getMessage("leaderboards.refreshed-all", sender));
+        } else {
+            Leaderboard leaderboard = leaderboardManager.getFromID(toRefresh);
+            if (leaderboard == null) {
+                sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
+                return;
+            }
+            leaderboardManager.sort(leaderboard);
+            sender.sendMessage(Utils.getMessage("leaderboards.refreshed-one", sender)
+                    .replace("%leaderboard%", leaderboard.getName()));
+        }
+    }
+
+    private void setLeaderboardHologramLocation(CommandSender sender, String[] args) {
+        if (!plugin.isLeaderboardManagerReady()) return;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Utils.getMessage("only-players", sender));
+            return;
+        }
+        Player player = (Player) sender;
+        if (args.length < 2) {
+            player.sendMessage(Utils.getMessage("leaderboards.type-leaderboard-name", player));
+            return;
+        }
+        String leaderboardName = Utils.arrayToString(Arrays.copyOfRange(args, 1, args.length), sender, false, false);
+        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardName);
+        if (leaderboard == null) {
+            player.sendMessage(Utils.getMessage("leaderboards.not-found", player));
+            return;
+        }
+        leaderboard.createHologram(plugin, player.getLocation());
+        leaderboardManager.save();
+        leaderboardManager.updateHologram(leaderboard);
+        player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
+    }
+
     private void save(CommandSender sender, String[] args) {
-        if (!(args.length < 3)) {
-            sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
+        if (args.length < 2) {
+            plugin.save();
+            sender.sendMessage(Utils.getMessage("main-command.saved", sender));
             return;
         }
         switch (args[1]) {
             case "stats":
             case "stat":
-            case "istatistik":    
+            case "istatistik":
             case "istatistikler":
                 if (!plugin.isDatabaseEnabled()) sender.sendMessage(Utils.getMessage("main-command.database-disabled", sender));
                 else if (plugin.saveAllUserStatistics()) sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
                 else sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
                 return;
-            case "leaderboards":    
-            case "sıralama":    
+            case "leaderboards":
+            case "sıralama":
             case "sıralamalar":
                 boolean saved = false;
                 if (!plugin.isLeaderboardManagerReady()) sender.sendMessage(Utils.getMessage("leaderboards.not-active", sender));
@@ -89,29 +141,6 @@ public class BDuelsCommand implements CommandExecutor {
                 sender.sendMessage(Utils.getMessage("main-command.wrong-usage", sender));
         }
     }
-
-    private void setLeaderboardHologramLocation(CommandSender sender, String[] args) {
-        if (!plugin.isLeaderboardManagerReady()) return;
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(Utils.getMessage("only-players", sender));
-            return;
-        }
-        Player player = (Player) sender;
-        if (!(args.length < 3)) {
-            player.sendMessage(Utils.getMessage("leaderboards.type-leaderboard-name", player));
-            return;
-        }
-        String leaderboardName = args[1];
-        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardName);
-        if (leaderboard == null) {
-            player.sendMessage(Utils.getMessage("leaderboards.not-found", player));
-            return;
-        }
-        leaderboard.createHologram(plugin, player.getLocation());
-        leaderboardManager.save();
-        leaderboardManager.updateHologram(leaderboard);
-        player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
-    }
     
     private static class BDuelsCommandTabCompleter implements TabCompleter {
 
@@ -119,7 +148,7 @@ public class BDuelsCommand implements CommandExecutor {
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
             if (args.length > 1 && args[0].equalsIgnoreCase("save"))
                 return Arrays.asList("stats", "leaderboards", "all");
-            return Arrays.asList("reload", "save", "save");
+            return Arrays.asList("reload", "refresh-leaderboard", "leaderboardholo", "save", "save");
         }
 
     }

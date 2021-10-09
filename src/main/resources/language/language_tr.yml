@@ -16,11 +16,13 @@ messages:
   main-command:
     wrong-usage:
       - '%prefix% &cKomutu hatalı kullandınız.'
-      - '%prefix% &6/bduels &3<alt komut>'
+      - '%prefix% &6/bduels &3<alt komut> [<alt komut ekstrası>]'
+      - '%prefix% &6[] içeren kısımlar isteğe bağlıdır.'
       - '%prefix% &6Alt komutlar:'
       - '%prefix% &7- &3reload'
+      - '%prefix% &7- &3refresh-leaderboard[s]'
       - '%prefix% &7- &3leaderboardholo <sıralama ismi> &7| &3Girilen sıralamanın hologram lokasyonunu bulunduğunuz lokasyon olarak ayarlar.'
-      - '%prefix% &7- &3save <veri türü> &7| &3Girilen verileri gerekli yerlere kaydeder.'
+      - '%prefix% &7- &3save [<veri türü>] &7| &3Girilen verileri gerekli yerlere kaydeder. Veri türü girmezseniz her şey kaydedilecektir.'
       - '%prefix% &6Veri türleri:'
       - '%prefix% &7- &3stats &7| &3Aktif oyuncuların istatistiklerini kapsar.'
       - '%prefix% &7- &3leaderboards &7| &3Tüm mevcut sıralamaları kapsar.'
@@ -59,6 +61,8 @@ messages:
     location-changed: '%prefix% &6Hologram lokasyonu değiştirildi.'
     saved: '%prefix% &6Sıralamalar dosyaya kaydedildi.'
     not-active: '%prefix% &cSıralama sistemi aktif değil. Aktif olması için veritabanının çalışır durumda olması gerekir.'
+    refreshed-all: '%prefix% &6Tüm sıralamalar yenilendi.'
+    refreshed-one: '%prefix% &3%leaderboard% &6yeniden sıralandı.'
     type-names:
       TOTAL_MATCHES: Toplam Maç
       WINS: Kazanma

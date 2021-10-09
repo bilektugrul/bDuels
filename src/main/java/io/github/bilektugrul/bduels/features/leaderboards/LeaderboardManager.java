@@ -10,6 +10,7 @@ import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -18,16 +19,18 @@ import java.util.stream.Collectors;
 public class LeaderboardManager {
 
     private final BDuels plugin;
+    private final BukkitScheduler scheduler;
     private final List<Leaderboard> leaderboards = new ArrayList<>();
     private SimpleDateFormat formatter;
     private FileConfiguration file;
 
     public LeaderboardManager(BDuels plugin) {
         this.plugin = plugin;
-        reloadSettings();
+        this.scheduler = plugin.getServer().getScheduler();
+        reloadSettings(true);
     }
 
-    public void reloadSettings() {
+    public void reloadSettings(boolean first) {
         clear();
         file = ConfigUtils.getConfig(plugin, "leaderboards");
         formatter = new SimpleDateFormat(Utils.getMessage("leaderboards.date-format", null));
@@ -42,9 +45,9 @@ public class LeaderboardManager {
             leaderboards.add(leaderboard);
             if (plugin.isHologramsEnabled() && hologramLocation != null) {
                 leaderboard.createHologram(plugin, hologramLocation);
-                sort(leaderboard);
             }
         }
+        if (first) sortEveryLeaderboard();
     }
 
     public void prepareEntries(Leaderboard leaderboard) {
@@ -78,16 +81,22 @@ public class LeaderboardManager {
     }
 
     public void sort(Leaderboard leaderboard) {
-        List<LeaderboardEntry> leaderboardEntries = StatisticsUtils.getStats(leaderboard.getType())
-                .stream()
-                .sorted(isReversed(leaderboard.getSortingType())
-                        ? Comparator.comparingInt(LeaderboardEntry::getValue).reversed()
-                        : Comparator.comparingInt(LeaderboardEntry::getValue))
-                .limit(leaderboard.getMaxSize())
-                .collect(Collectors.toList());
+        List<LeaderboardEntry> leaderboardEntries = StatisticsUtils.getStats(leaderboard.getType());
+        if (leaderboardEntries != null) {
+            leaderboard.setLeaderboardEntries(leaderboardEntries
+                    .stream()
+                    .sorted(isReversed(leaderboard.getSortingType())
+                            ? Comparator.comparingInt(LeaderboardEntry::getValue).reversed()
+                            : Comparator.comparingInt(LeaderboardEntry::getValue))
+                    .limit(leaderboard.getMaxSize())
+                    .collect(Collectors.toList())
+            );
+            scheduler.runTask(plugin, () -> updateHologram(leaderboard));
+        }
+    }
 
-        leaderboard.setLeaderboardEntries(leaderboardEntries);
-        plugin.getServer().getScheduler().runTask(plugin, () -> updateHologram(leaderboard));
+    public void sortEveryLeaderboard() {
+        scheduler.runTaskAsynchronously(plugin, () -> leaderboards.forEach(this::sort));
     }
 
     public void updateHologram(Leaderboard leaderboard) {

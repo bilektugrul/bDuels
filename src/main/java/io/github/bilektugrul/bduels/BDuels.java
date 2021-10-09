@@ -18,13 +18,11 @@ import io.github.bilektugrul.bduels.features.language.LanguageManager;
 import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardManager;
 import io.github.bilektugrul.bduels.features.placeholders.CustomPlaceholderManager;
 import io.github.bilektugrul.bduels.features.placeholders.PAPIPlaceholders;
-import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.listeners.HInventoryClickListener;
 import io.github.bilektugrul.bduels.listeners.PlayerListener;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
-import me.despical.commons.database.MysqlDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -47,6 +45,7 @@ public final class BDuels extends JavaPlugin {
 
     private boolean databaseEnabled = false;
     private boolean hologramsEnabled = false;
+    private boolean forceDisable = false;
 
     @Override
     public void onEnable() {
@@ -63,8 +62,15 @@ public final class BDuels extends JavaPlugin {
         }
 
         databaseEnabled = getConfig().getBoolean("database.enabled");
-        if (databaseEnabled)
-            mysqlDatabase = new MysqlDatabase(getConfig().getString("database.user"), getConfig().getString("database.password"), getConfig().getString("database.url"));
+        if (databaseEnabled) {
+            mysqlDatabase = new MysqlDatabase(getLogger(), getConfig());
+            if (mysqlDatabase.shouldClose()) {
+                forceDisable = true;
+                setEnabled(false);
+                return;
+            }
+        }
+
         customPlaceholderManager = new CustomPlaceholderManager(this);
         languageManager = new LanguageManager(this);
         duelManager = new DuelManager(this);
@@ -103,13 +109,15 @@ public final class BDuels extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        duelManager.endMatches(DuelEndReason.SERVER_STOP);
-        if (databaseEnabled) {
-            saveAllUserStatistics();
-            mysqlDatabase.shutdownConnPool();
+        if (!forceDisable) {
+            duelManager.endMatches(DuelEndReason.SERVER_STOP);
+            if (databaseEnabled) {
+                saveAllUserStatistics();
+                mysqlDatabase.shutdownConnPool();
+            }
+            Bukkit.getScheduler().cancelTasks(this);
+            save();
         }
-        Bukkit.getScheduler().cancelTasks(this);
-        save();
     }
 
     public boolean saveAllUserStatistics() {
@@ -190,7 +198,7 @@ public final class BDuels extends JavaPlugin {
         arenaManager.loadArenas();
         duelManager.reload();
         userManager.prepareSaveProcess();
-        if (isLeaderboardManagerReady()) leaderboardManager.reloadSettings();
+        if (isLeaderboardManagerReady()) leaderboardManager.reloadSettings(false);
     }
 
     public void save() {

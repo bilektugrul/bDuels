@@ -30,20 +30,28 @@ public class StatisticsUtils {
 
         List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
         try (Connection connection = plugin.getMySQLDatabase().getConnection()) {
-            Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + ", name FROM " + userManager.getMysqlManager().getTableName() + " ORDER BY " + stat.getName());
-            while (set.next()) {
-                String name = set.getString("name");
-                Integer value = set.getInt(stat.getName());
-                leaderboardEntries.add(new LeaderboardEntry(name, value));
+            try (Statement statement = connection.createStatement()) {
+                ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + ", name FROM " + userManager.getMysqlManager().getTableName() + " ORDER BY " + stat.getName());
+                while (set.next()) {
+                    String name = set.getString("name");
+                    Integer value = set.getInt(stat.getName());
+                    leaderboardEntries.add(new LeaderboardEntry(name, value));
+                }
+                return leaderboardEntries;
+            } catch (NullPointerException e) {
+                exception(e);
+                return null;
             }
-            return leaderboardEntries;
         } catch (SQLException e) {
-            plugin.getLogger().warning("Something went wrong while trying to get statistics. Check your SQL settings.");
-            e.printStackTrace();
-            plugin.getLogger().warning("Something went wrong while trying to get statistics. Check your SQL settings.");
+            exception(e);
             return null;
         }
+    }
+
+    private static void exception(Exception e) {
+        plugin.getLogger().warning("Something went wrong while trying to get statistics. Check your SQL settings.");
+        e.printStackTrace();
+        plugin.getLogger().warning("Something went wrong while trying to get statistics. Check your SQL settings.");
     }
 
 }
