@@ -99,40 +99,10 @@ public class LeaderboardManager {
         scheduler.runTaskAsynchronously(plugin, () -> leaderboards.forEach(this::sort));
     }
 
-    public void updateHologram(Leaderboard leaderboard) {
-        if (!plugin.isHologramsEnabled()) return;
-        Hologram hologram = leaderboard.getHologram();
-        if (hologram != null) {
-            hologram.clearLines();
-            Date date = new Date();
-            for (String value : Utils.getMessageList("leaderboards.hologram.before-leaderboard", null)) {
-                value = value.replace("%leaderboardname%", leaderboard.getName())
-                                .replace("%lastrenew%", formatter.format(date));
-                hologram.appendTextLine(value);
-            }
-
-            int i = 1;
-            for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
-                hologram.appendTextLine(Utils.getMessage("leaderboards.hologram.entry-format")
-                        .replace("%#%", String.valueOf(i++))
-                        .replace("%name%", entry.getName())
-                        .replace("%value%", String.valueOf(entry.getValue()))
-                        .replace("%type%", Utils.getMessage("leaderboards.type-names." + leaderboard.getType().name()))
-                );
-            }
-
-            for (String value : Utils.getMessageList("leaderboards.hologram.after-leaderboard", null)) {
-                value = value.replace("%leaderboardname%", leaderboard.getName())
-                        .replace("%lastrenew%", formatter.format(date));
-                hologram.appendTextLine(value);
-            }
-        }
-    }
-
-    public void leaderboardToChatMessage(Leaderboard leaderboard, CommandSender sender) {
+    public List<String> leaderboardToString(Leaderboard leaderboard, CommandSender sender, String mode) {
         List<String> messages = new ArrayList<>();
         Date date = new Date();
-        for (String value : Utils.getMessageList("leaderboards.chat.before-leaderboard", sender)) {
+        for (String value : Utils.getMessageList("leaderboards." + mode + ".before-leaderboard", sender)) {
             value = value.replace("%leaderboardname%", leaderboard.getName())
                     .replace("%lastrenew%", formatter.format(date));
             messages.add(value);
@@ -140,7 +110,7 @@ public class LeaderboardManager {
 
         int i = 1;
         for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
-            messages.add(Utils.getMessage("leaderboards.chat.entry-format", sender)
+            messages.add(Utils.getMessage("leaderboards." + mode + ".entry-format", sender)
                     .replace("%#%", String.valueOf(i++))
                     .replace("%name%", entry.getName())
                     .replace("%value%", String.valueOf(entry.getValue()))
@@ -148,12 +118,27 @@ public class LeaderboardManager {
             );
         }
 
-        for (String value : Utils.getMessageList("leaderboards.chat.after-leaderboard", sender)) {
+        for (String value : Utils.getMessageList("leaderboards." + mode + ".after-leaderboard", sender)) {
             value = value.replace("%leaderboardname%", leaderboard.getName())
                     .replace("%lastrenew%", formatter.format(date));
             messages.add(value);
         }
-        sender.sendMessage(Utils.listToString(messages));
+        return messages;
+    }
+
+    public void updateHologram(Leaderboard leaderboard) {
+        if (!plugin.isHologramsEnabled()) return;
+        Hologram hologram = leaderboard.getHologram();
+        if (hologram != null) {
+            hologram.clearLines();
+            for (String line : leaderboardToString(leaderboard, null, "hologram")) {
+                hologram.appendTextLine(line);
+            }
+        }
+    }
+
+    public void leaderboardToChatMessage(Leaderboard leaderboard, CommandSender sender) {
+        sender.sendMessage(Utils.listToString(leaderboardToString(leaderboard, sender, "chat")));
     }
 
     public boolean save() {
@@ -163,6 +148,7 @@ public class LeaderboardManager {
             Hologram hologram = leaderboard.getHologram();
             if (hologram != null) file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
             int i = 1;
+            file.set(path + "leaderboard", new ArrayList<>());
             for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
                 String entryPath = path + "leaderboard." + i++ + ".";
                 file.set(entryPath + "name", entry.getName());

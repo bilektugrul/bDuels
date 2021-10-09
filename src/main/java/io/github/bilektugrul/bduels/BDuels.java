@@ -104,7 +104,7 @@ public final class BDuels extends JavaPlugin {
         getCommand("duel").setExecutor(new DuelCommand(this));
         getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
         getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
-        getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
+        if (isLeaderboardManagerReady()) getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
     }
 
     @Override
