@@ -4,6 +4,7 @@ import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
 import io.github.bilektugrul.bduels.features.language.LanguageManager;
 import io.github.bilektugrul.bduels.features.placeholders.CustomPlaceholderManager;
+import io.github.bilektugrul.bduels.stuff.InGameSettingMode;
 import io.github.bilektugrul.bduels.stuff.MessageType;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.compat.Titles;
@@ -320,5 +321,14 @@ public class Utils {
         return current != currentMoney && current + toAdd <= currentMoney;
     }
 
+    public static boolean shouldCancelEvent(String what, Player player) {
+        InGameSettingMode mode = InGameSettingMode.valueOf(getString("in-game-settings." + what));
+        if (mode == InGameSettingMode.NEVER) {
+            return true;
+        } else if (mode == InGameSettingMode.EVERYONE) {
+            return false;
+        }
+        return !(player.hasPermission("bduels." + what));
+    }
 
 }

@@ -61,6 +61,10 @@ public class UserManager {
         userList.remove(user);
     }
 
+    public boolean isInMatch(User user) {
+        return user.getState() == UserState.IN_MATCH || user.getState() == UserState.STARTING_MATCH;
+    }
+
     public Set<User> getUserList() {
         return new HashSet<>(userList);
     }

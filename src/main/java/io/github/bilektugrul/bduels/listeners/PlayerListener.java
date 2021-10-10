@@ -7,18 +7,17 @@ import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
-import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 
 public class PlayerListener implements Listener {
 
@@ -66,7 +65,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         User user = userManager.getUser(e.getEntity());
-        if (user.getState() == UserState.IN_MATCH) {
+        if (userManager.isInMatch(user)) {
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
             user.setRespawnLocation(duel.getPreDuelLocations().get(user));
@@ -93,6 +92,46 @@ public class PlayerListener implements Listener {
 
         if (entity.hasMetadata("god-mode-bduels")) {
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent e) {
+        Player player = e.getPlayer();
+        User user = userManager.getUser(player);
+        if (userManager.isInMatch(user)) {
+            e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e) {
+        Player player = e.getPlayer();
+        User user = userManager.getUser(player);
+        if (userManager.isInMatch(user)) {
+            e.setCancelled(Utils.shouldCancelEvent("can-break-blocks", player));
+        }
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        if (!(e.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL)) {
+            return;
+        }
+
+        Player player = e.getPlayer();
+        User user = userManager.getUser(player);
+        if (userManager.isInMatch(user)) {
+            e.setCancelled(Utils.shouldCancelEvent("can-teleport", player));
+        }
+    }
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        Player player = e.getPlayer();
+        User user = userManager.getUser(player);
+        if (userManager.isInMatch(user)) {
+            e.setCancelled(Utils.shouldCancelEvent("can-use-command", player));
         }
     }
 

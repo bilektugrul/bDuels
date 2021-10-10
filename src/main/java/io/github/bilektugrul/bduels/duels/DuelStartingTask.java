@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.duels;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ public class DuelStartingTask extends BukkitRunnable {
 
     private final Duel duel;
     private final Player player, opponent;
+    private final Location playerStartLocation, opponentStartLocation;
     private int time;
 
     public DuelStartingTask(BDuels plugin, Duel duel) {
@@ -28,21 +30,32 @@ public class DuelStartingTask extends BukkitRunnable {
 
         this.player.setMetadata("god-mode-bduels", new FixedMetadataValue(plugin, true));
         this.opponent.setMetadata("god-mode-bduels", new FixedMetadataValue(plugin, true));
+        this.player.setFireTicks(0);
+        this.opponent.setFireTicks(0);
+
+        Arena arena = duel.getArena();
+        playerStartLocation = arena.getPlayerLocation();
+        opponentStartLocation = arena.getOpponentLocation();
         clean();
     }
 
     @Override
     public void run() {
-        Location playerLocation = duel.getArena().getPlayerLocation();
-        Location opponentLocation = duel.getArena().getOpponentLocation();
+        if (!Utils.isSameLoc(playerStartLocation, player.getLocation())) {
+            player.teleport(playerStartLocation);
+        }
 
-        if (!Utils.isSameLoc(playerLocation, player.getLocation())) player.teleport(playerLocation);
+        if (player.getHealth() != 20) {
+            player.setHealth(20);
+        }
 
-        if (player.getHealth() != 20) player.setHealth(20);
+        if (!Utils.isSameLoc(opponentStartLocation, opponent.getLocation())) {
+            opponent.teleport(opponentStartLocation);
+        }
 
-        if (!Utils.isSameLoc(opponentLocation, opponent.getLocation())) opponent.teleport(opponentLocation);
-
-        if (opponent.getHealth() != 20) opponent.setHealth(20);
+        if (opponent.getHealth() != 20) {
+            opponent.setHealth(20);
+        }
 
         if (time == 0) {
             player.removeMetadata("god-mode-bduels", plugin);
