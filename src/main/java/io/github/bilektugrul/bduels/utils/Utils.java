@@ -175,9 +175,9 @@ public class Utils {
     public static void sendWinMessage(MessageType messageType, Player winner, Player loser, String itemAmount, String betPrice) {
         Player[] players = new Player[]{winner, loser};
         String toBroadcast = replaceWinnerAndLoser(
-                languageManager.getString("duel.win.broadcast")
+                Utils.getMessage("duel.win.broadcast", null, false, false)
                         .replace("%itemamount%", itemAmount)
-                        .replace("%betprice%", itemAmount),
+                        .replace("%betprice%", betPrice),
                 winner, loser);
         if (!toBroadcast.isEmpty()) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
