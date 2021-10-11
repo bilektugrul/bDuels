@@ -32,6 +32,7 @@ public class ArenaCommand implements CommandExecutor {
         registerSubCommand(new DefinePlayerLocationCommand("p1", "p2"));
         //registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
         registerSubCommand(new ArenaListCommand("list", "liste"));
+        registerSubCommand(new ArenaTeleportCommand("teleport", "ışınlan"));
         registerSubCommand(new ArenaInfoCommand("info", "bilgi"));
     }
 
@@ -62,8 +63,9 @@ public class ArenaCommand implements CommandExecutor {
             return true;
         }
 
+        String toExecute = args[0];
         for (SubCommand subCommand : subCommands) {
-            if (subCommand.isValidTrigger(args[0])) {
+            if (subCommand.isValidTrigger(toExecute)) {
                 if (!subCommand.hasPermission(sender)) {
                     Utils.noPermission(sender);
                     return true;
@@ -71,14 +73,13 @@ public class ArenaCommand implements CommandExecutor {
 
                 if (args.length - 1 >= subCommand.getMinimumArguments()) {
                     try {
-                        subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length), args[0]);
+                        subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length), toExecute);
                     } catch (CommandException e) {
                         sender.sendMessage(ChatColor.RED + e.getMessage());
                     }
                 } else {
-                    if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-                        sender.sendMessage(ChatColor.RED + "Kullanım: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
-                    }
+                    sender.sendMessage(Utils.getMessage("wrong-usage", sender)
+                            .replace("%usage%", "/arena " + toExecute + " <arena>"));
                 }
 
                 return true;

@@ -58,11 +58,6 @@ public class ArenaListCommand extends SubCommand {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.HIDDEN;
-    }
-
-    @Override
     public SenderType getSenderType() {
         return SenderType.PLAYER;
     }

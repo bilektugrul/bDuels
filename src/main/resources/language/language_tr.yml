@@ -6,6 +6,7 @@ messages:
   did-you-mean: '%prefix% &cKullandığınız komut bulunamadı. Şunu mu demek istemiştiniz: &3/%command%'
   player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
   saving-statistics: '%prefix% &6Tüm istatistikler kaydediliyor...'
+  wrong-usage: '%prefix% &cKomutu hatalı kullandınız. Doğru kullanım: &3%usage%'
 
   user-states:
     FREE: Müsait
@@ -161,6 +162,7 @@ messages:
       - '%prefix% &6/arena sil <arena ismi> &7| &3Var olan bir arenayı siler.'
       - '%prefix% &6/arena bilgi <arena ismi> &7| &3Girilen arenanın bilgilerini gösterir.'
       - '%prefix% &6/arena liste &7| &3Sohbetinize arena listesini gönderir.'
+      - '%prefix% &6/arena ışınlan <arena ismi> &7| &3Girdiğiniz arenaya ışınlanırsınız.'
       - '%prefix% &6/arena p1 <arena ismi> &7| &3Arenanın 1. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
       - '%prefix% &6/arena p2 <arena ismi> &7| &3Arenanın 2. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
       - '&b&m-----------------'
@@ -173,6 +175,7 @@ messages:
     deleted: '%prefix% &3%arena% &6isimli arena silindi.'
     could-not-deleted: '%prefix% &3%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'
     player-location-set: '%prefix% &3%arena% &6adlı arenada &3%no% &6numaralı oyuncunun başlangıç noktası belirlendi.'
+    teleported: '%prefix% &3%arena% &6adlı arenaya ışınlandın.'
     list:
       start-message:
         - '%prefix%'
@@ -180,7 +183,6 @@ messages:
         - '     &6Kullanılan: &3%usedamount%'
         - '     &6Müsait: &3%emptyamount%'
         - '     &6Tümü (&3%totalamount%&6):'
-        - '%prefix%'
       arena-format: '     &7- &6%arena% (&3%state%&6)'
     info:
       - '%prefix%'

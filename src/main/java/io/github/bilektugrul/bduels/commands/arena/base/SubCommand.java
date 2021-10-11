@@ -52,13 +52,7 @@ public abstract class SubCommand {
 
     public abstract List<String> getTutorial();
 
-    public abstract CommandType getType();
-
     public abstract SenderType getSenderType();
-
-    public enum CommandType {
-        GENERIC, HIDDEN
-    }
 
     public enum SenderType {
         PLAYER, BOTH

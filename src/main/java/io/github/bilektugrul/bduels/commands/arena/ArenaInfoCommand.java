@@ -22,7 +22,7 @@ public class ArenaInfoCommand extends SubCommand {
 
     @Override
     public int getMinimumArguments() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -48,11 +48,6 @@ public class ArenaInfoCommand extends SubCommand {
     @Override
     public List<String> getTutorial() {
         return null;
-    }
-
-    @Override
-    public CommandType getType() {
-        return CommandType.HIDDEN;
     }
 
     @Override

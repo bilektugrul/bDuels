@@ -26,7 +26,6 @@ public class ArenaDeleteCommand extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args, String label) throws CommandException {
         String arenaName = args[0];
-
         if (!arenaManager.isPresent(arenaName)) {
             sender.sendMessage(Utils.getMessage("arenas.not-found", sender));
             return;
@@ -45,11 +44,6 @@ public class ArenaDeleteCommand extends SubCommand {
     @Override
     public List<String> getTutorial() {
         return null;
-    }
-
-    @Override
-    public CommandType getType() {
-        return CommandType.GENERIC;
     }
 
     @Override

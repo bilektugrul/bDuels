@@ -43,11 +43,6 @@ public class ArenaCreateCommand extends SubCommand {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.GENERIC;
-    }
-
-    @Override
     public SenderType getSenderType() {
         return SenderType.PLAYER;
     }
