@@ -32,14 +32,14 @@ public class ArenaManager {
 
             Location playerLocation = LocationSerializer.fromString(arenasFile.getString(path + "playerLocation"));
             Location opponentLocation = LocationSerializer.fromString(arenasFile.getString(path + "opponentLocation"));
-            Location edgeLocation = LocationSerializer.fromString(arenasFile.getString(path + "edgeLocation"));
-            Location otherEdgeLocation = LocationSerializer.fromString(arenasFile.getString(path + "otherEdgeLocation"));
+            //Location edgeLocation = LocationSerializer.fromString(arenasFile.getString(path + "edgeLocation"));
+            //Location otherEdgeLocation = LocationSerializer.fromString(arenasFile.getString(path + "otherEdgeLocation"));
 
             Arena arena = new Arena(name);
             arena.setPlayerLocation(playerLocation);
             arena.setOpponentLocation(opponentLocation);
-            arena.setEdge(edgeLocation);
-            arena.setOtherEdge(otherEdgeLocation);
+            //arena.setEdge(edgeLocation);
+            //arena.setOtherEdge(otherEdgeLocation);
             registerArena(arena);
         }
     }
@@ -112,16 +112,16 @@ public class ArenaManager {
         for (Arena arena : arenas) {
             String playerLocation = LocationSerializer.toString(arena.getPlayerLocation());
             String opponentLocation = LocationSerializer.toString(arena.getOpponentLocation());
-            String edgeLocation = LocationSerializer.toString(arena.getEdge());
-            String otherEdgeLocation = LocationSerializer.toString(arena.getOtherEdge());
+            //String edgeLocation = LocationSerializer.toString(arena.getEdge());
+            //String otherEdgeLocation = LocationSerializer.toString(arena.getOtherEdge());
 
             String name = arena.getName();
             String path = "arenas." + name + ".";
 
             arenasFile.set(path + "playerLocation", playerLocation);
             arenasFile.set(path + "opponentLocation", opponentLocation);
-            arenasFile.set(path + "edgeLocation", edgeLocation);
-            arenasFile.set(path + "otherEdgeLocation", otherEdgeLocation);
+            //arenasFile.set(path + "edgeLocation", edgeLocation);
+            //arenasFile.set(path + "otherEdgeLocation", otherEdgeLocation);
         }
         ConfigUtils.saveConfig(plugin, arenasFile, "arenas");
     }

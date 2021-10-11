@@ -163,8 +163,6 @@ messages:
       - '%prefix% &6/arena liste &7| &3Sohbetinize arena listesini gönderir.'
       - '%prefix% &6/arena p1 <arena ismi> &7| &3Arenanın 1. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
       - '%prefix% &6/arena p2 <arena ismi> &7| &3Arenanın 2. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
-      - '%prefix% &6/arena edge1 <arena ismi> &7| &3Arenanın 1. köşesini bulunduğunuz lokasyon olarak ayarlar.'
-      - '%prefix% &6/arena edge2 <arena ismi> &7| &3Arenanın 2. köşesini bulunduğunuz lokasyon olarak ayarlar.'
       - '&b&m-----------------'
     wrong-usage: '%prefix% &cKomutu hatalı kullandınız.'
     not-found: '%prefix% &cAradığınız arena bulunamadı.'
@@ -175,7 +173,6 @@ messages:
     deleted: '%prefix% &3%arena% &6isimli arena silindi.'
     could-not-deleted: '%prefix% &3%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'
     player-location-set: '%prefix% &3%arena% &6adlı arenada &3%no% &6numaralı oyuncunun başlangıç noktası belirlendi.'
-    edge-location-set: '%prefix% &3%arena% &6adlı arenada &3%no% &6numaralı harita köşesi belirlendi.'
     list:
       start-message:
         - '%prefix%'
@@ -190,8 +187,6 @@ messages:
       - '   &6Arena hakkında &7- &3%arena%'
       - '       &6Oyuncu 1 lokasyonu: &3%p1loc%'
       - '       &6Oyuncu 2 lokasyonu: &3%p2loc%'
-      - '       &6Köşe 1 lokasyonu: &3%edge1loc%'
-      - '       &6Köşe 2 lokasyonu: &3%edge2loc%'
       - '       &6Durumu: &3%state%'
       - '%prefix%'
     states:

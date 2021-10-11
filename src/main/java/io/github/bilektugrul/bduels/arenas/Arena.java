@@ -58,9 +58,6 @@ public class Arena {
     }
 
     public boolean isReady() {
-        return playerLocation != null
-                && opponentLocation != null
-                && edge != null
-                && otherEdge != null;
+        return playerLocation != null && opponentLocation != null;
     }
 }
