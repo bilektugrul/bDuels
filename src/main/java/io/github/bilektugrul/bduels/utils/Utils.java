@@ -175,7 +175,7 @@ public class Utils {
     public static void sendWinMessage(MessageType messageType, Player winner, Player loser, String itemAmount, String betPrice) {
         Player[] players = new Player[]{winner, loser};
         String toBroadcast = replaceWinnerAndLoser(
-                getMessage("duel.win.broadcast", null, false, false)
+                languageManager.getString("duel.win.broadcast")
                         .replace("%itemamount%", itemAmount)
                         .replace("%betprice%", itemAmount),
                 winner, loser);

@@ -9,10 +9,10 @@ import java.util.Locale;
 
 public class LanguageManager {
 
+    private final BDuels plugin;
+
     private FileConfiguration language;
     private String languageString;
-
-    private final BDuels plugin;
 
     public LanguageManager(BDuels plugin) {
         this.plugin = plugin;

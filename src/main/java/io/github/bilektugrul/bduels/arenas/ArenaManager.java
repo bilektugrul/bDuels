@@ -1,7 +1,6 @@
 package io.github.bilektugrul.bduels.arenas;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.duels.DuelManager;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.Location;
@@ -16,11 +15,9 @@ public class ArenaManager {
     private final Set<Arena> arenas = new HashSet<>();
 
     private FileConfiguration arenasFile;
-    private DuelManager duelManager;
 
     public ArenaManager(BDuels plugin) {
         this.plugin = plugin;
-        this.duelManager = plugin.getDuelManager();
         loadArenas();
     }
 
@@ -42,10 +39,6 @@ public class ArenaManager {
             //arena.setOtherEdge(otherEdgeLocation);
             registerArena(arena);
         }
-    }
-
-    public void setDuelManager(DuelManager duelManager) {
-        this.duelManager = duelManager;
     }
 
     public Set<Arena> getArenas() {

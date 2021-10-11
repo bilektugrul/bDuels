@@ -13,6 +13,7 @@ public class UserManager {
 
     private final BDuels plugin;
     private final Set<User> userList = new HashSet<>();
+
     private MySQLManager mysqlManager;
     private StatisticSaveProcess statisticSaveProcess;
 

@@ -41,7 +41,6 @@ public class DuelCommand implements CommandExecutor {
         }
 
         Player opponentPlayer = Bukkit.getPlayer(args[0]);
-
         if (opponentPlayer == null) {
             sender.sendMessage(Utils.getMessage("player-not-found", sender));
             return true;

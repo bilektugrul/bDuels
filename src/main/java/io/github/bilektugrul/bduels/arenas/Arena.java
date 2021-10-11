@@ -60,4 +60,5 @@ public class Arena {
     public boolean isReady() {
         return playerLocation != null && opponentLocation != null;
     }
+
 }

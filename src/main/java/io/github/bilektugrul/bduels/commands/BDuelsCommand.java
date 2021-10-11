@@ -73,35 +73,41 @@ public class BDuelsCommand implements CommandExecutor {
         if (all) {
             leaderboardManager.sortEveryLeaderboard();
             sender.sendMessage(Utils.getMessage("leaderboards.refreshed-all", sender));
-        } else {
-            Leaderboard leaderboard = leaderboardManager.getFromID(toRefresh);
-            if (leaderboard == null) {
-                sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
-                return;
-            }
-            leaderboardManager.sort(leaderboard);
-            sender.sendMessage(Utils.getMessage("leaderboards.refreshed-one", sender)
-                    .replace("%leaderboard%", leaderboard.getName()));
+            return;
         }
+
+        Leaderboard leaderboard = leaderboardManager.getFromID(toRefresh);
+        if (leaderboard == null) {
+            sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
+            return;
+        }
+
+        leaderboardManager.sort(leaderboard);
+        sender.sendMessage(Utils.getMessage("leaderboards.refreshed-one", sender)
+                .replace("%leaderboard%", leaderboard.getName()));
     }
 
     private void setLeaderboardHologramLocation(CommandSender sender, String[] args) {
         if (!plugin.isLeaderboardManagerReady()) return;
+
         if (!(sender instanceof Player)) {
             sender.sendMessage(Utils.getMessage("only-players", sender));
             return;
         }
+
         Player player = (Player) sender;
         if (args.length < 2) {
             player.sendMessage(Utils.getMessage("leaderboards.type-leaderboard-name", player));
             return;
         }
-        String leaderboardName = Utils.arrayToString(Arrays.copyOfRange(args, 1, args.length), sender, false, false);
-        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardName);
+
+        String leaderboardID = Utils.arrayToString(Arrays.copyOfRange(args, 1, args.length), sender, false, false);
+        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardID);
         if (leaderboard == null) {
             player.sendMessage(Utils.getMessage("leaderboards.not-found", player));
             return;
         }
+
         leaderboard.createHologram(plugin, player.getLocation());
         leaderboardManager.save();
         leaderboardManager.updateHologram(leaderboard);
@@ -114,6 +120,7 @@ public class BDuelsCommand implements CommandExecutor {
             sender.sendMessage(Utils.getMessage("main-command.saved", sender));
             return;
         }
+
         switch (args[1]) {
             case "stats":
             case "stat":

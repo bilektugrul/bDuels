@@ -13,9 +13,10 @@ public class Leaderboard {
 
     private final String id;
     private final String name;
+    private final int maxSize;
     private final StatisticType type;
     private final SortingType sortingType;
-    private final int maxSize;
+
     private Hologram hologram;
     private List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
 

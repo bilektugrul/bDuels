@@ -27,7 +27,6 @@ public class ToggleDuelRequestsCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-
         if (!player.hasPermission("bduels.togglerequests")) {
             Utils.noPermission(player);
             return true;

@@ -21,6 +21,7 @@ public class LeaderboardManager {
     private final BDuels plugin;
     private final BukkitScheduler scheduler;
     private final List<Leaderboard> leaderboards = new ArrayList<>();
+
     private SimpleDateFormat formatter;
     private FileConfiguration file;
 

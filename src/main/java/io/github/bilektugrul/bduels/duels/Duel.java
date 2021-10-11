@@ -67,11 +67,11 @@ public class Duel {
     }
 
     public Map<User, DuelRewards> getDuelRewards() {
-        return duelRewards;
+        return new HashMap<>(duelRewards);
     }
 
     public Map<User, Location> getPreDuelLocations() {
-        return preDuelLocations;
+        return new HashMap<>(preDuelLocations);
     }
 
     public User[] getPlayers() {

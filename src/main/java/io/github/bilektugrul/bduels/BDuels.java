@@ -73,11 +73,9 @@ public final class BDuels extends JavaPlugin {
 
         customPlaceholderManager = new CustomPlaceholderManager(this);
         languageManager = new LanguageManager(this);
-        duelManager = new DuelManager(this);
         arenaManager = new ArenaManager(this);
+        duelManager = new DuelManager(this);
         userManager = new UserManager(this);
-        duelManager.setArenaManager(arenaManager);
-        arenaManager.setDuelManager(duelManager);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             userManager.loadUser(p);
@@ -90,10 +88,13 @@ public final class BDuels extends JavaPlugin {
         }
 
         hologramsEnabled = pluginManager.isPluginEnabled("HolographicDisplays");
-        if (!hologramsEnabled)
+        if (!hologramsEnabled) {
             getLogger().warning("HolographicDisplays bulunamadı, sıralama hologramı çalışmayacak.");
+        }
 
-        if (databaseEnabled) leaderboardManager = new LeaderboardManager(this);
+        if (databaseEnabled) {
+            leaderboardManager = new LeaderboardManager(this);
+        }
 
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);

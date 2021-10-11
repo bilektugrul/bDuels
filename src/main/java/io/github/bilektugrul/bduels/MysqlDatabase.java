@@ -115,4 +115,5 @@ public class MysqlDatabase {
     public boolean shouldClose() {
         return forceClose;
     }
+
 }

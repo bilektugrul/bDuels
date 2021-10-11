@@ -32,8 +32,8 @@ public class LeaderboardCommand implements CommandExecutor {
             return true;
         }
 
-        String name = Utils.arrayToString(Arrays.copyOfRange(args, 0, args.length), sender, false, false);
-        Leaderboard leaderboard = leaderboardManager.getFromID(name);
+        String leaderboardID = Utils.arrayToString(Arrays.copyOfRange(args, 0, args.length), sender, false, false);
+        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardID);
         if (leaderboard == null) {
             sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
             return true;

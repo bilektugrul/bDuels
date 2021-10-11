@@ -33,7 +33,7 @@ public class DuelManager {
     private final BDuels plugin;
     private final InventoryAPI inventoryAPI;
     private final EconomyAdapter economy;
-    private ArenaManager arenaManager;
+    private final ArenaManager arenaManager;
 
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<Duel> ongoingDuels = new ArrayList<>();
@@ -54,6 +54,7 @@ public class DuelManager {
         this.plugin = plugin;
         this.inventoryAPI = plugin.getInventoryAPI();
         this.economy = plugin.getEconomyAdapter();
+        this.arenaManager = plugin.getArenaManager();
         reload();
     }
 
@@ -107,10 +108,6 @@ public class DuelManager {
             MoneyBetSettings settings = new MoneyBetSettings(item, moneyToAdd, lore, name);
             moneyBetSettingsCache.add(settings);
         }
-    }
-
-    public void setArenaManager(ArenaManager arenaManager) {
-        this.arenaManager = arenaManager;
     }
 
     public DuelRequestProcess getProcess(User player) {

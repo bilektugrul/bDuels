@@ -23,7 +23,6 @@ public class DuelStatsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player statPlayer = args.length > 0 ? Bukkit.getPlayer(args[0]) : sender instanceof Player ? (Player) sender : null;
-
         if (statPlayer == null) {
             sender.sendMessage(Utils.getMessage("player-not-found", sender));
             return true;
@@ -46,7 +45,6 @@ public class DuelStatsCommand implements CommandExecutor {
                 .replace("%lostitem%", String.valueOf(statUser.getStat(StatisticType.TOTAL_LOST_ITEM)))
                 .replace("%requests%", Utils.getMessage("request-toggle-command.modes." + statUser.getStat(StatisticType.DUEL_REQUESTS), sender));
         sender.sendMessage(message);
-
         return true;
     }
 
