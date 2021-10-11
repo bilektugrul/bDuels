@@ -70,6 +70,10 @@ public class Utils {
         return getString(languageManager.getLanguage(), "messages." + string, from, replacePersonalPlaceholders);
     }
 
+    public static String getMessage(String string, CommandSender from, boolean replacePersonalPlaceholders, boolean replacePAPI) {
+        return getString(languageManager.getLanguage(), "messages." + string, from, replacePersonalPlaceholders, replacePAPI);
+    }
+
     public static String getString(String string, CommandSender from) {
         return replacePlaceholders(plugin.getConfig().get(string), from, true);
     }
@@ -168,15 +172,27 @@ public class Utils {
                 .replace("%loser%", loser.getName());
     }
 
-    public static void sendWinMessage(MessageType messageType, Player winner, Player loser, int itemAmount, int betPrice) {
+    public static void sendWinMessage(MessageType messageType, Player winner, Player loser, String itemAmount, String betPrice) {
         Player[] players = new Player[]{winner, loser};
+        String toBroadcast = replaceWinnerAndLoser(
+                getMessage("duel.win.broadcast", null, false, false)
+                        .replace("%itemamount%", itemAmount)
+                        .replace("%betprice%", itemAmount),
+                winner, loser);
+        if (!toBroadcast.isEmpty()) {
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendMessage(Utils.replacePlaceholders(toBroadcast, player, true));
+                }
+            });
+        }
         for (Player p : players) {
             String chat = replaceWinnerAndLoser(getMessage("duel.win.chat", p), winner, loser)
-                    .replace("%itemamount%", String.valueOf(itemAmount))
-                    .replace("%betprice%", String.valueOf(betPrice));
+                    .replace("%itemamount%", itemAmount)
+                    .replace("%betprice%", betPrice);
             String actionBar = replaceWinnerAndLoser(getMessage("duel.win.actionbar", p), winner, loser)
-                    .replace("%itemamount%", String.valueOf(itemAmount))
-                    .replace("%betprice%", String.valueOf(betPrice));
+                    .replace("%itemamount%", itemAmount)
+                    .replace("%betprice%", betPrice);
             switch (messageType) {
                 case CHAT:
                     p.sendMessage(chat);

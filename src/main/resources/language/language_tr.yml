@@ -150,9 +150,17 @@ messages:
         - ' '
         - '&6Oyuncular: &3%loser%&6, &3%winner%'
         - '&6Kazanan: &3%winner%'
-        - '&6Ödül: &3%itemamount% &6adet eşya ve &3%betprice% &6miktar para'
+        - '&6Ödül: &3%itemamount% &6adet eşya ve &3%betprice% &6miktarda para'
         - '&a&l&m---------------------------------------------&r'
       actionbar: '&3%loser% &evs &3%winner% &7- &6Kazanan: &3%winner%'
+      broadcast:
+        - '&e&m-----------------'
+        - '%prefix% &3%winner% &6adlı oyuncu, &c%loser% &6adlı oyuncuyu düelloda katletti'
+        - '%prefix% &6Ödülleri: &3%itemamount% &6adet eşya ve &3%betprice% &6miktarda para'
+        - '&e&m-----------------'
+        # eğer üstteki iki satırı silip broadcast kısmına '' yazarsanız maç sonrası duyuru yapılmayacaktır
+        # örnek:
+        # broadcast: ''
     match-force-ended: '%prefix% &6Maç bitirildi, eşyalarınız ve paralarınız geri verildi.'
 
   arenas:

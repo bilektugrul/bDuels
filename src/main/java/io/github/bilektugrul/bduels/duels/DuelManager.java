@@ -130,33 +130,33 @@ public class DuelManager {
         return user.getRequestProcess() == null && user.getState() == UserState.FREE;
     }
 
-    public void sendDuelRequest(User sender, User opponent) {
+    public boolean sendDuelRequest(User sender, User opponent) {
         Player senderPlayer = sender.getBase();
         Player opponentPlayer = opponent.getBase();
 
-        if (senderPlayer.equals(opponentPlayer)) return;
+        if (senderPlayer.equals(opponentPlayer)) return false;
 
         if (!canSendOrAcceptDuel(sender) || !canSendOrAcceptDuel(opponent)) {
             senderPlayer.sendMessage(Utils.getMessage("duel.not-now", senderPlayer)
                     .replace("%opponent%", opponent.getName()));
-            return;
+            return false;
         }
 
         if (!opponent.doesAcceptDuelRequests()) {
             senderPlayer.sendMessage(Utils.getMessage("duel.does-not-accept", senderPlayer)
                     .replace("%opponent%", opponentPlayer.getName()));
-            return;
+            return false;
         }
 
         if (!sender.doesAcceptDuelRequests()) {
             senderPlayer.sendMessage(Utils.getMessage("duel.do-not-accept", senderPlayer)
                     .replace("%opponent%", opponentPlayer.getName()));
-            return;
+            return false;
         }
 
         if (!arenaManager.isAnyArenaAvailable()) {
             senderPlayer.sendMessage(Utils.getMessage("arenas.all-in-usage", senderPlayer));
-            return;
+            return false;
         }
 
         senderPlayer.sendMessage(Utils.getMessage("duel.request-sent", opponentPlayer)
@@ -169,6 +169,7 @@ public class DuelManager {
         opponent.setRequestProcess(process);
 
         duelRequestProcesses.add(process);
+        return true;
     }
 
     public void acceptDuelRequest(DuelRequestProcess process, List<String> timer) {
@@ -404,7 +405,7 @@ public class DuelManager {
         }
 
         MessageType messageType = MessageType.valueOf(Utils.getMessage("duel.win.used-mode"));
-        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, loserItemsPutSize, loserMoneyBet);
+        Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, String.valueOf(loserItemsPutSize), String.valueOf(loserMoneyBet));
 
         giveItems(winnerItemsPut, winnerPlayer); // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli
 

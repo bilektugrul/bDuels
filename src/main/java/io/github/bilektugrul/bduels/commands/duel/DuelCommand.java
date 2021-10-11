@@ -55,7 +55,9 @@ public class DuelCommand implements CommandExecutor {
         User playerUser = userManager.getUser(player);
         User opponent = userManager.getUser(opponentPlayer);
 
-        duelManager.sendDuelRequest(playerUser, opponent);
+        if (!duelManager.sendDuelRequest(playerUser, opponent)) {
+            return true;
+        }
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             DuelRequestProcess process = playerUser.getRequestProcess();
