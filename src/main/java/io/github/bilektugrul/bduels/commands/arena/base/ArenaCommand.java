@@ -40,10 +40,6 @@ public class ArenaCommand implements CommandExecutor {
         subCommands.add(subCommand);
     }
 
-    public List<SubCommand> getSubCommands() {
-        return new ArrayList<>(subCommands);
-    }
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -93,6 +89,10 @@ public class ArenaCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    public List<SubCommand> getSubCommands() {
+        return new ArrayList<>(subCommands);
     }
 
 }

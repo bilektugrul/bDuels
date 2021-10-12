@@ -339,8 +339,7 @@ public class DuelManager {
 
         if (!arenaManager.isAnyArenaAvailable()) {
             for (User user : requestProcess.getPlayers()) {
-                Player player = user.getBase();
-                player.sendMessage(Utils.getMessage("arenas.all-in-usage-2", player));
+                user.sendMessage("arenas.all-in-usage-2");
             }
             return;
         }
