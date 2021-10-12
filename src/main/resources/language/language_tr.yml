@@ -40,6 +40,7 @@ messages:
       - '&6Toplam maç sayısı: &e%totalmatches%'
       - '&6Kazanma: &e%wins%'
       - '&6Kaybetme: &e%loses%'
+      - '&6Şu anki kazanma kombosu: &e%winstreak%'
       - '&6Kazanılan para: &e%money%'
       - '&6Kaybedilen para: &e%lostmoney%'
       - '&6Kazanılan eşya sayısı: &e%item%'

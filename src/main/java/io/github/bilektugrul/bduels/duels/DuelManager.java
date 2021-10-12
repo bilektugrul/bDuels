@@ -405,16 +405,17 @@ public class DuelManager {
         Utils.sendWinMessage(messageType, winnerPlayer, loserPlayer, String.valueOf(loserItemsPutSize), String.valueOf(loserMoneyBet));
 
         giveItems(winnerItemsPut, winnerPlayer); // Kazanan kişinin ortaya koyduğu eşyaları geri verir, önce bunu yapıyoruz çünkü adam kendi eşyalarını kaybetmemeli
+        giveItems(loserItemsPut, winnerPlayer); // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
 
         winner.addStat(StatisticType.WINS, 1);
+        winner.addStat(StatisticType.WIN_STREAK, 1);
         winner.addStat(StatisticType.TOTAL_EARNED_ITEM, loserItemsPutSize);
         winner.addStat(StatisticType.TOTAL_EARNED_MONEY, loserMoneyBet);
         loser.addStat(StatisticType.TOTAL_LOST_ITEM, loserItemsPutSize);
         loser.addStat(StatisticType.TOTAL_LOST_MONEY, loserMoneyBet);
         loser.addStat(StatisticType.LOSES, 1);
+        loser.setStat(StatisticType.WIN_STREAK, 0);
         economy.addMoney(winnerPlayer, loserMoneyBet + winnerMoneyBet);
-
-        giveItems(loserItemsPut, winnerPlayer); // Kaybeden kişinin ortaya koyduğu eşyaları kazanana verir
     }
 
     public void giveItems(List<ItemStack> items, Player player) {

@@ -39,6 +39,7 @@ public class DuelStatsCommand implements CommandExecutor {
                 .replace("%totalmatches%", String.valueOf(statUser.getStat(StatisticType.TOTAL_MATCHES)))
                 .replace("%wins%", String.valueOf(statUser.getStat(StatisticType.WINS)))
                 .replace("%loses%", String.valueOf(statUser.getStat(StatisticType.LOSES)))
+                .replace("%winstreak%", String.valueOf(statUser.getStat(StatisticType.WIN_STREAK)))
                 .replace("%money%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_MONEY)))
                 .replace("%lostmoney%", String.valueOf(statUser.getStat(StatisticType.TOTAL_LOST_MONEY)))
                 .replace("%item%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_ITEM)))

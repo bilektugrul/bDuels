@@ -34,6 +34,7 @@ public class MySQLManager {
                         + "  `name` varchar(32) NOT NULL,\n"
                         + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
+                        + "  `win_streak` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `total_matches` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `total_earned_money` int(11) NOT NULL DEFAULT '0',\n"
                         + "  `total_earned_item` int(11) NOT NULL DEFAULT '0',\n"

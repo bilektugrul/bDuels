@@ -5,6 +5,7 @@ public enum StatisticType {
     TOTAL_MATCHES("total_matches", "matches"),
     WINS("wins", "win"),
     LOSES("loses", "lose"),
+    WIN_STREAK("win_streak", "streak"),
     TOTAL_EARNED_MONEY("total_earned_money", "money"),
     TOTAL_LOST_MONEY("total_lost_money", "lost_money"),
     TOTAL_EARNED_ITEM("total_earned_item", "item"),
