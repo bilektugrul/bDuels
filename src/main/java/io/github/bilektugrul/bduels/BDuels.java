@@ -19,6 +19,7 @@ import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardManager;
 import io.github.bilektugrul.bduels.features.placeholders.CustomPlaceholderManager;
 import io.github.bilektugrul.bduels.features.placeholders.PAPIPlaceholders;
 import io.github.bilektugrul.bduels.listeners.HInventoryClickListener;
+import io.github.bilektugrul.bduels.listeners.InMatchEventListener;
 import io.github.bilektugrul.bduels.listeners.PlayerListener;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
@@ -98,6 +99,7 @@ public final class BDuels extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);
+        getServer().getPluginManager().registerEvents(new InMatchEventListener(this), this);
 
         getCommand("accept").setExecutor(new DuelAcceptCommand(this));
         getCommand("arena").setExecutor(new ArenaCommand());
