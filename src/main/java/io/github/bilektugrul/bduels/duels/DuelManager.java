@@ -119,10 +119,6 @@ public class DuelManager {
         return null;
     }
 
-    public List<Duel> getOngoingDuels() {
-        return ongoingDuels;
-    }
-
     public boolean canSendOrAcceptDuel(User user) {
         return user.getRequestProcess() == null && user.getState() == UserState.FREE;
     }
@@ -131,7 +127,9 @@ public class DuelManager {
         Player senderPlayer = sender.getBase();
         Player opponentPlayer = opponent.getBase();
 
-        if (senderPlayer.equals(opponentPlayer)) return false;
+        if (senderPlayer.equals(opponentPlayer)) {
+            return false;
+        }
 
         if (!canSendOrAcceptDuel(sender) || !canSendOrAcceptDuel(opponent)) {
             senderPlayer.sendMessage(Utils.getMessage("duel.not-now", senderPlayer)
@@ -221,7 +219,9 @@ public class DuelManager {
         ItemMeta meta = newItem.getItemMeta();
         List<String> oldLore = meta.getLore();
 
-        if (oldLore == null) return itemStack;
+        if (oldLore == null) {
+            return itemStack;
+        }
 
         List<String> newLore = new ArrayList<>();
         for (String string : oldLore) {
@@ -232,6 +232,7 @@ public class DuelManager {
             }
             newLore.add(string);
         }
+
         meta.setLore(newLore);
         newItem.setItemMeta(meta);
         return newItem;
@@ -326,12 +327,18 @@ public class DuelManager {
             user.setState(UserState.FREE);
             Player player = user.getBase();
             HInventory inventory = inventoryAPI.getInventoryManager().getPlayerInventory(player);
-            if (inventory != null) inventory.close(player);
-            if (canceller != null) player.sendMessage(Utils.getMessage("duel.cancelled", player)
-                    .replace("%who%", canceller.getName()));
+            if (inventory != null) {
+                inventory.close(player);
+            }
+            if (canceller != null) {
+                player.sendMessage(Utils.getMessage("duel.cancelled", player)
+                        .replace("%who%", canceller.getName()));
+            }
 
         }
-        if (remove) duelRequestProcesses.remove(requestProcess);
+        if (remove) {
+            duelRequestProcesses.remove(requestProcess);
+        }
     }
 
     public void startMatch(DuelRequestProcess requestProcess) {
@@ -366,7 +373,9 @@ public class DuelManager {
         arena.setState(ArenaState.POST_MATCH);
 
         boolean isReloadOrStop = reason == DuelEndReason.RELOAD || reason == DuelEndReason.SERVER_STOP;
-        if (!isReloadOrStop) ongoingDuels.remove(duel);
+        if (!isReloadOrStop) {
+            ongoingDuels.remove(duel);
+        }
 
         for (User user : duel.getPlayers()) {
             Location preDuelLocation = duel.getPreDuelLocations().get(user);
@@ -445,6 +454,10 @@ public class DuelManager {
             cancel(null, process, false);
         }
         duelRequestProcesses.clear();
+    }
+
+    public List<Duel> getOngoingDuels() {
+        return new ArrayList<>(ongoingDuels);
     }
 
     public int[] getOpponentSide() {

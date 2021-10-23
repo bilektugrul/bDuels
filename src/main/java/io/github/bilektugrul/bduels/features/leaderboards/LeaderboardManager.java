@@ -48,7 +48,9 @@ public class LeaderboardManager {
                 leaderboard.createHologram(plugin, hologramLocation);
             }
         }
-        if (first) sortEveryLeaderboard();
+        if (first) {
+            sortEveryLeaderboard();
+        }
     }
 
     public void prepareEntries(Leaderboard leaderboard) {
@@ -59,7 +61,9 @@ public class LeaderboardManager {
             String entryName = file.getString(path + ".name");
             int value = file.getInt(path + ".value");
             leaderboardEntries.add(new LeaderboardEntry(entryName, value));
-            if (leaderboardEntries.size() == leaderboard.getMaxSize()) break;
+            if (leaderboardEntries.size() == leaderboard.getMaxSize()) {
+                break;
+            }
         }
         leaderboard.setLeaderboardEntries(leaderboardEntries);
     }
@@ -67,7 +71,9 @@ public class LeaderboardManager {
     public void clear() {
         for (Leaderboard leaderboard : leaderboards) {
             Hologram hologram = leaderboard.getHologram();
-            if (hologram != null) hologram.delete();
+            if (hologram != null) {
+                hologram.delete();
+            }
         }
         leaderboards.clear();
     }
@@ -128,7 +134,9 @@ public class LeaderboardManager {
     }
 
     public void updateHologram(Leaderboard leaderboard) {
-        if (!plugin.isHologramsEnabled()) return;
+        if (!plugin.isHologramsEnabled()) {
+            return;
+        }
         Hologram hologram = leaderboard.getHologram();
         if (hologram != null) {
             hologram.clearLines();
@@ -147,7 +155,9 @@ public class LeaderboardManager {
             String leaderboardName = leaderboard.getId();
             String path = "leaderboards." + leaderboardName + ".";
             Hologram hologram = leaderboard.getHologram();
-            if (hologram != null) file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
+            if (hologram != null) {
+                file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
+            }
             int i = 1;
             file.set(path + "leaderboard", new ArrayList<>());
             for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {

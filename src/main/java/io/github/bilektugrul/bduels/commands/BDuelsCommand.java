@@ -23,7 +23,9 @@ public class BDuelsCommand implements CommandExecutor {
 
     public BDuelsCommand(BDuels plugin) {
         this.plugin = plugin;
-        if (plugin.isLeaderboardManagerReady()) this.leaderboardManager = plugin.getLeaderboardManager();
+        if (plugin.isLeaderboardManagerReady()) {
+            this.leaderboardManager = plugin.getLeaderboardManager();
+        }
         plugin.getCommand("bduels").setTabCompleter(new BDuelsCommandTabCompleter());
     }
 
@@ -61,7 +63,9 @@ public class BDuelsCommand implements CommandExecutor {
     }
 
     private void refreshLeaderboard(CommandSender sender, String[] args) {
-        if (!plugin.isLeaderboardManagerReady()) return;
+        if (!plugin.isLeaderboardManagerReady()) {
+            return;
+        }
         boolean all = true;
         String toRefresh = "";
 
@@ -88,7 +92,9 @@ public class BDuelsCommand implements CommandExecutor {
     }
 
     private void setLeaderboardHologramLocation(CommandSender sender, String[] args) {
-        if (!plugin.isLeaderboardManagerReady()) return;
+        if (!plugin.isLeaderboardManagerReady()) {
+            return;
+        }
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(Utils.getMessage("only-players", sender));
@@ -126,17 +132,25 @@ public class BDuelsCommand implements CommandExecutor {
             case "stat":
             case "istatistik":
             case "istatistikler":
-                if (!plugin.isDatabaseEnabled()) sender.sendMessage(Utils.getMessage("main-command.database-disabled", sender));
-                else if (plugin.saveAllUserStatistics()) sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
-                else sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
+                if (!plugin.isDatabaseEnabled()) {
+                    sender.sendMessage(Utils.getMessage("main-command.database-disabled", sender));
+                } else if (plugin.saveAllUserStatistics()) {
+                    sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
+                } else {
+                    sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
+                }
                 return;
             case "leaderboards":
             case "sıralama":
             case "sıralamalar":
                 boolean saved = false;
-                if (!plugin.isLeaderboardManagerReady()) sender.sendMessage(Utils.getMessage("leaderboards.not-active", sender));
-                else saved = leaderboardManager.save();
-                if (saved) sender.sendMessage(Utils.getMessage("leaderboards.saved", sender));
+                if (!plugin.isLeaderboardManagerReady()) {
+                    sender.sendMessage(Utils.getMessage("leaderboards.not-active", sender));
+                } else {
+                    saved = leaderboardManager.save();
+                } if (saved) {
+                    sender.sendMessage(Utils.getMessage("leaderboards.saved", sender));
+                }
                 return;
             case "all":
             case "hepsi":
@@ -153,8 +167,9 @@ public class BDuelsCommand implements CommandExecutor {
 
         @Override
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-            if (args.length > 1 && args[0].equalsIgnoreCase("save"))
+            if (args.length > 1 && args[0].equalsIgnoreCase("save")) {
                 return Arrays.asList("stats", "leaderboards", "all");
+            }
             return Arrays.asList("reload", "refresh-leaderboard", "leaderboardholo", "save", "save");
         }
 

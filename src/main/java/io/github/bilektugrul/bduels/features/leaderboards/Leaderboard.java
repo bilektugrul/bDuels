@@ -49,9 +49,11 @@ public class Leaderboard {
     }
 
     public Hologram createHologram(BDuels plugin, Location location) {
-        if (this.hologram != null) this.hologram.delete();
-        this.hologram = HologramsAPI.createHologram(plugin, location);
-        return this.hologram;
+        if (hologram != null) {
+            hologram.delete();
+        }
+        hologram = HologramsAPI.createHologram(plugin, location);
+        return hologram;
     }
 
     public Hologram getHologram() {

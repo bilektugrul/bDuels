@@ -25,14 +25,20 @@ public class HInventoryClickListener extends ListenerAdapter {
         HInventory playerHInventory = plugin.getInventoryAPI().getInventoryManager().getPlayerInventory(clicker);
         if (playerHInventory != null && playerHInventory.getId().contains("-bDuels")) {
             ItemStack clicked = e.getCurrentItem();
-            if (clicked == null) return;
+            if (clicked == null) {
+                return;
+            }
 
             Inventory clickedInventory = e.getClickedInventory();
-            if (clickedInventory == null) return;
+            if (clickedInventory == null) {
+                return;
+            }
 
             User user = userManager.getUser(clicker);
             DuelRequestProcess process = duelManager.getProcess(user);
-            if (process.isFinished(user)) return;
+            if (process.isFinished(user)) {
+                return;
+            }
 
             PlayerType clickerType = process.getPlayerType(user);
             int[] side = clickerType == PlayerType.PLAYER ? duelManager.getPlayerSide() : duelManager.getOpponentSide();
@@ -42,12 +48,16 @@ public class HInventoryClickListener extends ListenerAdapter {
 
             if (!clickedInventory.equals(playerHInventoryOriginal)) { // KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
                 int slotToPut = Utils.nextEmptySlot(side, playerHInventoryOriginal);
-                if (rewards.containsItem(clicked) || slotToPut == -1) return;
+                if (rewards.containsItem(clicked) || slotToPut == -1) {
+                    return;
+                }
 
                 rewards.addItemToBet(clicked);
                 playerHInventoryOriginal.setItem(slotToPut, clicked);
             } else { // GUIYE TIKLADIĞINDA TIKLADIĞI İTEM BETLENEN İTEMLERDENSE SİLİNECEK
-                if (!rewards.containsItem(clicked)) return;
+                if (!rewards.containsItem(clicked)) {
+                    return;
+                }
 
                 rewards.removeItem(clicked);
                 clickedInventory.setItem(e.getSlot(), null);

@@ -201,12 +201,16 @@ public final class BDuels extends JavaPlugin {
         arenaManager.loadArenas();
         duelManager.reload();
         userManager.prepareSaveProcess();
-        if (isLeaderboardManagerReady()) leaderboardManager.reloadSettings(false);
+        if (isLeaderboardManagerReady()) {
+            leaderboardManager.reloadSettings(false);
+        }
     }
 
     public void save() {
         arenaManager.save();
-        if (isLeaderboardManagerReady()) leaderboardManager.save();
+        if (isLeaderboardManagerReady()) {
+            leaderboardManager.save();
+        }
     }
 
 }

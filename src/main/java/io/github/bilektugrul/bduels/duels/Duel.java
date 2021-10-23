@@ -86,7 +86,9 @@ public class Duel {
 
     public User getOpponentOf(User user) {
         for (User user2 : getPlayers()) {
-            if (!user2.equals(user)) return user2;
+            if (!user2.equals(user)) {
+                return user2;
+            }
         }
         return null;
     }

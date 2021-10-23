@@ -53,7 +53,6 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String identifier) {
-
         if (identifier.contains("custom")) {
             String name = identifier.substring(identifier.indexOf("custom_") + 7);
             return placeholderManager.getPlaceholder(name).getValue();
@@ -68,7 +67,9 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
         }
 
         boolean userRequired = identifier.contains("stat") || identifier.contains("opponent") || identifier.contains("arena");
-        if (!userRequired) return "";
+        if (!userRequired) {
+            return "";
+        }
 
         User user = userManager.getUser(player);
         Duel duel = user.getDuel();
@@ -84,16 +85,18 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
 
         if (identifier.contains("opponent")) {
             DuelRequestProcess process = user.getRequestProcess();
-            if (process != null)
+            if (process != null) {
                 return process.getOpponentOf(user).getName();
-            if (duel != null)
+            } if (duel != null) {
                 return duel.getOpponentOf(user).getName();
+            }
             return "";
         }
 
         if (identifier.contains("arena")) {
-            if (duel != null)
+            if (duel != null) {
                 return duel.getArena().getName();
+            }
         }
 
         return "";

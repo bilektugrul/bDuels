@@ -45,7 +45,9 @@ public class DuelRequestProcess {
 
     public User getOpponentOf(User user) {
         for (User user2 : getPlayers()) {
-            if (!user2.equals(user)) return user2;
+            if (!user2.equals(user)) {
+                return user2;
+            }
         }
         return null;
     }
@@ -72,7 +74,9 @@ public class DuelRequestProcess {
 
     public boolean isBothFinished() {
         for (boolean b : finished.values()) {
-            if (!b) return false;
+            if (!b) {
+                return false;
+            }
         }
         return true;
     }

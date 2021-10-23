@@ -105,8 +105,9 @@ public class Utils {
 
         if (replacePersonalPlaceholders)
             msg = msg.replace("%player%", matchName(from));
-        if (isPAPIEnabled && replacePAPI)
+        if (isPAPIEnabled && replacePAPI) {
             return PlaceholderAPI.setPlaceholders(from instanceof Player ? (Player) from : null, msg);
+        }
         return msg;
     }
 

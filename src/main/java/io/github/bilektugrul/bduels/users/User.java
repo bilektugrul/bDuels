@@ -87,12 +87,16 @@ public class User {
     }
 
     public void setStat(StatisticType stat, int i) {
-        if (stat == StatisticType.DUEL_REQUESTS) i = i >= 1 ? 1 : 0;
+        if (stat == StatisticType.DUEL_REQUESTS) {
+            i = i >= 1 ? 1 : 0;
+        }
         stats.put(stat, i);
     }
 
     public void addStat(StatisticType stat, int i) {
-        if (stat == StatisticType.DUEL_REQUESTS) return;
+        if (stat == StatisticType.DUEL_REQUESTS) {
+            return;
+        }
         stats.put(stat, getStat(stat) + i);
     }
 

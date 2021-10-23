@@ -40,7 +40,9 @@ public abstract class SubCommand {
     }
 
     public final boolean hasPermission(CommandSender sender) {
-        if (permission == null) return true;
+        if (permission == null) {
+            return true;
+        }
         return sender.hasPermission(permission);
     }
 

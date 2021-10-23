@@ -59,7 +59,9 @@ public class MySQLManager {
         StringBuilder update = new StringBuilder(" SET ");
 
         for (StatisticType stat : StatisticType.values()) {
-            if (!stat.isPersistent()) continue;
+            if (!stat.isPersistent()) {
+                continue;
+            }
             if (update.toString().equalsIgnoreCase(" SET ")) {
                 update.append(stat.getName()).append("=").append(user.getStat(stat));
             }
@@ -68,10 +70,11 @@ public class MySQLManager {
         }
 
         String finalUpdate = update.toString();
-        if (!sync)
+        if (!sync) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + tableName + finalUpdate + " WHERE UUID='" + user.getUUID().toString() + "';"));
-        else
+        } else {
             database.executeUpdate("UPDATE " + tableName + finalUpdate + " WHERE UUID='" + user.getUUID().toString() + "';");
+        }
     }
 
     public void loadStatistics(User user) {
@@ -83,7 +86,6 @@ public class MySQLManager {
                 ResultSet rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
                 if (rs.next()) {
-
                     for (StatisticType stat : StatisticType.values()) {
                         if (!stat.isPersistent()) continue;
 
@@ -93,8 +95,9 @@ public class MySQLManager {
                     statement.executeUpdate("INSERT INTO " + tableName + " (UUID,name) VALUES ('" + uuid + "','" + name + "');");
 
                     for (StatisticType stat : StatisticType.values()) {
-                        if (!stat.isPersistent()) continue;
-
+                        if (!stat.isPersistent()) {
+                            continue;
+                        }
                         user.setStat(stat, stat.getDefaultValue());
                     }
                 }
