@@ -29,6 +29,7 @@ in-game-settings:
   # NEVER: kimse yapamaz
   can-break-blocks: ONLY_WITH_PERMISSION # sadece bduels.can-break-blocks yetkisi olanlar maç sırasında blok kırabilir
   can-place-blocks: ONLY_WITH_PERMISSION # sadece bduels.can-place-blocks yetkisi olanlar maç sırasında blok kırabilir
+                                         # maç sırasında arenalara koyulan bloklar maç bittiğinde temizlenmez. dikkatli olun.
   can-use-command: ONLY_WITH_PERMISSION  # sadece bduels.can-use-command yetkisi olanlar maç sırasında komut kullanabilir
   can-drop-item: ONLY_WITH_PERMISSION    # sadece bduels.can-drop-item yetkisi olanlar maç sırasında yere eşya atabilir
   can-teleport: ONLY_WITH_PERMISSION     # sadece bduels.can-teleport yetkisi olanlar maç sırasında başka bir yere ışınlanabilir

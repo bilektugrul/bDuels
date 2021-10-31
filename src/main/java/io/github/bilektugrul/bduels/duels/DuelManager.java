@@ -39,16 +39,17 @@ public class DuelManager {
     private final List<Duel> ongoingDuels = new ArrayList<>();
     private final List<MoneyBetSettings> moneyBetSettingsCache = new ArrayList<>();
 
-    private final int[] midGlasses = {4, 13, 22, 31, 40};
-    private final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
-    private final int[] opponentSide = {5, 6, 7, 8, 15, 16, 17, 23, 24, 25, 26, 32, 33, 34, 35, 41, 42, 43, 44, 51, 52, 53};
-    private final int[] playerMoneySide = {0, 1, 2, 3};
-    private final int[] opponentMoneySide = {5, 6, 7, 8};
+    private static final int[] midGlasses = {4, 13, 22, 31, 40};
+    private static final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
+    private static final int[] opponentSide = {5, 6, 7, 8, 15, 16, 17, 23, 24, 25, 26, 32, 33, 34, 35, 41, 42, 43, 44, 51, 52, 53};
+    private static final int[] playerMoneySide = {0, 1, 2, 3};
+    private static final int[] opponentMoneySide = {5, 6, 7, 8};
 
-    private ItemStack glass = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
-    private ItemStack greenGlass = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
-    private ItemStack redGlass = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-    private ItemStack cancelItem = new ItemStack(Material.BARRIER);
+    private static ItemStack glass = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
+    private static ItemStack greenGlass = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
+    private static ItemStack redGlass = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
+    private static ItemStack cancelItem = new ItemStack(Material.BARRIER);
+    private static final ItemStack playerHead = XMaterial.PLAYER_HEAD.parseItem();
 
     public DuelManager(BDuels plugin) {
         this.plugin = plugin;
@@ -75,22 +76,21 @@ public class DuelManager {
         ItemMeta glassMeta = glass.getItemMeta();
         glassMeta.setDisplayName(Utils.getString("mid-item.name", null));
         glassMeta.setLore(Utils.getStringList("mid-item.lore", null));
+        glass.setItemMeta(glassMeta);
 
-        ItemMeta greenGlassMeta = glass.getItemMeta();
+        ItemMeta greenGlassMeta = greenGlass.getItemMeta();
         greenGlassMeta.setDisplayName(Utils.getString("ready-item.name", null));
         greenGlassMeta.setLore(Utils.getStringList("ready-item.lore", null));
+        greenGlass.setItemMeta(greenGlassMeta);
 
-        ItemMeta redGlassMeta = glass.getItemMeta();
+        ItemMeta redGlassMeta = redGlass.getItemMeta();
         redGlassMeta.setDisplayName(Utils.getString("not-ready-item.name", null));
         redGlassMeta.setLore(Utils.getStringList("not-ready-item.lore", null));
+        redGlass.setItemMeta(redGlassMeta);
 
         ItemMeta cancelItemMeta = cancelItem.getItemMeta();
         cancelItemMeta.setDisplayName(Utils.getString("request-cancel-item.name", null));
         cancelItemMeta.setLore(Utils.getStringList("request-cancel-item.lore", null));
-
-        glass.setItemMeta(glassMeta);
-        greenGlass.setItemMeta(greenGlassMeta);
-        redGlass.setItemMeta(redGlassMeta);
         cancelItem.setItemMeta(cancelItemMeta);
     }
 
@@ -239,8 +239,8 @@ public class DuelManager {
     }
 
     public void updateHeads(HInventory inventory, DuelRequestProcess process) {
-        ItemStack playerSkull = XMaterial.PLAYER_HEAD.parseItem().clone();
-        ItemStack opponentSkull = XMaterial.PLAYER_HEAD.parseItem().clone();
+        ItemStack playerSkull = playerHead.clone();
+        ItemStack opponentSkull = playerHead.clone();
         inventory.setItem(12, ClickableItem.empty(replaceLoreAndName(playerSkull, process, null)));
         inventory.setItem(14, ClickableItem.empty(replaceLoreAndName(opponentSkull, process, null)));
         updateMetas(inventory, process);
@@ -334,7 +334,6 @@ public class DuelManager {
                 player.sendMessage(Utils.getMessage("duel.cancelled", player)
                         .replace("%who%", canceller.getName()));
             }
-
         }
         if (remove) {
             duelRequestProcesses.remove(requestProcess);
@@ -343,7 +342,6 @@ public class DuelManager {
 
     public void startMatch(DuelRequestProcess requestProcess) {
         cancel(null, requestProcess, true);
-
         if (!arenaManager.isAnyArenaAvailable()) {
             for (User user : requestProcess.getPlayers()) {
                 user.sendMessage("arenas.all-in-usage-2");
@@ -356,8 +354,8 @@ public class DuelManager {
 
         Duel duel = new Duel(plugin, requestProcess, matchArena);
         duel.startCountdown();
-
         ongoingDuels.add(duel);
+
         for (User user : duel.getPlayers()) {
             economy.removeMoney(user.getBase(), duel.getRewardsOf(user).getMoneyBet());
         }
@@ -399,7 +397,7 @@ public class DuelManager {
 
         if (isReloadOrStop) {
             giveItems(winnerItemsPut, winnerPlayer); // ortaya koyduğu eşyaları geri veriyoz çünkü stop veya reload yedi
-            giveItems(loserItemsPut, loserPlayer); // / diğerinin eşyalarını da geri veriyoz çünkü stop veya reload yedi
+            giveItems(loserItemsPut, loserPlayer); // diğerinin eşyalarını da geri veriyoz çünkü stop veya reload yedi
 
             winnerPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", winnerPlayer));
             loserPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", loserPlayer));

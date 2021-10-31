@@ -33,29 +33,22 @@ public class UserManager {
         }
     }
 
-    public User loadUser(Player p) {
-        return loadUser(p, true);
-    }
+    public User getUser(Player player) {
+        if (!player.isOnline()) {
+            return null;
+        }
 
-    public User loadUser(Player player, boolean keep) {
-        User user = new User(player);
-        loadStatistics(user);
-        if (keep) userList.add(user);
-        return user;
-    }
-
-    public User getUser(Player p) {
-        UUID uuid = p.getUniqueId();
-        return getUser(uuid);
-    }
-
-    public User getUser(UUID uuid) {
+        UUID uuid = player.getUniqueId();
         for (User user : userList) {
-            if (user.getBase().getUniqueId().equals(uuid)) {
+            if (user.getUUID().equals(uuid)) {
                 return user;
             }
         }
-        return null;
+
+        User user = new User(player);
+        loadStatistics(user);
+        userList.add(user);
+        return user;
     }
 
     public void removeUser(User user) {

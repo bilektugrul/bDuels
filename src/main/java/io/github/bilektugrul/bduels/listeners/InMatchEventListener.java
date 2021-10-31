@@ -48,7 +48,7 @@ public class InMatchEventListener extends ListenerAdapter {
     }
 
     @EventHandler
-    public void onBreak(PlayerDropItemEvent e) {
+    public void onDrop(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
         User user = userManager.getUser(player);
         if (userManager.isInMatch(user)) {

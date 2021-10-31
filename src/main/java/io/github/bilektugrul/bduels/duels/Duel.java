@@ -39,11 +39,8 @@ public class Duel {
         this.player.addStat(StatisticType.TOTAL_MATCHES, 1);
         this.opponent.addStat(StatisticType.TOTAL_MATCHES, 1);
 
-        Player player = this.player.getBase();
-        Player opponentPlayer = this.opponent.getBase();
-
-        preDuelLocations.put(this.player, player.getLocation());
-        preDuelLocations.put(this.opponent, opponentPlayer.getLocation());
+        preDuelLocations.put(player, player.getBase().getLocation());
+        preDuelLocations.put(opponent, opponent.getBase().getLocation());
     }
 
     public void startCountdown() {

@@ -43,6 +43,7 @@ public final class BDuels extends JavaPlugin {
     private LeaderboardManager leaderboardManager;
 
     private InventoryAPI inventoryAPI;
+    private PluginManager pluginManager;
 
     private boolean databaseEnabled = false;
     private boolean hologramsEnabled = false;
@@ -52,14 +53,50 @@ public final class BDuels extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
+        pluginManager = getServer().getPluginManager();
 
-        PluginManager pluginManager = getServer().getPluginManager();
+        if (registerManagers()) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                userManager.getUser(p);
+            }
+
+            pluginManager.registerEvents(new PlayerListener(this), this);
+            pluginManager.registerEvents(new HInventoryClickListener(this), this);
+            pluginManager.registerEvents(new InMatchEventListener(this), this);
+
+            getCommand("accept").setExecutor(new DuelAcceptCommand(this));
+            getCommand("arena").setExecutor(new ArenaCommand());
+            getCommand("bduels").setExecutor(new BDuelsCommand(this));
+            getCommand("duel").setExecutor(new DuelCommand(this));
+            getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
+            getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
+            if (isLeaderboardManagerReady()) {
+                getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
+            }
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        if (!forceDisable) {
+            duelManager.endMatches(DuelEndReason.SERVER_STOP);
+            if (databaseEnabled) {
+                saveAllUserStatistics();
+                mysqlDatabase.shutdownConnPool();
+            }
+            Bukkit.getScheduler().cancelTasks(this);
+            save();
+        }
+    }
+
+    private boolean registerManagers() {
         if (pluginManager.isPluginEnabled("Vault")) {
             vaultManager = new VaultManager(this);
             vaultEconomy = new VaultEconomy(this);
         } else {
             getLogger().warning("Sunucunuzda Vault kurulu değil, BDuels'in çalışması için Vault gereklidir.");
             setEnabled(false);
+            return false;
         }
 
         databaseEnabled = getConfig().getBoolean("database.enabled");
@@ -68,7 +105,7 @@ public final class BDuels extends JavaPlugin {
             if (mysqlDatabase.shouldClose()) {
                 forceDisable = true;
                 setEnabled(false);
-                return;
+                return false;
             }
         }
 
@@ -77,10 +114,6 @@ public final class BDuels extends JavaPlugin {
         arenaManager = new ArenaManager(this);
         duelManager = new DuelManager(this);
         userManager = new UserManager(this);
-
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            userManager.loadUser(p);
-        }
 
         if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
             new PAPIPlaceholders(this).register();
@@ -96,31 +129,7 @@ public final class BDuels extends JavaPlugin {
         if (databaseEnabled) {
             leaderboardManager = new LeaderboardManager(this);
         }
-
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-        getServer().getPluginManager().registerEvents(new HInventoryClickListener(this), this);
-        getServer().getPluginManager().registerEvents(new InMatchEventListener(this), this);
-
-        getCommand("accept").setExecutor(new DuelAcceptCommand(this));
-        getCommand("arena").setExecutor(new ArenaCommand());
-        getCommand("bduels").setExecutor(new BDuelsCommand(this));
-        getCommand("duel").setExecutor(new DuelCommand(this));
-        getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
-        getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
-        if (isLeaderboardManagerReady()) getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
-    }
-
-    @Override
-    public void onDisable() {
-        if (!forceDisable) {
-            duelManager.endMatches(DuelEndReason.SERVER_STOP);
-            if (databaseEnabled) {
-                saveAllUserStatistics();
-                mysqlDatabase.shutdownConnPool();
-            }
-            Bukkit.getScheduler().cancelTasks(this);
-            save();
-        }
+        return true;
     }
 
     public boolean saveAllUserStatistics() {
