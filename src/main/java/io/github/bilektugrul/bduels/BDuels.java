@@ -1,5 +1,6 @@
 package io.github.bilektugrul.bduels;
 
+import com.hakan.controller.LicenseController;
 import com.hakan.inventoryapi.InventoryAPI;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.BDuelsCommand;
@@ -51,6 +52,10 @@ public final class BDuels extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (!checkLicence()) {
+            return;
+        }
+
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
         pluginManager = getServer().getPluginManager();
@@ -73,7 +78,23 @@ public final class BDuels extends JavaPlugin {
             if (isLeaderboardManagerReady()) {
                 getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
             }
+        } else {
+            forceClose();
         }
+    }
+
+    private boolean checkLicence() {
+        boolean licenced = new LicenseController().checkLicense("bDuels");
+        if (!licenced) {
+            getLogger().warning("Lisans doğrulanamadı. Eklenti kapatılıyor.");
+            forceClose();
+        }
+        return licenced;
+    }
+
+    private void forceClose() {
+        forceDisable = true;
+        setEnabled(false);
     }
 
     @Override
@@ -95,7 +116,6 @@ public final class BDuels extends JavaPlugin {
             vaultEconomy = new VaultEconomy(this);
         } else {
             getLogger().warning("Sunucunuzda Vault kurulu değil, BDuels'in çalışması için Vault gereklidir.");
-            setEnabled(false);
             return false;
         }
 
@@ -103,8 +123,6 @@ public final class BDuels extends JavaPlugin {
         if (databaseEnabled) {
             mysqlDatabase = new MysqlDatabase(getLogger(), getConfig());
             if (mysqlDatabase.shouldClose()) {
-                forceDisable = true;
-                setEnabled(false);
                 return false;
             }
         }

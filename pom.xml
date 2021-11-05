@@ -58,6 +58,14 @@
                                     <pattern>com.zaxxer.hikari</pattern>
                                     <shadedPattern>io.github.bilektugrul.bduels.internal.hikari</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.hakan.controller</pattern>
+                                    <shadedPattern>io.github.bilektugrul.bduels.internal.licence</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.json</pattern>
+                                    <shadedPattern>io.github.bilektugrul.bduels.internal.json</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
@@ -115,6 +123,11 @@
             <groupId>com.github.hakan-krgn</groupId>
             <artifactId>hInventoryAPI</artifactId>
             <version>1.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hakan.LicenseController</groupId>
+            <artifactId>LicenseController</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
