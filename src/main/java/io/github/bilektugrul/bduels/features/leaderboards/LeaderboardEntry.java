@@ -3,9 +3,9 @@ package io.github.bilektugrul.bduels.features.leaderboards;
 public class LeaderboardEntry {
 
     private final String name;
-    private final Integer value;
+    private final int value;
 
-    public LeaderboardEntry(String name, Integer value) {
+    public LeaderboardEntry(String name, int value) {
         this.name = name;
         this.value = value;
     }
@@ -14,7 +14,7 @@ public class LeaderboardEntry {
         return name;
     }
 
-    public Integer getValue() {
+    public int getValue() {
         return value;
     }
 

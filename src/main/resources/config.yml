@@ -23,7 +23,7 @@ titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ay
   fade-out: 5
 
 in-game-settings:
-  # modlar: NEVER, EVERYONE
+  # modlar: ONLY_WITH_PERMISSION, NEVER, EVERYONE
   # ONLY_WITH_PERMISSION: sadece yetkisi olan kişiler aşağıdakileri yapabilir
   # EVERYONE: herkes aşağıdakileri yapabilir
   # NEVER: kimse yapamaz
@@ -34,7 +34,6 @@ in-game-settings:
   can-drop-item: ONLY_WITH_PERMISSION    # sadece bduels.can-drop-item yetkisi olanlar maç sırasında yere eşya atabilir
   can-teleport: ONLY_WITH_PERMISSION     # sadece bduels.can-teleport yetkisi olanlar maç sırasında başka bir yere ışınlanabilir
                                          # sadece enter pearl ile olan ışınlanmalar için geçerlidir
-
 
 start-countdown: 5 # Maç başlarken kaç saniye geri sayım yapılacağına dair ayar.
 other-stats-require-permission: true # true olarak kalırsa oyuncular

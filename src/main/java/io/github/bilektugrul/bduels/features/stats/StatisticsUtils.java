@@ -31,10 +31,12 @@ public class StatisticsUtils {
         List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
         try (Connection connection = plugin.getMySQLDatabase().getConnection()) {
             try (Statement statement = connection.createStatement()) {
-                ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + ", name FROM " + userManager.getMysqlManager().getTableName() + " ORDER BY " + stat.getName());
+                ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName()
+                        + ", name FROM " + userManager.getMysqlManager().getTableName()
+                        + " ORDER BY " + stat.getName());
                 while (set.next()) {
                     String name = set.getString("name");
-                    Integer value = set.getInt(stat.getName());
+                    int value = set.getInt(stat.getName());
                     leaderboardEntries.add(new LeaderboardEntry(name, value));
                 }
                 return leaderboardEntries;

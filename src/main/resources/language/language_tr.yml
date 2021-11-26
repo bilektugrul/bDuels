@@ -1,5 +1,10 @@
 messages:
 
+  after-load:
+    - '%prefix% &bbDuels''i tercih ettiğiniz için teşekkürler!'
+    - '%prefix% &bEklentiyle alakalı her türlü bilgiye kolayca ulaşmak için:'
+    - '%prefix% &bhttps://github.com/bilektugrul/bDuels-Wiki/wiki'
+
   no-permission: '%prefix% &cÜzgünüm %player% ancak bunu yapamazsın.'
   only-players: '%prefix% &cSadece oyuncular bu komutu kullanabilir.'
   config-reloaded: '%prefix% &6Ayarlar, mesajlar ve arenalar başarıyla yenilendi.'
@@ -21,8 +26,6 @@ messages:
       - '%prefix% &6[] içeren kısımlar isteğe bağlıdır.'
       - '%prefix% &6Alt komutlar:'
       - '%prefix% &7- &3reload'
-      - '%prefix% &7- &3refresh-leaderboard[s]'
-      - '%prefix% &7- &3leaderboardholo <sıralama ismi> &7| &3Girilen sıralamanın hologram lokasyonunu bulunduğunuz lokasyon olarak ayarlar.'
       - '%prefix% &7- &3save [<veri türü>] &7| &3Girilen verileri gerekli yerlere kaydeder. Veri türü girmezseniz her şey kaydedilecektir.'
       - '%prefix% &6Veri türleri:'
       - '%prefix% &7- &3stats &7| &3Aktif oyuncuların istatistiklerini kapsar.'
@@ -34,30 +37,7 @@ messages:
     could-not-saved: '%prefix% &cOyuncu istatistikleri veritabanına kaydedilemedi. Veritabanı ayarlarınızı kontrol edin.'
     database-disabled: '%prefix% &cVeritabanı kapalı olduğu için verileri kaydedemezsin.'
 
-  stats-command:
-    command:
-      - '&b&l&m-----&r &3%statplayer% &b&l&m-----'
-      - '&6Toplam maç sayısı: &e%totalmatches%'
-      - '&6Kazanma: &e%wins%'
-      - '&6Kaybetme: &e%loses%'
-      - '&6Şu anki kazanma kombosu: &e%winstreak%'
-      - '&6Kazanılan para: &e%money%'
-      - '&6Kaybedilen para: &e%lostmoney%'
-      - '&6Kazanılan eşya sayısı: &e%item%'
-      - '&6Kaybedilen eşya sayısı: &e%lostitem%'
-      - ' '
-      - '&6Düello istekleri: &e%requests%'
-      - '&b&l&m-----&r &3%statplayer% &b&l&m-----'
-    cannot-check: '%prefix% &cBaşkalarının istatistiklerine bakma yetkin yok.'
-
-  request-toggle-command:
-    toggled: '%prefix% &6Artık düello isteklerini %newmode%&6.'
-    modes:
-      0: '&calmayacaksın'
-      1: '&ealacaksın'
-
   leaderboards:
-    type-leaderboard-name: '%prefix% &cBir sıralama ismi girmelisin.'
     not-found: '%prefix% &cBu sıralama bulunamadı.'
     date-format: 'dd/MM/yyyy HH:mm:ss'
     location-changed: '%prefix% &6Hologram lokasyonu değiştirildi.'
@@ -92,6 +72,45 @@ messages:
         - '%prefix% &cKomutu hatalı kullandınız.'
         - '%prefix% &cDoğru kullanım: &6/sıralama <sıralama ismi>'
         - '%prefix% &cTüm sıralamalar: &6%leaderboards%'
+      wrong-usage-admin:
+        - '%prefix% &cKomutu hatalı kullandınız.'
+        - '%prefix% &cDoğru kullanım: &6/sıralama <sıralama ismi>'
+        - '%prefix% &cDoğru kullanım: &6/sıralama <alt komut> <sıralama ismi> <alt komut ekstraları>'
+        - '%prefix% &cTüm sıralamalar: &6%leaderboards%'
+        - '%prefix% &7- &3oluştur [<sıralama ismi>]'
+        - '%prefix% &7- &3yenile [<sıralama ismi>] &7| &3Girilen Sıralamalayı veya sıralama girilmemişse tüm sıralamaları yeniler.'
+        - '%prefix% &7- &3hologram <sıralama ismi> &7| &3Girilen sıralamanın hologram lokasyonunu bulunduğunuz lokasyon olarak ayarlar.'
+        - '%prefix% &7- &3limit <sıralama ismi> <limit> &7| &3Girilen sıralamanın sıralayacağı kişi limitini değiştirir.'
+        - '%prefix% &7- &3veri <sıralama ismi> <veri türü> &7| &3Girilen sıralamanın sıralayacağı istatistik türünü değiştirir.'
+        - '%prefix% &7- &3sıralamatürü <sıralama ismi> <sıralama türü> &7| &3Girilen sıralamanın, nasıl sıralanacağını belirler..'
+    created: '%prefix% &3%leaderboard% &6isimli bir sıralama oluşturuldu! Diğer ayarlarını yapmayı unutmayın.'
+    not-created: '%prefix% &3%leaderboard% &6isimli sıralama zaten o isimde bir sıralama olduğu için oluşturulamadı.'
+    size-changed: '%prefix% &3%leaderboard% &6isimli sıralamanın genişliği &3%newsize% &6olarak değiştirildi.'
+    data-changed: '%prefix% &3%leaderboard% &6isimli sıralamanın sıralama veri türü &3%newdata% &6olarak değiştirildi.'
+    sorting-type-changed: '%prefix% &3%leaderboard% &6isimli sıralamanın sıralama veri türü &3%newtype% &6olarak değiştirildi.'
+    not-ready: '%prefix% &cBu sıralama hazır değil.'
+
+  stats-command:
+    command:
+      - '&b&l&m-----&r &3%statplayer% &b&l&m-----'
+      - '&6Toplam maç sayısı: &e%totalmatches%'
+      - '&6Kazanma: &e%wins%'
+      - '&6Kaybetme: &e%loses%'
+      - '&6Şu anki kazanma kombosu: &e%winstreak%'
+      - '&6Kazanılan para: &e%money%'
+      - '&6Kaybedilen para: &e%lostmoney%'
+      - '&6Kazanılan eşya sayısı: &e%item%'
+      - '&6Kaybedilen eşya sayısı: &e%lostitem%'
+      - ' '
+      - '&6Düello istekleri: &e%requests%'
+      - '&b&l&m-----&r &3%statplayer% &b&l&m-----'
+    cannot-check: '%prefix% &cBaşkalarının istatistiklerine bakma yetkin yok.'
+
+  request-toggle-command:
+    toggled: '%prefix% &6Artık düello isteklerini %newmode%&6.'
+    modes:
+      0: '&calmayacaksın'
+      1: '&ealacaksın'
 
   duel:
     enter-player: '%prefix% &cDüello atmak istediğin oyuncunun adını gir.'

@@ -1,7 +1,7 @@
 package io.github.bilektugrul.bduels.features.placeholders;
 
 import io.github.bilektugrul.bduels.BDuels;
-import org.bukkit.ChatColor;
+import me.despical.commons.util.Strings;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class CustomPlaceholderManager {
     }
 
     public String colored(String str) {
-        return ChatColor.translateAlternateColorCodes('&', str);
+        return Strings.format(str);
     }
 
     public Set<CustomPlaceholder> getPlaceholderList() {

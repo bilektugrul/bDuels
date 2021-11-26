@@ -20,7 +20,7 @@ public class LeaderboardManager {
 
     private final BDuels plugin;
     private final BukkitScheduler scheduler;
-    private final List<Leaderboard> leaderboards = new ArrayList<>();
+    private final Set<Leaderboard> leaderboards = new HashSet<>();
 
     private SimpleDateFormat formatter;
     private FileConfiguration file;
@@ -36,20 +36,43 @@ public class LeaderboardManager {
         file = ConfigUtils.getConfig(plugin, "leaderboards");
         formatter = new SimpleDateFormat(Utils.getMessage("leaderboards.date-format", null));
         for (String key : file.getConfigurationSection("leaderboards").getKeys(false)) {
-            String path = "leaderboards." + key + ".";
+            if (key.contains(" ")) {
+                plugin.getLogger().warning(key + " ID'li sıralamanın isminde boşluk olduğu için düzgün şekilde oluşturulamadı. Lütfen boşluk kullanmayın.");
+                continue;
+            }
+            loadLeaderboardFromFile(key);
+        }
+        if (first) {
+            sortEveryLeaderboard();
+        }
+    }
+
+    public void loadLeaderboardFromFile(String id) {
+        if (id == null) {
+            return;
+        }
+
+        String path = "leaderboards." + id;
+        if (!file.isConfigurationSection(path)) {
+            return;
+        }
+
+        try {
+            path = path + ".";
             String name = file.getString(path + "name");
             int max = file.getInt(path + "max-size");
             StatisticType type = StatisticType.valueOf(file.getString(path + "type").toUpperCase(Locale.ROOT));
+            SortingType how = SortingType.valueOf(file.getString(path + "how"));
             Location hologramLocation = LocationSerializer.fromString(file.getString(path + "hologram-location"));
-            Leaderboard leaderboard = new Leaderboard(key, name, type, SortingType.valueOf(file.getString(path + "how")), max);
+
+            Leaderboard leaderboard = new Leaderboard(id, name, type, how, max);
             prepareEntries(leaderboard);
             leaderboards.add(leaderboard);
             if (plugin.isHologramsEnabled() && hologramLocation != null) {
                 leaderboard.createHologram(plugin, hologramLocation);
             }
-        }
-        if (first) {
-            sortEveryLeaderboard();
+        } catch (NullPointerException ignored) {
+            plugin.getLogger().warning(id + " ID'li sıralamanın verilerinde hata olduğu için düzgün şekilde oluşturulamadı.");
         }
     }
 
@@ -68,6 +91,13 @@ public class LeaderboardManager {
         leaderboard.setLeaderboardEntries(leaderboardEntries);
     }
 
+    public boolean createLeaderboard(String id) {
+        if (id == null) return false;
+
+        id = id.replace(" ", "_");
+        return leaderboards.add(new Leaderboard(id));
+    }
+
     public void clear() {
         for (Leaderboard leaderboard : leaderboards) {
             Hologram hologram = leaderboard.getHologram();
@@ -81,6 +111,15 @@ public class LeaderboardManager {
     public Leaderboard getFromID(String name) {
         for (Leaderboard leaderboard : leaderboards) {
             if (leaderboard.getId().equals(name)) {
+                return leaderboard;
+            }
+        }
+        return null;
+    }
+
+    public Leaderboard getFromName(String name) {
+        for (Leaderboard leaderboard : leaderboards) {
+            if (leaderboard.getName().equalsIgnoreCase(name)) {
                 return leaderboard;
             }
         }
@@ -107,6 +146,10 @@ public class LeaderboardManager {
     }
 
     public List<String> leaderboardToString(Leaderboard leaderboard, CommandSender sender, String mode) {
+        if (!leaderboard.isReady()) {
+            return Collections.singletonList(Utils.getMessage("leaderboards.not-ready", sender));
+        }
+
         List<String> messages = new ArrayList<>();
         Date date = new Date();
         for (String value : Utils.getMessageList("leaderboards." + mode + ".before-leaderboard", sender)) {
@@ -152,22 +195,30 @@ public class LeaderboardManager {
 
     public boolean save() {
         for (Leaderboard leaderboard : leaderboards) {
-            String leaderboardName = leaderboard.getId();
-            String path = "leaderboards." + leaderboardName + ".";
-            Hologram hologram = leaderboard.getHologram();
-            if (hologram != null) {
-                file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
-            }
-            int i = 1;
-            file.set(path + "leaderboard", new ArrayList<>());
-            for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
-                String entryPath = path + "leaderboard." + i++ + ".";
-                file.set(entryPath + "name", entry.getName());
-                file.set(entryPath + "value", entry.getValue());
-            }
+            saveLeaderboard(leaderboard);
         }
         ConfigUtils.saveConfig(plugin, file, "leaderboards");
         return true;
+    }
+
+    public void saveLeaderboard(Leaderboard leaderboard) {
+        String leaderboardId = leaderboard.getId();
+        String path = "leaderboards." + leaderboardId + ".";
+        file.set(path + "leaderboard", null);
+        Hologram hologram = leaderboard.getHologram();
+        if (hologram != null) {
+            file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
+        }
+        file.set(path + "name", leaderboard.getName());
+        file.set(path + "type", leaderboard.getType().name());
+        file.set(path + "how", leaderboard.getSortingType().name());
+        file.set(path + "max-size", leaderboard.getMaxSize());
+        int i = 1;
+        for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
+            String entryPath = path + "leaderboard." + i++ + ".";
+            file.set(entryPath + "name", entry.getName());
+            file.set(entryPath + "value", entry.getValue());
+        }
     }
 
     public List<Leaderboard> getLeaderboards() {

@@ -25,6 +25,7 @@ import io.github.bilektugrul.bduels.listeners.PlayerListener;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
+import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -38,7 +39,6 @@ public final class BDuels extends JavaPlugin {
     private ArenaManager arenaManager;
     private VaultManager vaultManager;
     private EconomyAdapter economyAdapter;
-    private VaultEconomy vaultEconomy;
     private DuelManager duelManager;
     private MysqlDatabase mysqlDatabase;
     private LeaderboardManager leaderboardManager;
@@ -52,10 +52,6 @@ public final class BDuels extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!checkLicence()) {
-            return;
-        }
-
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
         pluginManager = getServer().getPluginManager();
@@ -78,6 +74,7 @@ public final class BDuels extends JavaPlugin {
             if (isLeaderboardManagerReady()) {
                 getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
             }
+            getLogger().info(Utils.getMessage("after-load"));
         } else {
             forceClose();
         }
@@ -113,7 +110,7 @@ public final class BDuels extends JavaPlugin {
     private boolean registerManagers() {
         if (pluginManager.isPluginEnabled("Vault")) {
             vaultManager = new VaultManager(this);
-            vaultEconomy = new VaultEconomy(this);
+            setEconomyAdapter(new VaultEconomy(this));
         } else {
             getLogger().warning("Sunucunuzda Vault kurulu değil, BDuels'in çalışması için Vault gereklidir.");
             return false;
@@ -182,8 +179,8 @@ public final class BDuels extends JavaPlugin {
         return vaultManager;
     }
 
-    public VaultEconomy getVaultEconomy() {
-        return vaultEconomy;
+    public EconomyAdapter getEconomyAdapter() {
+        return economyAdapter;
     }
 
     public DuelManager getDuelManager() {
@@ -194,9 +191,6 @@ public final class BDuels extends JavaPlugin {
         return inventoryAPI;
     }
 
-    public EconomyAdapter getEconomyAdapter() {
-        return economyAdapter;
-    }
 
     public void setEconomyAdapter(EconomyAdapter economyAdapter) {
         this.economyAdapter = economyAdapter;
