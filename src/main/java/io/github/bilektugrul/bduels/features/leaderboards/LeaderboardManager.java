@@ -91,11 +91,13 @@ public class LeaderboardManager {
         leaderboard.setLeaderboardEntries(leaderboardEntries);
     }
 
-    public boolean createLeaderboard(String id) {
-        if (id == null) return false;
+    public void createLeaderboard(String id) {
+        if (id == null) {
+            return;
+        }
 
         id = id.replace(" ", "_");
-        return leaderboards.add(new Leaderboard(id));
+        leaderboards.add(new Leaderboard(id));
     }
 
     public void clear() {
@@ -108,9 +110,13 @@ public class LeaderboardManager {
         leaderboards.clear();
     }
 
+    public boolean isPresent(String id) {
+        return getFromID(id) != null;
+    }
+
     public Leaderboard getFromID(String name) {
         for (Leaderboard leaderboard : leaderboards) {
-            if (leaderboard.getId().equals(name)) {
+            if (leaderboard.getId().equalsIgnoreCase(name)) {
                 return leaderboard;
             }
         }
@@ -180,6 +186,7 @@ public class LeaderboardManager {
         if (!plugin.isHologramsEnabled()) {
             return;
         }
+
         Hologram hologram = leaderboard.getHologram();
         if (hologram != null) {
             hologram.clearLines();
@@ -202,6 +209,10 @@ public class LeaderboardManager {
     }
 
     public void saveLeaderboard(Leaderboard leaderboard) {
+        if (leaderboard == null) {
+            return;
+        }
+
         String leaderboardId = leaderboard.getId();
         String path = "leaderboards." + leaderboardId + ".";
         file.set(path + "leaderboard", null);

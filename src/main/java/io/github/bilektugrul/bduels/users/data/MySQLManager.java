@@ -87,8 +87,9 @@ public class MySQLManager {
 
                 if (rs.next()) {
                     for (StatisticType stat : StatisticType.values()) {
-                        if (!stat.isPersistent()) continue;
-
+                        if (!stat.isPersistent()) {
+                            continue;
+                        }
                         user.setStat(stat, rs.getInt(stat.getName()));
                     }
                 } else {

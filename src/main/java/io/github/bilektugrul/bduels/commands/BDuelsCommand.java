@@ -103,7 +103,7 @@ public class BDuelsCommand implements CommandExecutor {
             if (args.length > 1 && args[0].equalsIgnoreCase("save")) {
                 return Arrays.asList("stats", "leaderboards", "all");
             }
-            return Arrays.asList("reload", "refresh-leaderboard", "leaderboardholo", "save");
+            return Arrays.asList("reload", "save");
         }
 
     }

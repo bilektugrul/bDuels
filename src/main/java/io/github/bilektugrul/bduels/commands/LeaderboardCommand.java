@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class LeaderboardCommand implements CommandExecutor {
 
@@ -80,9 +79,41 @@ public class LeaderboardCommand implements CommandExecutor {
         return true;
     }
 
-    private void setSortType(CommandSender sender, String[] args) {
-        if (args.length < 3) {
-            wrongUsage(sender);
+    private void createLeaderboard(CommandSender sender, String[] args) {
+        String name = args[1];
+        if (!leaderboardManager.isPresent(name)) {
+            leaderboardManager.createLeaderboard(name);
+            sender.sendMessage(Utils.getMessage("leaderboards.created", sender)
+                    .replace("%leaderboard%", name));
+        } else {
+            sender.sendMessage(Utils.getMessage("leaderboards.not-created", sender)
+                    .replace("%leaderboard%", name));
+        }
+    }
+
+    private void refresh(CommandSender sender, String[] args) {
+        boolean all = args[1].equalsIgnoreCase("hepsi");
+
+        if (all) {
+            leaderboardManager.sortEveryLeaderboard();
+            sender.sendMessage(Utils.getMessage("leaderboards.refreshed-all", sender));
+            return;
+        }
+
+        Leaderboard leaderboard = leaderboardManager.getFromID(args[1]);
+        if (leaderboard == null) {
+            sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
+            return;
+        }
+
+        leaderboardManager.sort(leaderboard);
+        sender.sendMessage(Utils.getMessage("leaderboards.refreshed-one", sender)
+                .replace("%leaderboard%", leaderboard.getName()));
+    }
+
+    private void setHologram(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Utils.getMessage("only-players", sender));
             return;
         }
 
@@ -93,11 +124,11 @@ public class LeaderboardCommand implements CommandExecutor {
             return;
         }
 
-        SortingType sortingType = SortingType.valueOf(args[2].toUpperCase(Locale.ROOT));
-        leaderboard.setSortingType(sortingType);
-        sender.sendMessage(Utils.getMessage("leaderboards.sorting-type-changed", sender)
-                .replace("%leaderboard%", leaderboard.getName())
-                .replace("%newtype%", sortingType.name()));
+        Player player = (Player) sender;
+        leaderboard.createHologram(plugin, player.getLocation());
+        leaderboardManager.save();
+        leaderboardManager.updateHologram(leaderboard);
+        player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
     }
 
     private void setDataType(CommandSender sender, String[] args) {
@@ -155,46 +186,9 @@ public class LeaderboardCommand implements CommandExecutor {
         }
     }
 
-    private void createLeaderboard(CommandSender sender, String[] args) {
-        String name = args[1];
-        if (leaderboardManager.createLeaderboard(name)) {
-            sender.sendMessage(Utils.getMessage("leaderboards.created", sender)
-                    .replace("%leaderboard%", name));
-        } else {
-            sender.sendMessage(Utils.getMessage("leaderboards.not-created", sender)
-                    .replace("%leaderboard%", name));
-        }
-    }
-
-    private void refresh(CommandSender sender, String[] args) {
-        boolean all = true;
-        String toRefresh = "";
-
-        if (args.length >= 2) {
-            all = false;
-            toRefresh = Utils.arrayToString(Arrays.copyOfRange(args, 1, args.length), sender, false, false);
-        }
-
-        if (all) {
-            leaderboardManager.sortEveryLeaderboard();
-            sender.sendMessage(Utils.getMessage("leaderboards.refreshed-all", sender));
-            return;
-        }
-
-        Leaderboard leaderboard = leaderboardManager.getFromID(toRefresh);
-        if (leaderboard == null) {
-            sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
-            return;
-        }
-
-        leaderboardManager.sort(leaderboard);
-        sender.sendMessage(Utils.getMessage("leaderboards.refreshed-one", sender)
-                .replace("%leaderboard%", leaderboard.getName()));
-    }
-
-    private void setHologram(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(Utils.getMessage("only-players", sender));
+    private void setSortType(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            wrongUsage(sender);
             return;
         }
 
@@ -205,11 +199,16 @@ public class LeaderboardCommand implements CommandExecutor {
             return;
         }
 
-        Player player = (Player) sender;
-        leaderboard.createHologram(plugin, player.getLocation());
-        leaderboardManager.save();
-        leaderboardManager.updateHologram(leaderboard);
-        player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
+        SortingType sortingType = SortingType.getByShort(args[2]);
+        if (sortingType == null) {
+            sender.sendMessage(Utils.getMessage("leaderboards.type-not-found", sender));
+            return;
+        }
+
+        leaderboard.setSortingType(sortingType);
+        sender.sendMessage(Utils.getMessage("leaderboards.sorting-type-changed", sender)
+                .replace("%leaderboard%", leaderboard.getName())
+                .replace("%newtype%", sortingType.name()));
     }
 
 }
