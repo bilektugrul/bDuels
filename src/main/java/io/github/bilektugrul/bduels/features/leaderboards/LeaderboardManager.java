@@ -100,6 +100,14 @@ public class LeaderboardManager {
         leaderboards.add(new Leaderboard(id));
     }
 
+    public void deleteLeaderboard(String id) {
+        if (id == null) {
+            return;
+        }
+
+        leaderboards.removeIf(leaderboard -> leaderboard.getId().equalsIgnoreCase(id));
+    }
+
     public void clear() {
         for (Leaderboard leaderboard : leaderboards) {
             Hologram hologram = leaderboard.getHologram();
@@ -237,6 +245,12 @@ public class LeaderboardManager {
     }
 
     public String getReadableLeaderboards() {
+        StringBuilder builder = new StringBuilder();
+        leaderboards.forEach(leaderboard -> builder.append(leaderboard.getName()).append(", "));
+        return builder.substring(0, builder.length() - 2);
+    }
+
+    public String getReadableLeaderboardIDs() {
         StringBuilder builder = new StringBuilder();
         leaderboards.forEach(leaderboard -> builder.append(leaderboard.getId()).append(", "));
         return builder.substring(0, builder.length() - 2);

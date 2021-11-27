@@ -20,7 +20,7 @@ public class LeaderboardCommand implements CommandExecutor {
 
     private final BDuels plugin;
     private final LeaderboardManager leaderboardManager;
-    private final List<String> adminSubCommands = new ArrayList<>(Arrays.asList("oluştur", "yenile", "hologram", "limit", "veri", "data", "sıralamatürü", "type"));
+    private final List<String> adminSubCommands = new ArrayList<>(Arrays.asList("oluştur", "sil", "yenile", "hologram", "limit", "veri", "data", "sıralamatürü", "type"));
 
     public LeaderboardCommand(BDuels plugin) {
         this.plugin = plugin;
@@ -39,7 +39,7 @@ public class LeaderboardCommand implements CommandExecutor {
             return true;
         }
 
-        if (adminSubCommands.contains(args[0])) {
+        if (adminSubCommands.contains(args[0]) && sender.hasPermission("bduels.leaderboards.admin")) {
             if (args.length == 1) {
                 wrongUsage(sender);
                 return true;
@@ -47,6 +47,9 @@ public class LeaderboardCommand implements CommandExecutor {
             switch (args[0]) {
                 case "oluştur":
                     createLeaderboard(sender, args);
+                    return true;
+                case "sil":
+                    deleteLeaderboard(sender, args);
                     return true;
                 case "yenile":
                     refresh(sender, args);
@@ -87,6 +90,18 @@ public class LeaderboardCommand implements CommandExecutor {
                     .replace("%leaderboard%", name));
         } else {
             sender.sendMessage(Utils.getMessage("leaderboards.not-created", sender)
+                    .replace("%leaderboard%", name));
+        }
+    }
+
+    private void deleteLeaderboard(CommandSender sender, String[] args) {
+        String name = args[1];
+        if (leaderboardManager.isPresent(name)) {
+            leaderboardManager.deleteLeaderboard(name);
+            sender.sendMessage(Utils.getMessage("leaderboards.deleted", sender)
+                    .replace("%leaderboard%", name));
+        } else {
+            sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender)
                     .replace("%leaderboard%", name));
         }
     }
@@ -178,10 +193,11 @@ public class LeaderboardCommand implements CommandExecutor {
 
     private void wrongUsage(CommandSender sender) {
         if (sender.hasPermission("bduels.leaderboards.admin")) {
-            sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage-admin", sender)
-                    .replace("%leaderboards%", leaderboardManager.getReadableLeaderboards()));
-        } else {
             sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage", sender)
+                    .replace("%leaderboards%", leaderboardManager.getReadableLeaderboards())
+                    .replace("%leaderboardids%", leaderboardManager.getReadableLeaderboardIDs()));
+        } else {
+            sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage-admin", sender)
                     .replace("%leaderboards%", leaderboardManager.getReadableLeaderboards()));
         }
     }
