@@ -103,8 +103,9 @@ public class Utils {
         String msg = originalMsg instanceof List ? listToString((List) originalMsg) : (String) originalMsg;
         msg = placeholderManager.replacePlaceholders(Strings.format(msg)).replace("%nl%", "\n");
 
-        if (replacePersonalPlaceholders)
+        if (replacePersonalPlaceholders) {
             msg = msg.replace("%player%", matchName(from));
+        }
         if (isPAPIEnabled && replacePAPI) {
             return PlaceholderAPI.setPlaceholders(from instanceof Player ? (Player) from : null, msg);
         }

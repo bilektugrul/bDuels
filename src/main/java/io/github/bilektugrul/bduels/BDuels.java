@@ -24,6 +24,7 @@ import io.github.bilektugrul.bduels.listeners.InMatchEventListener;
 import io.github.bilektugrul.bduels.listeners.PlayerListener;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
+import io.github.bilektugrul.bduels.users.data.DatabaseType;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Bukkit;
@@ -31,6 +32,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.xml.crypto.Data;
+import java.util.Optional;
+
+//TODO: Wikiyi yeni confige göre yeniden düzenle ve leaderboard tab completer ekle (regex kullan)
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
@@ -47,11 +52,16 @@ public final class BDuels extends JavaPlugin {
     private PluginManager pluginManager;
 
     private boolean databaseEnabled = false;
+    private DatabaseType usedDatabaseType = null;
     private boolean hologramsEnabled = false;
     private boolean forceDisable = false;
 
     @Override
     public void onEnable() {
+        if (!checkLicence()) {
+            return;
+        }
+
         saveDefaultConfig();
         inventoryAPI = InventoryAPI.getInstance(this);
         pluginManager = getServer().getPluginManager();
@@ -118,43 +128,50 @@ public final class BDuels extends JavaPlugin {
 
         databaseEnabled = getConfig().getBoolean("database.enabled");
         if (databaseEnabled) {
-            mysqlDatabase = new MysqlDatabase(getLogger(), getConfig());
-            if (mysqlDatabase.shouldClose()) {
-                return false;
+            usedDatabaseType = Optional.of(DatabaseType.valueOf(getConfig().getString("database.database-type"))).orElse(DatabaseType.FLAT);
+            if (usedDatabaseType == DatabaseType.MYSQL) {
+                mysqlDatabase = new MysqlDatabase(getLogger(), getConfig());
+                if (mysqlDatabase.shouldClose()) {
+                    return false;
+                }
             }
-        }
 
-        customPlaceholderManager = new CustomPlaceholderManager(this);
-        languageManager = new LanguageManager(this);
-        arenaManager = new ArenaManager(this);
-        duelManager = new DuelManager(this);
-        userManager = new UserManager(this);
+            customPlaceholderManager = new CustomPlaceholderManager(this);
+            languageManager = new LanguageManager(this);
+            arenaManager = new ArenaManager(this);
+            duelManager = new DuelManager(this);
+            userManager = new UserManager(this);
 
-        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
-            new PAPIPlaceholders(this).register();
-        } else {
-            getLogger().warning("Sunucunuzda PlaceholderAPI kurulu değil, ona bağlı özellikleri kullanamayacaksınız.");
-        }
+            if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
+                new PAPIPlaceholders(this).register();
+            } else {
+                getLogger().warning("Sunucunuzda PlaceholderAPI kurulu değil, ona bağlı özellikleri kullanamayacaksınız.");
+            }
 
-        hologramsEnabled = pluginManager.isPluginEnabled("HolographicDisplays");
-        if (!hologramsEnabled) {
-            getLogger().warning("HolographicDisplays bulunamadı, sıralama hologramı çalışmayacak.");
-        }
+            hologramsEnabled = pluginManager.isPluginEnabled("HolographicDisplays");
+            if (!hologramsEnabled) {
+                getLogger().warning("HolographicDisplays bulunamadı, sıralama hologramı çalışmayacak.");
+            }
 
-        if (databaseEnabled) {
-            leaderboardManager = new LeaderboardManager(this);
+            if (databaseEnabled) {
+                leaderboardManager = new LeaderboardManager(this);
+            }
         }
         return true;
     }
 
     public boolean saveAllUserStatistics() {
         MySQLManager mySQLManager = userManager.getMysqlManager();
-        if (mySQLManager == null || !databaseEnabled) {
+        if (!databaseEnabled) {
             return false;
         }
 
         for (User user : userManager.getUserList()) {
-            mySQLManager.saveAllStatistic(user, true);
+            if (usedDatabaseType == DatabaseType.FLAT) {
+                userManager.saveStatistics(user, false);
+            } else if (mySQLManager != null) {
+                mySQLManager.saveAllStatistic(user, true);
+            }
         }
         return true;
     }
@@ -210,6 +227,10 @@ public final class BDuels extends JavaPlugin {
 
     public boolean isDatabaseEnabled() {
         return databaseEnabled;
+    }
+
+    public DatabaseType getUsedDatabaseType() {
+        return usedDatabaseType;
     }
 
     public MysqlDatabase getMySQLDatabase() {

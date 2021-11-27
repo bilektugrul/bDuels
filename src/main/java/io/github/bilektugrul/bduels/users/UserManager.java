@@ -1,10 +1,17 @@
 package io.github.bilektugrul.bduels.users;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.features.stats.StatisticType;
+import io.github.bilektugrul.bduels.users.data.DatabaseType;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
 import io.github.bilektugrul.bduels.users.data.StatisticSaveProcess;
+import me.despical.commons.configuration.ConfigUtils;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -20,17 +27,19 @@ public class UserManager {
     public UserManager(BDuels plugin) {
         this.plugin = plugin;
         if (plugin.isDatabaseEnabled()) {
-            this.mysqlManager = new MySQLManager(plugin);
+            if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL) {
+                this.mysqlManager = new MySQLManager(plugin);
+            }
             prepareSaveProcess();
         }
     }
 
     public void prepareSaveProcess() {
-        if (isMysqlManagerReady()) {
-            if (statisticSaveProcess != null) statisticSaveProcess.cancel();
-            statisticSaveProcess = new StatisticSaveProcess(plugin);
-            statisticSaveProcess.start();
+        if (statisticSaveProcess != null) {
+            statisticSaveProcess.cancel();
         }
+        statisticSaveProcess = new StatisticSaveProcess(plugin);
+        statisticSaveProcess.start();
     }
 
     public User getUser(Player player) {
@@ -59,24 +68,42 @@ public class UserManager {
         return user.getState() == UserState.IN_MATCH || user.getState() == UserState.STARTING_MATCH;
     }
 
+    public boolean isMysqlManagerReady() {
+        return mysqlManager != null;
+    }
+
+    public void loadStatistics(User user) {
+        if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
+            FileConfiguration data = user.getData();
+            for (StatisticType statisticType : StatisticType.values()) {
+                int stat = data.getInt("stats." + statisticType.name());
+                user.setStat(statisticType, stat);
+            }
+        } else if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL && isMysqlManagerReady()) {
+            mysqlManager.loadStatistics(user);
+        }
+    }
+
+    public void saveStatistics(User user, boolean sync) {
+        if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
+            FileConfiguration data = user.getData();
+            String path = "/players/" + user.getUUID();
+            data.set("name", user.getName());
+            for (StatisticType statisticType : StatisticType.values()) {
+                data.set("stats." + statisticType.name(), user.getStat(statisticType));
+            }
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> ConfigUtils.saveConfig(plugin, data, path));
+        } else if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL && isMysqlManagerReady()) {
+            mysqlManager.saveAllStatistic(user, sync);
+        }
+    }
+
     public Set<User> getUserList() {
         return new HashSet<>(userList);
     }
 
     public MySQLManager getMysqlManager() {
         return mysqlManager;
-    }
-
-    public boolean isMysqlManagerReady() {
-        return mysqlManager != null;
-    }
-
-    public void loadStatistics(User user) {
-        if (isMysqlManagerReady()) mysqlManager.loadStatistics(user);
-    }
-
-    public void saveStatistics(User user, boolean sync) {
-        if (isMysqlManagerReady()) mysqlManager.saveAllStatistic(user, sync);
     }
 
 }

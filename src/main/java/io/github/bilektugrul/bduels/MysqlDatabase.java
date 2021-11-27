@@ -23,9 +23,9 @@ public class MysqlDatabase {
 
     public MysqlDatabase(Logger logger, FileConfiguration config) {
         this.databaseLogger = logger;
-        String user = config.getString("database.user");
-        String password = config.getString("database.password");
-        String jdbcUrl = config.getString("database.url");
+        String user = config.getString("database.mysql-settings.user");
+        String password = config.getString("database.mysql-settings.password");
+        String jdbcUrl = config.getString("database.mysql-settings.url");
         databaseLogger.info("MySQL bağlantısı ayarlanıyor...");
         configureConnPool(user, password, jdbcUrl);
 

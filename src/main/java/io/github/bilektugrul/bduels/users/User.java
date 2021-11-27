@@ -1,30 +1,40 @@
 package io.github.bilektugrul.bduels.users;
 
+import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.features.stats.StatisticType;
+import io.github.bilektugrul.bduels.users.data.DatabaseType;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class User {
 
+    private final static BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
+    private final Map<StatisticType, Integer> stats = new EnumMap<>(StatisticType.class);
     private final Player base;
 
     private UserState state;
     private Duel duel;
     private DuelRequestProcess requestProcess;
     private Location respawnLocation;
-
-    private final Map<StatisticType, Integer> stats = new EnumMap<>(StatisticType.class);
+    private FileConfiguration data;
 
     public User(Player player) {
         this.base = player;
         this.state = UserState.FREE;
+        if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
+            this.data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + "/players/" + player.getUniqueId() + ".yml"));
+        }
     }
 
     public Player getBase() {
@@ -61,6 +71,10 @@ public class User {
 
     public UUID getUUID() {
         return base.getUniqueId();
+    }
+
+    public FileConfiguration getData() {
+        return data;
     }
 
     public UserState getState() {

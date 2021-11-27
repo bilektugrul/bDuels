@@ -9,14 +9,17 @@ custom-placeholders:
   #isim: içerik
 
 database:
-  enabled: false # true olarak ayarlarsanız istatistikler aşağıda bilgileri verilmiş MySQL veritabanında tutulur.
-  user: <user>
-  url: jdbc:mysql://localhost:3306/<databasename>?useSSL=false&autoReConnect=true
-  password: <password>
-  table: bduelsstats
+  enabled: true # true olarak ayarlarsanız istatistikler aşağıda ayarlanmış veritabanında tutulur.
+  database-type: FLAT # MYSQL veya FLAT
+                      # FLAT türü, oyuncuların istatistiklerini kendi veri dosyalarında tutar
+                      # MYSQL, MySQL veritabanını kullanır.
   auto-save-interval: 30 # 30 dakikada bir istatistikleri kaydedip sıralamaları yeniler
                          # değiştirip /bduels reload komutunu kullanırsanız süreç baştan başlar ve yeni ayar geçerli olur
-
+  mysql-settings:
+    user: <user>
+    url: jdbc:mysql://localhost:3306/<databasename>?useSSL=false&autoReConnect=true
+    password: <password>
+    table: bduelsstats
 titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ayarlar.
   fade-in: 5
   stay: 30
