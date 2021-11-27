@@ -6,12 +6,9 @@ import io.github.bilektugrul.bduels.users.data.DatabaseType;
 import io.github.bilektugrul.bduels.users.data.MySQLManager;
 import io.github.bilektugrul.bduels.users.data.StatisticSaveProcess;
 import me.despical.commons.configuration.ConfigUtils;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

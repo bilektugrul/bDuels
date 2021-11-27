@@ -32,7 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.xml.crypto.Data;
 import java.util.Optional;
 
 //TODO: Wikiyi yeni confige göre yeniden düzenle ve leaderboard tab completer ekle (regex kullan)

@@ -4,7 +4,6 @@ package io.github.bilektugrul.bduels.features.stats;
 
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardEntry;
-import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.users.data.DatabaseType;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,8 +15,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Despical
