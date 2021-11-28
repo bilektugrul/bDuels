@@ -28,62 +28,66 @@ public class StatisticsUtils {
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
 
     public static void getStats(StatisticType stat, Consumer<List<LeaderboardEntry>> consumer) {
+        if (!plugin.isDatabaseEnabled()) {
+            plugin.getLogger().warning(stat.name() + " için tüm istatistikler istendi ama database özelliği kapalı.");
+            return;
+        }
+
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            boolean completed = false;
             if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
                 getFlatStats(stat, consumer);
-                completed = true;
+                return;
             }
 
-            if (!completed) {
-                UserManager userManager = plugin.getUserManager();
-                if (!plugin.isDatabaseEnabled() || !userManager.isMysqlManagerReady()) {
-                    throw new IllegalStateException(stat.name() + " için tüm istatistikler istendi ama bir hata oluştu.");
-                }
+            UserManager userManager = plugin.getUserManager();
+            if (!userManager.isMysqlManagerReady()) {
+                plugin.getLogger().warning(stat.name() + " için tüm istatistikler istendi ama SQL bağlantısı kurulamadı.");
+                return;
+            }
 
-                List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
-                try (Connection connection = plugin.getMySQLDatabase().getConnection()) {
-                    try (Statement statement = connection.createStatement()) {
-                        ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName()
-                                + ", name FROM " + userManager.getMysqlManager().getTableName()
-                                + " ORDER BY " + stat.getName());
-                        while (set.next()) {
-                            String name = set.getString("name");
-                            int value = set.getInt(stat.getName());
-                            leaderboardEntries.add(new LeaderboardEntry(name, value));
-                        }
-                        consumer.accept(leaderboardEntries);
-                    } catch (NullPointerException e) {
-                        exception(e);
+            List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
+            try (Connection connection = plugin.getMySQLDatabase().getConnection()) {
+                try (Statement statement = connection.createStatement()) {
+                    ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName()
+                            + ", name FROM " + userManager.getMysqlManager().getTableName()
+                            + " ORDER BY " + stat.getName());
+                    while (set.next()) {
+                        String name = set.getString("name");
+                        int value = set.getInt(stat.getName());
+                        leaderboardEntries.add(new LeaderboardEntry(name, value));
                     }
-                } catch (SQLException e) {
+                    consumer.accept(leaderboardEntries);
+                } catch (NullPointerException e) {
                     exception(e);
                 }
+            } catch (SQLException e) {
+                exception(e);
             }
         });
     }
 
-    public static void getFlatStats(StatisticType statisticType, Consumer<List<LeaderboardEntry>> consumer) {
+    private static void getFlatStats(StatisticType statisticType, Consumer<List<LeaderboardEntry>> consumer) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             File base = new File(plugin.getDataFolder() + "/players/");
-            List<File> users = null;
+            List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
+
+            List<File> users;
             try {
                 users = new ArrayList<>(Arrays.asList(base.listFiles()));
             } catch (NullPointerException ignored) {
                 plugin.getLogger().warning("Hiç kayıtlı flat oyuncu istatistiği yok.");
+                consumer.accept(leaderboardEntries);
+                return;
             }
 
-            if (users != null) {
-                List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
-                for (File file : users) {
-                    FileConfiguration data = YamlConfiguration.loadConfiguration(file);
-                    String name = data.getString("name");
-                    int value = data.getInt("stats." + statisticType.name());
-                    LeaderboardEntry entry = new LeaderboardEntry(name, value);
-                    leaderboardEntries.add(entry);
-                }
-                consumer.accept(leaderboardEntries);
+            for (File file : users) {
+                FileConfiguration data = YamlConfiguration.loadConfiguration(file);
+                String name = data.getString("name");
+                int value = data.getInt("stats." + statisticType.name());
+                LeaderboardEntry entry = new LeaderboardEntry(name, value);
+                leaderboardEntries.add(entry);
             }
+            consumer.accept(leaderboardEntries);
         });
     }
 

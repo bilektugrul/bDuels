@@ -18,10 +18,10 @@ public class ArenaManager {
 
     public ArenaManager(BDuels plugin) {
         this.plugin = plugin;
-        loadArenas();
+        load();
     }
 
-    public void loadArenas() {
+    public void load() {
         arenasFile = ConfigUtils.getConfig(plugin, "arenas");
         arenas.clear();
         for (String name : arenasFile.getConfigurationSection("arenas").getKeys(false)) {
