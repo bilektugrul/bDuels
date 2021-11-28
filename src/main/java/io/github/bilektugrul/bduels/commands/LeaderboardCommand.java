@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class LeaderboardCommand implements CommandExecutor {
 
@@ -52,7 +53,11 @@ public class LeaderboardCommand implements CommandExecutor {
                     deleteLeaderboard(sender, args);
                     return true;
                 case "yenile":
-                    refresh(sender, args);
+                    try {
+                        refresh(sender, args);
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 case "hologram":
                     setHologram(sender, args);
@@ -106,7 +111,7 @@ public class LeaderboardCommand implements CommandExecutor {
         }
     }
 
-    private void refresh(CommandSender sender, String[] args) {
+    private void refresh(CommandSender sender, String[] args) throws ExecutionException, InterruptedException {
         boolean all = args[1].equalsIgnoreCase("hepsi");
 
         if (all) {
@@ -141,7 +146,7 @@ public class LeaderboardCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         leaderboard.createHologram(plugin, player.getLocation());
-        leaderboardManager.save();
+        leaderboardManager.saveLeaderboard(leaderboard);
         leaderboardManager.updateHologram(leaderboard);
         player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
     }
@@ -193,11 +198,11 @@ public class LeaderboardCommand implements CommandExecutor {
 
     private void wrongUsage(CommandSender sender) {
         if (sender.hasPermission("bduels.leaderboards.admin")) {
-            sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage", sender)
+            sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage-admin", sender)
                     .replace("%leaderboards%", leaderboardManager.getReadableLeaderboards())
                     .replace("%leaderboardids%", leaderboardManager.getReadableLeaderboardIDs()));
         } else {
-            sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage-admin", sender)
+            sender.sendMessage(Utils.getMessage("leaderboards.command.wrong-usage", sender)
                     .replace("%leaderboards%", leaderboardManager.getReadableLeaderboards()));
         }
     }

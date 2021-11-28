@@ -17,14 +17,15 @@ public class StatisticSaveProcess extends BukkitRunnable {
     public void start() {
         plugin.getLogger().info("Oyuncu verilerinin otomatik kayıt süreci başlatılıyor...");
         int i = plugin.getConfig().getInt("database.auto-save-interval");
-        runTaskTimerAsynchronously(plugin, 0, (i * 60L) * 20);
+        long time = (i * 60L) * 20;
+        runTaskTimerAsynchronously(plugin, time, time);
     }
 
     @Override
     public void run() {
         ConsoleCommandSender console = plugin.getServer().getConsoleSender();
         console.sendMessage(Utils.getMessage("saving-statistics", console));
-        plugin.saveAllUserStatistics();
+        plugin.saveAllUserStatistics(false);
         LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
         leaderboardManager.sortEveryLeaderboard();
         console.sendMessage(Utils.getMessage("main-command.saved-stats", console));

@@ -79,7 +79,7 @@ messages:
         - '%prefix% &cTüm sıralama isimleri: &6%leaderboards%'
         - '%prefix% &cTüm sıralama ID''leri: &6%leaderboardids%'
         - '%prefix% &7- &3oluştur [<sıralama ID''si>]'
-        - '%prefix% &7- &3yenile [<sıralama ID''si>] &7| &3Girilen sıralamalayı veya sıralama girilmemişse tüm sıralamaları yeniler.'
+        - '%prefix% &7- &3yenile [<sıralama ID''si>] &7| &3Girilen sıralamalayı veya "hepsi" yazılırsa tüm sıralamaları yeniler.'
         - '%prefix% &7- &3hologram <sıralama ID''si> &7| &3Girilen sıralamanın hologram lokasyonunu bulunduğunuz lokasyon olarak ayarlar.'
         - '%prefix% &7- &3limit <sıralama ID''si> <limit> &7| &3Girilen sıralamanın sıralayacağı kişi limitini değiştirir.'
         - '%prefix% &7- &3veri <sıralama ID''si> <veri türü> &7| &3Girilen sıralamanın sıralayacağı istatistik türünü değiştirir.'

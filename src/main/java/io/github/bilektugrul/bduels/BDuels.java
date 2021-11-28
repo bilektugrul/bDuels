@@ -105,13 +105,15 @@ public final class BDuels extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
         if (!forceDisable) {
             duelManager.endMatches(DuelEndReason.SERVER_STOP);
             if (databaseEnabled) {
-                saveAllUserStatistics();
-                mysqlDatabase.shutdownConnPool();
+                saveAllUserStatistics(true);
+                if (usedDatabaseType == DatabaseType.MYSQL) {
+                    mysqlDatabase.shutdownConnPool();
+                }
             }
-            Bukkit.getScheduler().cancelTasks(this);
             save();
         }
     }
@@ -159,7 +161,7 @@ public final class BDuels extends JavaPlugin {
         return true;
     }
 
-    public boolean saveAllUserStatistics() {
+    public boolean saveAllUserStatistics(boolean sync) {
         MySQLManager mySQLManager = userManager.getMysqlManager();
         if (!databaseEnabled) {
             return false;
@@ -167,9 +169,9 @@ public final class BDuels extends JavaPlugin {
 
         for (User user : userManager.getUserList()) {
             if (usedDatabaseType == DatabaseType.FLAT) {
-                userManager.saveStatistics(user, false);
+                userManager.saveStatistics(user, sync);
             } else if (mySQLManager != null) {
-                mySQLManager.saveAllStatistic(user, true);
+                mySQLManager.saveAllStatistic(user, sync);
             }
         }
         return true;

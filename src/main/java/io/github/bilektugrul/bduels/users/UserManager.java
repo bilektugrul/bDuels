@@ -89,7 +89,11 @@ public class UserManager {
             for (StatisticType statisticType : StatisticType.values()) {
                 data.set("stats." + statisticType.name(), user.getStat(statisticType));
             }
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> ConfigUtils.saveConfig(plugin, data, path));
+            if (!sync) {
+                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> ConfigUtils.saveConfig(plugin, data, path));
+            } else {
+                ConfigUtils.saveConfig(plugin, data, path);
+            }
         } else if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL && isMysqlManagerReady()) {
             mysqlManager.saveAllStatistic(user, sync);
         }

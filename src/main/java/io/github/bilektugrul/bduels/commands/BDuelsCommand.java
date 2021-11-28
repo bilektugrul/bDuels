@@ -67,7 +67,7 @@ public class BDuelsCommand implements CommandExecutor {
             case "istatistikler":
                 if (!plugin.isDatabaseEnabled()) {
                     sender.sendMessage(Utils.getMessage("main-command.database-disabled", sender));
-                } else if (plugin.saveAllUserStatistics()) {
+                } else if (plugin.saveAllUserStatistics(false)) {
                     sender.sendMessage(Utils.getMessage("main-command.saved-stats", sender));
                 } else {
                     sender.sendMessage(Utils.getMessage("main-command.could-not-saved", sender));
