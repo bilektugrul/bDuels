@@ -53,10 +53,12 @@ public class Duel {
 
     public void start() {
         Player requestSender = player.getBase();
+        requestSender.setHealth(requestSender.getMaxHealth());
         requestSender.teleport(arena.getPlayerLocation());
         player.setState(UserState.IN_MATCH);
 
         Player opponentPlayer = opponent.getBase();
+        opponentPlayer.setHealth(opponentPlayer.getMaxHealth());
         opponentPlayer.teleport(arena.getOpponentLocation());
         opponent.setState(UserState.IN_MATCH);
 
