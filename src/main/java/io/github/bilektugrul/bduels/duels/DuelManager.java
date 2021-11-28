@@ -380,6 +380,7 @@ public class DuelManager {
             Player player = user.getBase();
             player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
             player.teleport(preDuelLocation);
+            player.setHealth(player.getMaxHealth());
             user.setState(UserState.FREE);
             user.setDuel(null);
         }
