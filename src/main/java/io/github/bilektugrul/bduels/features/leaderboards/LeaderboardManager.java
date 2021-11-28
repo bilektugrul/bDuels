@@ -15,7 +15,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LeaderboardManager {
@@ -227,28 +226,33 @@ public class LeaderboardManager {
         return true;
     }
 
-    public void saveLeaderboard(Leaderboard leaderboard) {
+    public boolean saveLeaderboard(Leaderboard leaderboard) {
         if (leaderboard == null) {
-            return;
+            throw new NullPointerException("Leaderboard can not be null!");
         }
 
-        String leaderboardId = leaderboard.getId();
-        String path = "leaderboards." + leaderboardId + ".";
-        file.set(path + "leaderboard", null);
-        Hologram hologram = leaderboard.getHologram();
-        if (hologram != null) {
-            file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
+        try {
+            String leaderboardId = leaderboard.getId();
+            String path = "leaderboards." + leaderboardId + ".";
+            file.set(path + "leaderboard", null);
+            Hologram hologram = leaderboard.getHologram();
+            if (hologram != null) {
+                file.set(path + "hologram-location", LocationSerializer.toString(hologram.getLocation()));
+            }
+            file.set(path + "name", leaderboard.getName());
+            file.set(path + "type", leaderboard.getType().name());
+            file.set(path + "how", leaderboard.getSortingType().name());
+            file.set(path + "max-size", leaderboard.getMaxSize());
+            int i = 1;
+            for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
+                String entryPath = path + "leaderboard." + i++ + ".";
+                file.set(entryPath + "name", entry.getName());
+                file.set(entryPath + "value", entry.getValue());
+            }
+        } catch (NullPointerException ignored) {
+            return false;
         }
-        file.set(path + "name", leaderboard.getName());
-        file.set(path + "type", leaderboard.getType().name());
-        file.set(path + "how", leaderboard.getSortingType().name());
-        file.set(path + "max-size", leaderboard.getMaxSize());
-        int i = 1;
-        for (LeaderboardEntry entry : leaderboard.getLeaderboardEntries()) {
-            String entryPath = path + "leaderboard." + i++ + ".";
-            file.set(entryPath + "name", entry.getName());
-            file.set(entryPath + "value", entry.getValue());
-        }
+        return true;
     }
 
     public List<Leaderboard> getLeaderboards() {

@@ -12,8 +12,8 @@ import java.util.List;
 public class Leaderboard {
 
     private final String id;
-    private final String name;
 
+    private String name;
     private int maxSize;
     private StatisticType type;
     private SortingType sortingType;
@@ -30,6 +30,10 @@ public class Leaderboard {
         this.type = type;
         this.sortingType = sortingType;
         setMaxSize(maxSize);
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setMaxSize(int maxSize) {
