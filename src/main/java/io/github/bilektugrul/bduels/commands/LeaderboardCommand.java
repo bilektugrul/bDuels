@@ -21,7 +21,7 @@ public class LeaderboardCommand implements CommandExecutor {
 
     private final BDuels plugin;
     private final LeaderboardManager leaderboardManager;
-    private final List<String> adminSubCommands = new ArrayList<>(Arrays.asList("oluştur", "sil", "yenile", "hologram", "limit", "veri", "data", "sıralamatürü", "type"));
+    private final List<String> adminSubCommands = new ArrayList<>(Arrays.asList("oluştur", "sil", "isim", "yenile", "hologram", "limit", "veri", "data", "sıralamatürü", "type"));
 
     public LeaderboardCommand(BDuels plugin) {
         this.plugin = plugin;
@@ -51,6 +51,9 @@ public class LeaderboardCommand implements CommandExecutor {
                     return true;
                 case "sil":
                     deleteLeaderboard(sender, args);
+                    return true;
+                case "isim":
+                    setName(sender, args);
                     return true;
                 case "yenile":
                     try {
@@ -111,6 +114,26 @@ public class LeaderboardCommand implements CommandExecutor {
         }
     }
 
+    private void setName(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            wrongUsage(sender);
+            return;
+        }
+
+        String leaderboardID = args[1];
+        Leaderboard leaderboard = leaderboardManager.getFromID(leaderboardID);
+        if (leaderboard == null) {
+            sender.sendMessage(Utils.getMessage("leaderboards.not-found", sender));
+            return;
+        }
+
+        String leaderboardName = Utils.arrayToString(Arrays.copyOfRange(args, 2, args.length), sender, false, false);
+        leaderboard.setName(leaderboardName);
+        sender.sendMessage(Utils.getMessage("leaderboards.name-changed", sender)
+                .replace("%newname%", leaderboardName)
+                .replace("%leaderboard%", leaderboardID));
+    }
+
     private void refresh(CommandSender sender, String[] args) throws ExecutionException, InterruptedException {
         boolean all = args[1].equalsIgnoreCase("hepsi");
 
@@ -146,9 +169,12 @@ public class LeaderboardCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         leaderboard.createHologram(plugin, player.getLocation());
-        leaderboardManager.saveLeaderboard(leaderboard);
-        leaderboardManager.updateHologram(leaderboard);
-        player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
+        if (leaderboardManager.saveLeaderboard(leaderboard)) {
+            leaderboardManager.updateHologram(leaderboard);
+            player.sendMessage(Utils.getMessage("leaderboards.location-changed", player));
+        } else {
+            player.sendMessage(Utils.getMessage("leaderboards.not-ready", player));
+        }
     }
 
     private void setDataType(CommandSender sender, String[] args) {
