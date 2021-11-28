@@ -122,10 +122,10 @@
         <dependency>
             <groupId>com.github.hakan-krgn</groupId>
             <artifactId>hInventoryAPI</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.8</version>
         </dependency>
         <dependency>
-            <groupId>com.hakan.LicenseController</groupId>
+            <groupId>com.hakan</groupId>
             <artifactId>LicenseController</artifactId>
             <version>1.0.0</version>
         </dependency>

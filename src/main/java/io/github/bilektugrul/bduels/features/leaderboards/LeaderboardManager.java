@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LeaderboardManager {
@@ -142,18 +143,19 @@ public class LeaderboardManager {
     }
 
     public void sort(Leaderboard leaderboard) throws ExecutionException, InterruptedException {
-        List<LeaderboardEntry> leaderboardEntries = StatisticsUtils.getStats(leaderboard.getType()).get();
-        if (leaderboardEntries != null && !leaderboardEntries.isEmpty()) {
-            leaderboard.setLeaderboardEntries(leaderboardEntries
-                    .stream()
-                    .sorted(isReversed(leaderboard.getSortingType())
-                            ? Comparator.comparingInt(LeaderboardEntry::getValue).reversed()
-                            : Comparator.comparingInt(LeaderboardEntry::getValue))
-                    .limit(leaderboard.getMaxSize())
-                    .collect(Collectors.toList())
-            );
-            scheduler.runTask(plugin, () -> updateHologram(leaderboard));
-        }
+        StatisticsUtils.getStats(leaderboard.getType(), leaderboardEntries -> {
+            if (leaderboardEntries != null && !leaderboardEntries.isEmpty()) {
+                leaderboard.setLeaderboardEntries(leaderboardEntries
+                        .stream()
+                        .sorted(isReversed(leaderboard.getSortingType())
+                                ? Comparator.comparingInt(LeaderboardEntry::getValue).reversed()
+                                : Comparator.comparingInt(LeaderboardEntry::getValue))
+                        .limit(leaderboard.getMaxSize())
+                        .collect(Collectors.toList())
+                );
+                scheduler.runTask(plugin, () -> updateHologram(leaderboard));
+            }
+        });
     }
 
     public void sortEveryLeaderboard() {
