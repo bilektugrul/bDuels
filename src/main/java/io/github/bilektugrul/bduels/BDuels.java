@@ -240,12 +240,12 @@ public final class BDuels extends JavaPlugin {
 
     public void reload() {
         reloadConfig();
-        languageManager.loadLanguage();
-        arenaManager.loadArenas();
+        languageManager.load();
+        arenaManager.load();
         duelManager.reload();
         userManager.prepareSaveProcess();
         if (isLeaderboardManagerReady()) {
-            leaderboardManager.reloadSettings(false);
+            leaderboardManager.reload(false);
         }
     }
 

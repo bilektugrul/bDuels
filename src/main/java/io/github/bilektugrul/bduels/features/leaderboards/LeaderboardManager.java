@@ -29,10 +29,10 @@ public class LeaderboardManager {
     public LeaderboardManager(BDuels plugin) {
         this.plugin = plugin;
         this.scheduler = plugin.getServer().getScheduler();
-        reloadSettings(true);
+        reload(true);
     }
 
-    public void reloadSettings(boolean first) {
+    public void reload(boolean first) {
         clear();
         file = ConfigUtils.getConfig(plugin, "leaderboards");
         formatter = new SimpleDateFormat(Utils.getMessage("leaderboards.date-format", null));

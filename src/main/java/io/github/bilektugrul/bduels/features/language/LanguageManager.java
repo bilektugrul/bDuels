@@ -16,10 +16,10 @@ public class LanguageManager {
 
     public LanguageManager(BDuels plugin) {
         this.plugin = plugin;
-        loadLanguage();
+        load();
     }
 
-    public void loadLanguage() {
+    public void load() {
         languageString = plugin.getConfig().getString("language").toLowerCase(Locale.ROOT);
         String s = File.separator;
         try {
