@@ -18,28 +18,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 /**
  * @author Despical
-**/
+ **/
 public class StatisticsUtils {
 
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
 
-    public static Future<List<LeaderboardEntry>> getStats(StatisticType stat) {
-        CompletableFuture<List<LeaderboardEntry>> future = new CompletableFuture<>();
+    public static void getStats(StatisticType stat, Consumer<List<LeaderboardEntry>> consumer) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             boolean completed = false;
             if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
-                try {
-                    future.complete(getFlatStats(stat).get());
-                    completed = true;
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                getFlatStats(stat, consumer);
+                completed = true;
             }
 
             if (!completed) {
@@ -59,7 +52,7 @@ public class StatisticsUtils {
                             int value = set.getInt(stat.getName());
                             leaderboardEntries.add(new LeaderboardEntry(name, value));
                         }
-                        future.complete(leaderboardEntries);
+                        consumer.accept(leaderboardEntries);
                     } catch (NullPointerException e) {
                         exception(e);
                     }
@@ -68,11 +61,9 @@ public class StatisticsUtils {
                 }
             }
         });
-        return future;
     }
-    
-    public static Future<List<LeaderboardEntry>> getFlatStats(StatisticType statisticType) {
-        CompletableFuture<List<LeaderboardEntry>> future = new CompletableFuture<>();
+
+    public static void getFlatStats(StatisticType statisticType, Consumer<List<LeaderboardEntry>> consumer) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             File base = new File(plugin.getDataFolder() + "/players/");
             List<File> users = null;
@@ -91,10 +82,9 @@ public class StatisticsUtils {
                     LeaderboardEntry entry = new LeaderboardEntry(name, value);
                     leaderboardEntries.add(entry);
                 }
-                future.complete(leaderboardEntries);
+                consumer.accept(leaderboardEntries);
             }
         });
-        return future;
     }
 
     private static void exception(Exception e) {
