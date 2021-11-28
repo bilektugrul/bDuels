@@ -5,6 +5,7 @@ api-version: 1.13
 prefix: bDuels
 authors: [ bilektugrul ]
 description: Acayip özelliklerle dolu mükemmel bir düello eklentisi!
+website: https://github.com/bilektugrul/bDuels-Wiki/wiki
 
 softdepend:
   - PlaceholderAPI

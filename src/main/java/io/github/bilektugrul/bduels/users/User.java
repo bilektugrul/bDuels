@@ -85,6 +85,10 @@ public class User {
         state = newState;
     }
 
+    public boolean isInMatch() {
+        return state == UserState.IN_MATCH || state == UserState.STARTING_MATCH;
+    }
+
     public boolean doesAcceptDuelRequests() {
         return getStat(StatisticType.DUEL_REQUESTS) == 1;
     }

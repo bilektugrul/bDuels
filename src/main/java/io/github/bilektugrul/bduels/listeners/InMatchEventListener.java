@@ -33,7 +33,7 @@ public class InMatchEventListener extends ListenerAdapter {
     public void onPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();
         User user = userManager.getUser(player);
-        if (userManager.isInMatch(user)) {
+        if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
         }
     }
@@ -42,7 +42,7 @@ public class InMatchEventListener extends ListenerAdapter {
     public void onBreak(BlockBreakEvent e) {
         Player player = e.getPlayer();
         User user = userManager.getUser(player);
-        if (userManager.isInMatch(user)) {
+        if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-break-blocks", player));
         }
     }
@@ -51,7 +51,7 @@ public class InMatchEventListener extends ListenerAdapter {
     public void onDrop(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
         User user = userManager.getUser(player);
-        if (userManager.isInMatch(user)) {
+        if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-drop-item", player));
         }
     }
@@ -64,7 +64,7 @@ public class InMatchEventListener extends ListenerAdapter {
 
         Player player = e.getPlayer();
         User user = userManager.getUser(player);
-        if (userManager.isInMatch(user)) {
+        if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-teleport", player));
         }
     }
@@ -73,7 +73,7 @@ public class InMatchEventListener extends ListenerAdapter {
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
         User user = userManager.getUser(player);
-        if (userManager.isInMatch(user)) {
+        if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-use-command", player));
         }
     }

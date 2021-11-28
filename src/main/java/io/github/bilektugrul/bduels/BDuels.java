@@ -34,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Optional;
 
-//TODO: Wikiyi yeni confige göre yeniden düzenle ve leaderboard tab completer ekle (regex kullan)
+//TODO: Leaderboard tab completer ekle (regex kullan)
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;

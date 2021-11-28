@@ -61,10 +61,6 @@ public class UserManager {
         userList.remove(user);
     }
 
-    public boolean isInMatch(User user) {
-        return user.getState() == UserState.IN_MATCH || user.getState() == UserState.STARTING_MATCH;
-    }
-
     public boolean isMysqlManagerReady() {
         return mysqlManager != null;
     }
@@ -73,7 +69,11 @@ public class UserManager {
         if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
             FileConfiguration data = user.getData();
             for (StatisticType statisticType : StatisticType.values()) {
-                int stat = data.getInt("stats." + statisticType.name());
+                String path = "stats." + statisticType.name();
+                if (statisticType == StatisticType.DUEL_REQUESTS && !data.isSet(path)) {
+                    data.set(path, 1);
+                }
+                int stat = data.getInt(path);
                 user.setStat(statisticType, stat);
             }
         } else if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL && isMysqlManagerReady()) {
