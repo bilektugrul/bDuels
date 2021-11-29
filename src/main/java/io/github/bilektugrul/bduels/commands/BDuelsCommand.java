@@ -3,6 +3,7 @@ package io.github.bilektugrul.bduels.commands;
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardManager;
 import io.github.bilektugrul.bduels.utils.Utils;
+import me.despical.commons.string.StringMatcher;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,9 +11,8 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BDuelsCommand implements CommandExecutor {
 
@@ -98,12 +98,23 @@ public class BDuelsCommand implements CommandExecutor {
     
     private static class BDuelsCommandTabCompleter implements TabCompleter {
 
+        private static final List<String> defaultCompleters = new ArrayList<>(Arrays.asList("reload", "save"));
+        private static final List<String> saveCompleters = new ArrayList<>(Arrays.asList("stats", "leaderboards", "all"));
+
         @Override
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-            if (args.length > 1 && args[0].equalsIgnoreCase("save")) {
-                return Arrays.asList("stats", "leaderboards", "all");
+            if (args[0].equalsIgnoreCase("save")) {
+                return args.length == 2 ?
+                        args[1].length() == 0
+                                ? saveCompleters
+                                : StringMatcher.match(args[1], saveCompleters).stream().map(StringMatcher.Match::getMatch).collect(Collectors.toList())
+                        : Collections.emptyList();
             }
-            return Arrays.asList("reload", "save");
+            return args.length == 1
+                    ? args[0].length() == 0
+                        ? defaultCompleters
+                        : StringMatcher.match(args[0], defaultCompleters).stream().map(StringMatcher.Match::getMatch).collect(Collectors.toList())
+                    : Collections.emptyList();
         }
 
     }

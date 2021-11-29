@@ -24,7 +24,7 @@ commands:
   arena:
     usage: /arena <sub command> <arena>
   accept:
-    aliases: [/kabulet, /düellokabulet, /duelkabulet]
+    aliases: [kabulet, düellokabulet, duelkabulet]
     usage: /accept
   duelstats:
     aliases: [bduelstats, bduelsstats, düellostats, duelistatistikleri, düelloistatistikleri, stats]

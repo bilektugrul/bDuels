@@ -34,7 +34,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Optional;
 
-//TODO: Leaderboard tab completer ekle (regex kullan)
 public final class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
