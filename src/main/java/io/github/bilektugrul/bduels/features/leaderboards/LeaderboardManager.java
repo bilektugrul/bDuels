@@ -71,6 +71,7 @@ public class LeaderboardManager {
             leaderboards.add(leaderboard);
             if (plugin.isHologramsEnabled() && hologramLocation != null) {
                 leaderboard.createHologram(plugin, hologramLocation);
+                updateHologram(leaderboard);
             }
         } catch (NullPointerException ignored) {
             plugin.getLogger().warning(id + " ID'li sıralamanın verilerinde hata olduğu için düzgün şekilde oluşturulamadı.");
@@ -106,15 +107,20 @@ public class LeaderboardManager {
             return;
         }
 
-        leaderboards.removeIf(leaderboard -> leaderboard.getId().equalsIgnoreCase(id));
+        deleteLeaderboard(getFromID(id));
+    }
+
+    public void deleteLeaderboard(Leaderboard leaderboard) {
+        Hologram hologram = leaderboard.getHologram();
+        if (hologram != null) {
+            hologram.delete();
+        }
+        leaderboards.remove(leaderboard);
     }
 
     public void clear() {
         for (Leaderboard leaderboard : leaderboards) {
-            Hologram hologram = leaderboard.getHologram();
-            if (hologram != null) {
-                hologram.delete();
-            }
+            deleteLeaderboard(leaderboard);
         }
         leaderboards.clear();
     }

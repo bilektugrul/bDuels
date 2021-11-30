@@ -58,7 +58,7 @@ mid-item: # Düello menüsünü ortadan bölecek eşyanın ayarları.
   name: '&f'
   lore:
     - ' '
-    - '&a%sender% &7&m<-----&r-> &c%opponent%'
+    - '&a%sender% &7<&m------&r&7> &c%opponent%'
     - ' '
 
 not-ready-item: # Düello menüsünde oyuncular hazır değilken gözükecek eşyanın ayarları.

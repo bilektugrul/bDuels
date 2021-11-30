@@ -68,12 +68,11 @@ public class Leaderboard {
         return maxSize;
     }
 
-    public Hologram createHologram(BDuels plugin, Location location) {
+    public void createHologram(BDuels plugin, Location location) {
         if (hologram != null) {
             hologram.delete();
         }
         hologram = HologramsAPI.createHologram(plugin, location);
-        return hologram;
     }
 
     public Hologram getHologram() {
