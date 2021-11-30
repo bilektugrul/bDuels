@@ -107,20 +107,22 @@ public class LeaderboardManager {
             return;
         }
 
-        deleteLeaderboard(getFromID(id));
+        deleteLeaderboard(getFromID(id), true);
     }
 
-    public void deleteLeaderboard(Leaderboard leaderboard) {
+    public void deleteLeaderboard(Leaderboard leaderboard, boolean remove) {
         Hologram hologram = leaderboard.getHologram();
         if (hologram != null) {
             hologram.delete();
         }
-        leaderboards.remove(leaderboard);
+        if (remove) {
+            leaderboards.remove(leaderboard);
+        }
     }
 
     public void clear() {
         for (Leaderboard leaderboard : leaderboards) {
-            deleteLeaderboard(leaderboard);
+            deleteLeaderboard(leaderboard, false);
         }
         leaderboards.clear();
     }
