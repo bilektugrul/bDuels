@@ -161,11 +161,11 @@ public final class BDuels extends JavaPlugin {
     }
 
     public boolean saveAllUserStatistics(boolean sync) {
-        MySQLManager mySQLManager = userManager.getMysqlManager();
         if (!databaseEnabled) {
             return false;
         }
 
+        MySQLManager mySQLManager = userManager.getMysqlManager();
         for (User user : userManager.getUserList()) {
             if (usedDatabaseType == DatabaseType.FLAT) {
                 userManager.saveStatistics(user, sync);
@@ -207,7 +207,6 @@ public final class BDuels extends JavaPlugin {
     public InventoryAPI getInventoryAPI() {
         return inventoryAPI;
     }
-
 
     public void setEconomyAdapter(EconomyAdapter economyAdapter) {
         this.economyAdapter = economyAdapter;

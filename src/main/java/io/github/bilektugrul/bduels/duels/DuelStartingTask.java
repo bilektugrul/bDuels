@@ -9,20 +9,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class DuelStartingTask extends BukkitRunnable {
 
-    private final BDuels plugin;
+    private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
 
     private final Duel duel;
     private final Player player, opponent;
     private final Location playerStartLocation, opponentStartLocation;
+
     private int time;
 
-    public DuelStartingTask(BDuels plugin, Duel duel) {
-        this.plugin = plugin;
-
+    public DuelStartingTask(Duel duel) {
         this.duel = duel;
         this.player = duel.getPlayer().getBase();
         this.opponent = duel.getOpponent().getBase();

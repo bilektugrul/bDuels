@@ -352,7 +352,7 @@ public class DuelManager {
         Arena matchArena = arenaManager.findNextEmptyArenaIfPresent();
         matchArena.setState(ArenaState.PRE_MATCH);
 
-        Duel duel = new Duel(plugin, requestProcess, matchArena);
+        Duel duel = new Duel(requestProcess, matchArena);
         duel.startCountdown();
         ongoingDuels.add(duel);
 
