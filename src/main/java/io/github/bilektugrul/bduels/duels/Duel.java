@@ -9,14 +9,16 @@ import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Duel {
 
+    private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
+
     private final Arena arena;
-    private final BDuels plugin;
     private final User[] players;
     private final User player, opponent;
     private final Map<User, DuelRewards> duelRewards;
@@ -25,11 +27,10 @@ public class Duel {
     private User winner, loser;
     private DuelStartingTask startingTask;
 
-    public Duel(BDuels plugin, DuelRequestProcess requestProcess, Arena arena) {
-        this.plugin = plugin;
+    public Duel(DuelRequestProcess requestProcess, Arena arena) {
         this.player = requestProcess.getPlayer();
         this.opponent = requestProcess.getOpponent();
-        this.players = new User[]{player, opponent};
+        this.players = requestProcess.getPlayers();
 
         this.arena = arena;
         this.duelRewards = requestProcess.getDuelRewards();
@@ -47,7 +48,7 @@ public class Duel {
         for (User user : players) {
             user.setState(UserState.STARTING_MATCH);
         }
-        setStartingTask(new DuelStartingTask(plugin, this));
+        setStartingTask(new DuelStartingTask(this));
         startingTask.runTaskTimer(plugin, 0, 20L);
     }
 

@@ -1,60 +1,61 @@
 package io.github.bilektugrul.bduels.economy;
 
 import io.github.bilektugrul.bduels.BDuels;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class VaultEconomy implements EconomyAdapter {
 
-    private final VaultManager vaultHook;
+    private final Economy economy;
 
     public VaultEconomy(BDuels plugin) {
-        vaultHook = plugin.getVaultManager();
+        economy = plugin.getVaultManager().getEconomy();
     }
 
     @Override
     public void addMoney(String playerName, double amount) {
-        vaultHook.getEconomy().depositPlayer(playerName, amount);
+        economy.depositPlayer(playerName, amount);
     }
 
     @Override
     public void addMoney(Player player, double amount) {
-        vaultHook.getEconomy().depositPlayer(player, amount);
+        economy.depositPlayer(player, amount);
     }
 
     @Override
     public void addMoney(OfflinePlayer offlinePlayer, double amount) {
-        vaultHook.getEconomy().depositPlayer(offlinePlayer, amount);
+        economy.depositPlayer(offlinePlayer, amount);
     }
 
     @Override
     public void removeMoney(String playerName, double amount) {
-        vaultHook.getEconomy().withdrawPlayer(playerName, amount);
+        economy.withdrawPlayer(playerName, amount);
     }
 
     @Override
     public void removeMoney(Player player, double amount) {
-        vaultHook.getEconomy().withdrawPlayer(player, amount);
+        economy.withdrawPlayer(player, amount);
     }
 
     @Override
     public void removeMoney(OfflinePlayer offlinePlayer, double amount) {
-        vaultHook.getEconomy().withdrawPlayer(offlinePlayer, amount);
+        economy.withdrawPlayer(offlinePlayer, amount);
     }
 
     @Override
     public double getMoney(String playerName) {
-        return vaultHook.getEconomy().getBalance(playerName);
+        return economy.getBalance(playerName);
     }
 
     @Override
     public double getMoney(Player player) {
-        return vaultHook.getEconomy().getBalance(player);
+        return economy.getBalance(player);
     }
 
     @Override
     public double getMoney(OfflinePlayer offlinePlayer) {
-        return vaultHook.getEconomy().getBalance(offlinePlayer);
+        return economy.getBalance(offlinePlayer);
     }
     
 }
