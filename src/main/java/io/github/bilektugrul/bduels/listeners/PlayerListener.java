@@ -55,6 +55,7 @@ public class PlayerListener extends ListenerAdapter {
     public void onDeath(PlayerDeathEvent e) {
         User user = userManager.getUser(e.getEntity());
         if (user.isInMatch()) {
+            e.setKeepInventory(true);
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
             user.setRespawnLocation(duel.getPreDuelLocations().get(user));
