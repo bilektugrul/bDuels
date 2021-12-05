@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class PlayerListener extends ListenerAdapter {
 
@@ -58,20 +57,11 @@ public class PlayerListener extends ListenerAdapter {
             e.setKeepInventory(true);
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
-            user.setRespawnLocation(duel.getPreDuelLocations().get(user));
-            duelManager.endMatch(duel, DuelEndReason.DEATH);
-        }
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        Player player = e.getPlayer();
-        User user = userManager.getUser(player);
-        if (user.getRespawnLocation() != null) {
             Bukkit.getScheduler().runTask(plugin, () -> {
-                player.teleport(user.getRespawnLocation());
-                user.setRespawnLocation(null);
+                user.getBase().spigot().respawn();
+                user.getBase().teleport(duel.getPreDuelLocations().get(user));
             });
+            duelManager.endMatch(duel, DuelEndReason.DEATH);
         }
     }
 

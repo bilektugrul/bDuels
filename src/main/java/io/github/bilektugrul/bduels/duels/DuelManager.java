@@ -284,6 +284,10 @@ public class DuelManager {
             ItemStack item = replaceLoreAndName(settings.getItem(), process, null);
             int moneyToAdd = settings.getMoneyToAdd();
             inventory.setItem(i, ClickableItem.of(item, event -> {
+                if (process.isFinished(user)) {
+                    return;
+                }
+
                 Player clicker = (Player) event.getWhoClicked();
                 DuelRewards rewards = process.getRewardsOf(user);
                 if (clicker.equals(user.getBase())) {

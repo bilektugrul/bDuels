@@ -6,7 +6,6 @@ import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.users.data.DatabaseType;
 import io.github.bilektugrul.bduels.utils.Utils;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,7 +25,6 @@ public class User {
     private UserState state;
     private Duel duel;
     private DuelRequestProcess requestProcess;
-    private Location respawnLocation;
     private FileConfiguration data;
 
     public User(Player player) {
@@ -55,14 +53,6 @@ public class User {
 
     public void setRequestProcess(DuelRequestProcess requestProcess) {
         this.requestProcess = requestProcess;
-    }
-
-    public Location getRespawnLocation() {
-        return respawnLocation;
-    }
-
-    public void setRespawnLocation(Location respawnLocation) {
-        this.respawnLocation = respawnLocation;
     }
 
     public String getName() {
