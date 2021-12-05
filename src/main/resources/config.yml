@@ -22,7 +22,7 @@ database:
     table: bduelsstats
 titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ayarlar.
   fade-in: 5
-  stay: 30
+  stay: 100
   fade-out: 5
 
 in-game-settings:
