@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.listeners;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.entity.Entity;
@@ -35,6 +36,10 @@ public class InMatchEventListener extends ListenerAdapter {
         User user = userManager.getUser(player);
         if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
+            if (!e.isCancelled()) {
+                Duel duel = user.getDuel();
+                duel.addPlacedBlockLocation(e.getBlock().getLocation());
+            }
         }
     }
 
@@ -44,6 +49,10 @@ public class InMatchEventListener extends ListenerAdapter {
         User user = userManager.getUser(player);
         if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-break-blocks", player));
+            if (!e.isCancelled()) {
+                Duel duel = user.getDuel();
+                duel.removePlacedBlockLocation(e.getBlock().getLocation());
+            }
         }
     }
 
