@@ -20,10 +20,19 @@ database:
     url: jdbc:mysql://localhost:3306/<databasename>?useSSL=false&autoReConnect=true
     password: <password>
     table: bduelsstats
+
 titles: # Win mesajında title seçeneği kullanıldığında geçerli olacak ayarlar.
   fade-in: 5
   stay: 100
   fade-out: 5
+
+teleport-to-spawn-on-join: # Eğer bu ayar true olarak kalırsa
+                           # sunucu çöktüğünde, duelarenas adlı dünyadaki
+                           # oyuncular (yani maçtaki oyuncular)
+                           # tekrar giriş yaptıklarında spawna ışınlanacaklardır.
+  enabled: true
+  duel-world: duelarenas # düello arenalarının bulunduğu dünyanın adı
+  spawn-world: world # ana dünyanızın adı, oyuncular bu dünyanın spawnına ışınlanacak
 
 in-game-settings:
   # modlar: ONLY_WITH_PERMISSION, NEVER, EVERYONE

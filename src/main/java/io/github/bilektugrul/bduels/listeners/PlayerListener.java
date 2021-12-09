@@ -7,6 +7,7 @@ import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -24,6 +25,12 @@ public class PlayerListener extends ListenerAdapter {
         Player player = e.getPlayer();
         player.removeMetadata("god-mode-bduels", plugin);
         userManager.getUser(player);
+        if (Utils.getBoolean("teleport-to-spawn-on-join.enabled")) {
+            if (player.getWorld().getName().equalsIgnoreCase(Utils.getString("teleport-to-spawn-on-join.duel-world"))) {
+                World spawnWorld = Bukkit.getWorld(Utils.getString("teleport-to-spawn-on-join.spawn-world"));
+                Bukkit.getScheduler().runTask(plugin, () -> player.teleport(spawnWorld.getSpawnLocation()));
+            }
+        }
     }
 
     @EventHandler
