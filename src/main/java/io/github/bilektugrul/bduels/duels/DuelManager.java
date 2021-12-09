@@ -24,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class DuelManager {
     private final InventoryAPI inventoryAPI;
     private final EconomyAdapter economy;
     private final ArenaManager arenaManager;
+    private final BukkitScheduler scheduler;
 
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<Duel> ongoingDuels = new ArrayList<>();
@@ -56,6 +58,7 @@ public class DuelManager {
         this.inventoryAPI = plugin.getInventoryAPI();
         this.economy = plugin.getEconomyAdapter();
         this.arenaManager = plugin.getArenaManager();
+        this.scheduler = plugin.getServer().getScheduler();
         reload();
     }
 
@@ -184,7 +187,7 @@ public class DuelManager {
         opponentPlayer.sendMessage(Utils.getMessage("duel.request-accepted", opponentPlayer)
                 .replace("%opponent%", opponentName));
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        scheduler.runTaskLater(plugin, () -> {
             timer.remove(opponentName);
             HInventory inventory = inventoryAPI.getInventoryCreator()
                     .setTitle(Utils.getString("request-gui-name", sender.getBase())
@@ -365,6 +368,14 @@ public class DuelManager {
         }
     }
 
+    public void clearArena(Duel duel) {
+        scheduler.runTaskAsynchronously(plugin, () -> {
+           for (Location location : duel.getPlacedBlocks()) {
+               scheduler.runTask(plugin, () -> location.getBlock().setType(Material.AIR));
+           }
+        });
+    }
+
     public void endMatch(Duel duel, DuelEndReason reason) {
         User winner = duel.getWinner();
         User loser = duel.getLoser();
@@ -373,6 +384,8 @@ public class DuelManager {
 
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
+
+        clearArena(duel);
 
         boolean isReloadOrStop = reason == DuelEndReason.RELOAD || reason == DuelEndReason.SERVER_STOP;
         if (!isReloadOrStop) {
