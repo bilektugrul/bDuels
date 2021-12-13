@@ -84,7 +84,7 @@ public class Leaderboard {
     }
 
     public List<LeaderboardEntry> getLeaderboardEntries() {
-        return new ArrayList<>(leaderboardEntries);
+        return leaderboardEntries;
     }
 
     public boolean isReady() {

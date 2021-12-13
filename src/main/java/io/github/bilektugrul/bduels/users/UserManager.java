@@ -100,7 +100,7 @@ public class UserManager {
     }
 
     public Set<User> getUserList() {
-        return new HashSet<>(userList);
+        return userList;
     }
 
     public MySQLManager getMysqlManager() {

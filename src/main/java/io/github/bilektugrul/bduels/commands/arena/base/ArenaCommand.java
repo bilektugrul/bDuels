@@ -30,7 +30,7 @@ public class ArenaCommand implements CommandExecutor {
         registerSubCommand(new ArenaDeleteCommand("sil"));
         registerSubCommand(new ArenaCreateCommand("oluştur", "yarat"));
         registerSubCommand(new DefinePlayerLocationCommand("p1", "p2"));
-        //registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
+        registerSubCommand(new DefineEdgeLocationCommand("edge1", "edge2"));
         registerSubCommand(new ArenaListCommand("list", "liste"));
         registerSubCommand(new ArenaTeleportCommand("teleport", "ışınlan"));
         registerSubCommand(new ArenaInfoCommand("info", "bilgi"));

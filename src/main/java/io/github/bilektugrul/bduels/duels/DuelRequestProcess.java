@@ -53,7 +53,7 @@ public class DuelRequestProcess {
     }
 
     public Map<User, DuelRewards> getDuelRewards() {
-        return new HashMap<>(duelRewards);
+        return duelRewards;
     }
 
     public boolean isFinished(User user) {

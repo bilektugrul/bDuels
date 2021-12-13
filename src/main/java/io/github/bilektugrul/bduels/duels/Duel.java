@@ -70,15 +70,15 @@ public class Duel {
     }
 
     public Map<User, DuelRewards> getDuelRewards() {
-        return new HashMap<>(duelRewards);
+        return duelRewards;
     }
 
     public Map<User, Location> getPreDuelLocations() {
-        return new HashMap<>(preDuelLocations);
+        return preDuelLocations;
     }
 
     public List<Location> getPlacedBlocks() {
-        return new ArrayList<>(placedBlocks);
+        return placedBlocks;
     }
 
     public void addPlacedBlockLocation(Location location) {
