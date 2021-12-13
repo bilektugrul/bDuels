@@ -1,5 +1,6 @@
 package io.github.bilektugrul.bduels.arenas;
 
+import org.apache.commons.lang.math.IntRange;
 import org.bukkit.Location;
 
 public class Arena {
@@ -37,28 +38,41 @@ public class Arena {
         return state;
     }
 
-    public void setEdge(Location edge) {
+    public boolean isInArea(Location origin) {
+        System.out.println("anneni md5 " + origin);
+        return (new IntRange(edge.getX(), otherEdge.getX()).containsDouble(origin.getX())
+                && new IntRange(edge.getY(), otherEdge.getY()).containsDouble(origin.getY())
+                && new IntRange(edge.getZ(), otherEdge.getZ()).containsDouble(origin.getZ()));
+    }
+
+    public Arena setEdge(Location edge) {
         this.edge = edge;
+        return this;
     }
 
-    public void setOtherEdge(Location otherEdge) {
+    public Arena setOtherEdge(Location otherEdge) {
         this.otherEdge = otherEdge;
+        return this;
     }
 
-    public void setPlayerLocation(Location playerLocation) {
+    public Arena setPlayerLocation(Location playerLocation) {
         this.playerLocation = playerLocation;
+        return this;
     }
 
-    public void setOpponentLocation(Location opponentLocation) {
+    public Arena setOpponentLocation(Location opponentLocation) {
         this.opponentLocation = opponentLocation;
+        return this;
     }
 
-    public void setState(ArenaState state) {
+    public Arena setState(ArenaState state) {
         this.state = state;
+        return this;
     }
 
     public boolean isReady() {
-        return playerLocation != null && opponentLocation != null;
+        return playerLocation != null && opponentLocation != null
+                && edge != null && otherEdge != null;
     }
 
 }

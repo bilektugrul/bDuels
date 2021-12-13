@@ -263,8 +263,8 @@ public class LeaderboardManager {
         return true;
     }
 
-    public List<Leaderboard> getLeaderboards() {
-        return new ArrayList<>(leaderboards);
+    public Set<Leaderboard> getLeaderboards() {
+        return leaderboards;
     }
 
     public String getReadableLeaderboards() {

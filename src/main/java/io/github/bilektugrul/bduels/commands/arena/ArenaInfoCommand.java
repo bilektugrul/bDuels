@@ -39,8 +39,8 @@ public class ArenaInfoCommand extends SubCommand {
                 .replace("%arena%", arena.getName())
                 .replace("%p1loc%", LocationSerializer.toString(arena.getPlayerLocation()))
                 .replace("%p2loc%", LocationSerializer.toString(arena.getOpponentLocation()))
-                //.replace("%edge1loc%", LocationSerializer.toString(arena.getEdge()))
-                //.replace("%edge2loc%", LocationSerializer.toString(arena.getOtherEdge()))
+                .replace("%edge1loc%", LocationSerializer.toString(arena.getEdge()))
+                .replace("%edge2loc%", LocationSerializer.toString(arena.getOtherEdge()))
                 .replace("%state%", Utils.getMessage("arenas.states." + arena.getState().name()));
         sender.sendMessage(message);
     }

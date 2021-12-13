@@ -14,7 +14,6 @@ import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.compat.XMaterial;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -369,11 +368,9 @@ public class DuelManager {
     }
 
     public void clearArena(Duel duel) {
-        scheduler.runTaskAsynchronously(plugin, () -> {
-           for (Location location : duel.getPlacedBlocks()) {
-               scheduler.runTask(plugin, () -> location.getBlock().setType(Material.AIR));
-           }
-        });
+       for (Location location : duel.getPlacedBlocks()) {
+           location.getBlock().setType(Material.AIR);
+       }
     }
 
     public void endMatch(Duel duel, DuelEndReason reason) {
@@ -472,8 +469,12 @@ public class DuelManager {
         duelRequestProcesses.clear();
     }
 
+    public List<DuelRequestProcess> getDuelRequestProcesses() {
+        return duelRequestProcesses;
+    }
+
     public List<Duel> getOngoingDuels() {
-        return new ArrayList<>(ongoingDuels);
+        return ongoingDuels;
     }
 
     public int[] getOpponentSide() {
