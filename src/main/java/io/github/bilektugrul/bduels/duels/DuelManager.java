@@ -17,6 +17,7 @@ import me.despical.commons.compat.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -37,8 +38,8 @@ public class DuelManager {
     private final BukkitScheduler scheduler;
 
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
-    private final List<Duel> ongoingDuels = new ArrayList<>();
     private final List<MoneyBetSettings> moneyBetSettingsCache = new ArrayList<>();
+    private final List<Duel> ongoingDuels = new ArrayList<>();
 
     private static final int[] midGlasses = {4, 13, 22, 31, 40};
     private static final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
@@ -367,10 +368,28 @@ public class DuelManager {
         }
     }
 
-    public void clearArena(Duel duel) {
-       for (Location location : duel.getPlacedBlocks()) {
-           location.getBlock().setType(Material.AIR);
-       }
+    private void clearArena(Duel duel) {
+        Location maxArea = duel.getArena().getEdge();
+        Location minArea = duel.getArena().getOtherEdge();
+        List<String> blocksToClear = plugin.getConfig().getStringList("whitelisted-blocks");
+
+        if (minArea == null || maxArea == null) {
+            return;
+        }
+
+        scheduler.runTaskAsynchronously(plugin, () -> {
+            for (int x = (int) minArea.getX(); x <= maxArea.getX(); x++) {
+                for (int y = (int) minArea.getY(); y <= maxArea.getY(); y++) {
+                    for (int z = (int) minArea.getZ(); z <= maxArea.getZ(); z++) {
+                        Block block = minArea.getWorld().getBlockAt(x, y, z);
+
+                        if (blocksToClear.contains(block.getType().name())) {
+                            scheduler.runTask(plugin, () -> block.setType(Material.AIR));
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void endMatch(Duel duel, DuelEndReason reason) {
