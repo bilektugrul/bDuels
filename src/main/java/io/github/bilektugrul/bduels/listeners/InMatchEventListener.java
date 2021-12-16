@@ -1,11 +1,9 @@
 package io.github.bilektugrul.bduels.listeners;
 
 import io.github.bilektugrul.bduels.BDuels;
-import io.github.bilektugrul.bduels.duels.Duel;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,15 +42,6 @@ public class InMatchEventListener extends ListenerAdapter {
             }
             
             e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
-            if (!e.isCancelled()) {
-                Duel duel = user.getDuel();
-                Location location = e.getBlock().getLocation();
-                if (duel.getArena().isInArea(location)) {
-                    duel.addPlacedBlockLocation(e.getBlock().getLocation());
-                } else {
-                    e.setCancelled(true);
-                }
-            }
         }
     }
 
@@ -67,15 +56,6 @@ public class InMatchEventListener extends ListenerAdapter {
             }
 
             e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
-            if (!e.isCancelled()) {
-                Duel duel = user.getDuel();
-                Location location = e.getBlockClicked().getRelative(e.getBlockFace()).getLocation();
-                if (duel.getArena().isInArea(location)) {
-                    duel.addPlacedBlockLocation(location);
-                } else {
-                    e.setCancelled(true);
-                }
-            }
         }
     }
 
@@ -90,15 +70,6 @@ public class InMatchEventListener extends ListenerAdapter {
             }
             
             e.setCancelled(Utils.shouldCancelEvent("can-break-blocks", player));
-            if (!e.isCancelled()) {
-                Duel duel = user.getDuel();
-                Location location = e.getBlock().getLocation();
-                if (duel.getArena().isInArea(location)) {
-                    duel.addPlacedBlockLocation(e.getBlock().getLocation());
-                } else {
-                    e.setCancelled(true);
-                }
-            }
         }
     }
 

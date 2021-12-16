@@ -39,7 +39,6 @@ public class Arena {
     }
 
     public boolean isInArea(Location origin) {
-        System.out.println("anneni md5 " + origin);
         return (new IntRange(edge.getX(), otherEdge.getX()).containsDouble(origin.getX())
                 && new IntRange(edge.getY(), otherEdge.getY()).containsDouble(origin.getY())
                 && new IntRange(edge.getZ(), otherEdge.getZ()).containsDouble(origin.getZ()));

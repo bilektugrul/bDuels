@@ -11,9 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Duel {
@@ -25,7 +23,6 @@ public class Duel {
     private final User player, opponent;
     private final Map<User, DuelRewards> duelRewards;
     private final Map<User, Location> preDuelLocations = new HashMap<>();
-    private final List<Location> placedBlocks = new ArrayList<>();
 
     private User winner, loser;
     private DuelStartingTask startingTask;
@@ -75,24 +72,6 @@ public class Duel {
 
     public Map<User, Location> getPreDuelLocations() {
         return preDuelLocations;
-    }
-
-    public List<Location> getPlacedBlocks() {
-        return placedBlocks;
-    }
-
-    public void addPlacedBlockLocation(Location location) {
-        if (!doesPlacedBlockExist(location)) {
-            placedBlocks.add(location);
-        }
-    }
-
-    public void removePlacedBlockLocation(Location location) {
-        placedBlocks.remove(location);
-    }
-
-    public boolean doesPlacedBlockExist(Location location) {
-        return placedBlocks.contains(location);
     }
 
     public User[] getPlayers() {

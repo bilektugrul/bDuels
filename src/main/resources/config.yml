@@ -47,6 +47,16 @@ in-game-settings:
   can-teleport: ONLY_WITH_PERMISSION     # sadece bduels.can-teleport yetkisi olanlar maç sırasında başka bir yere ışınlanabilir
                                          # sadece enter pearl ile olan ışınlanmalar için geçerlidir
 
+whitelisted-blocks: # maçlarda koyulabilecek bloklar, bu bloklar maç sonrasında arenadan kaldırılır.
+                    # arenalarınızın içinde bu blokları kullanmayın!
+  - FIRE
+  - COBBLESTONE
+  - WOOD
+  - LAVA
+  - WATER
+  - STATIONARY_WATER
+  - STATIONARY_LAVA
+
 start-countdown: 5 # Maç başlarken kaç saniye geri sayım yapılacağına dair ayar.
 other-stats-require-permission: true # true olarak kalırsa oyuncular
                                      # /duelstats komutuyla başkalarının istatistiklerine bakmak istediklerinde
