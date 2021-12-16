@@ -38,7 +38,7 @@ public class DuelAcceptCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        User playerUser = userManager.getUser(player);
+        User playerUser = userManager.getOrLoadUser(player);
         DuelRequestProcess process = playerUser.getRequestProcess();
         if (process == null) {
             player.sendMessage(Utils.getMessage("duel.no-request", player));

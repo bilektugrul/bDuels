@@ -66,7 +66,7 @@ public final class BDuels extends JavaPlugin {
 
         if (registerManagers()) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                userManager.getUser(p);
+                userManager.getOrLoadUser(p);
             }
 
             pluginManager.registerEvents(new PlayerListener(this), this);

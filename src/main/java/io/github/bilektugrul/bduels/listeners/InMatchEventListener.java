@@ -34,7 +34,7 @@ public class InMatchEventListener extends ListenerAdapter {
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
             if (user.getState() == UserState.STARTING_MATCH) {
                 e.setCancelled(true);
@@ -48,7 +48,7 @@ public class InMatchEventListener extends ListenerAdapter {
     @EventHandler
     public void onLiquidPlace(PlayerBucketEmptyEvent e) {
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
             if (user.getState() == UserState.STARTING_MATCH) {
                 e.setCancelled(true);
@@ -62,7 +62,7 @@ public class InMatchEventListener extends ListenerAdapter {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
             if (user.getState() == UserState.STARTING_MATCH) {
                 e.setCancelled(true);
@@ -76,7 +76,7 @@ public class InMatchEventListener extends ListenerAdapter {
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
             if (user.getState() == UserState.STARTING_MATCH) {
                 e.setCancelled(true);
@@ -94,7 +94,7 @@ public class InMatchEventListener extends ListenerAdapter {
         }
 
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
             if (user.getState() == UserState.STARTING_MATCH) {
                 e.setCancelled(true);
@@ -108,7 +108,7 @@ public class InMatchEventListener extends ListenerAdapter {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
             e.setCancelled(Utils.shouldCancelEvent("can-use-command", player));
         }

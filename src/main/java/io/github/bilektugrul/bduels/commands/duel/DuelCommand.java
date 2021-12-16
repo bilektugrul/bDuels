@@ -51,8 +51,8 @@ public class DuelCommand implements CommandExecutor {
             return true;
         }
 
-        User playerUser = userManager.getUser(player);
-        User opponent = userManager.getUser(opponentPlayer);
+        User playerUser = userManager.getOrLoadUser(player);
+        User opponent = userManager.getOrLoadUser(opponentPlayer);
 
         if (!duelManager.sendDuelRequest(playerUser, opponent)) {
             return true;

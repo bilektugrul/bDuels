@@ -33,7 +33,7 @@ public class DuelStatsCommand implements CommandExecutor {
             return true;
         }
 
-        User statUser = userManager.getUser(statPlayer);
+        User statUser = userManager.getOrLoadUser(statPlayer);
         String message = Utils.getMessage("stats-command.command", sender)
                 .replace("%statplayer%", statPlayer.getName())
                 .replace("%totalmatches%", String.valueOf(statUser.getStat(StatisticType.TOTAL_MATCHES)))

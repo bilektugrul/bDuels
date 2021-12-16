@@ -39,7 +39,7 @@ public class UserManager {
         statisticSaveProcess.start();
     }
 
-    public User getUser(Player player) {
+    public User getOrLoadUser(Player player) {
         if (!player.isOnline()) {
             return null;
         }
