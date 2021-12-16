@@ -71,7 +71,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
             return "";
         }
 
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         Duel duel = user.getDuel();
 
         if (identifier.contains("state")) {

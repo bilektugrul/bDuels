@@ -34,7 +34,7 @@ public class HInventoryClickListener extends ListenerAdapter {
                 return;
             }
 
-            User user = userManager.getUser(clicker);
+            User user = userManager.getOrLoadUser(clicker);
             DuelRequestProcess process = duelManager.getProcess(user);
             if (process.isFinished(user)) {
                 return;

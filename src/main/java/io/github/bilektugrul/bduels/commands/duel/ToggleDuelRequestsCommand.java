@@ -32,7 +32,7 @@ public class ToggleDuelRequestsCommand implements CommandExecutor {
             return true;
         }
 
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         int current = user.getStat(StatisticType.DUEL_REQUESTS);
         int newMode = current == 0 ? 1 : 0;
         user.setStat(StatisticType.DUEL_REQUESTS, newMode);

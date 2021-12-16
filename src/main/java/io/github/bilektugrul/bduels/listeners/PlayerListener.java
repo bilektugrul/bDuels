@@ -24,7 +24,7 @@ public class PlayerListener extends ListenerAdapter {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         player.removeMetadata("god-mode-bduels", plugin);
-        userManager.getUser(player);
+        userManager.getOrLoadUser(player);
         if (Utils.getBoolean("teleport-to-spawn-on-join.enabled")) {
             if (player.getWorld().getName().equalsIgnoreCase(Utils.getString("teleport-to-spawn-on-join.duel-world"))) {
                 World spawnWorld = Bukkit.getWorld(Utils.getString("teleport-to-spawn-on-join.spawn-world"));
@@ -36,7 +36,7 @@ public class PlayerListener extends ListenerAdapter {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        User user = userManager.getUser(player);
+        User user = userManager.getOrLoadUser(player);
         Duel duel = user.getDuel();
         DuelRequestProcess process = user.getRequestProcess();
 
@@ -59,7 +59,7 @@ public class PlayerListener extends ListenerAdapter {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
-        User user = userManager.getUser(e.getEntity());
+        User user = userManager.getOrLoadUser(e.getEntity());
         if (user.isInMatch()) {
             e.setKeepInventory(true);
             Duel duel = user.getDuel();
