@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.commands;
 
 import io.github.bilektugrul.bduels.BDuels;
+import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.features.leaderboards.LeaderboardManager;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.string.StringMatcher;
@@ -17,10 +18,13 @@ import java.util.stream.Collectors;
 public class BDuelsCommand implements CommandExecutor {
 
     private final BDuels plugin;
+    private final ArenaManager arenaManager;
+
     private LeaderboardManager leaderboardManager;
 
     public BDuelsCommand(BDuels plugin) {
         this.plugin = plugin;
+        this.arenaManager = plugin.getArenaManager();
         if (plugin.isLeaderboardManagerReady()) {
             this.leaderboardManager = plugin.getLeaderboardManager();
         }
@@ -55,12 +59,17 @@ public class BDuelsCommand implements CommandExecutor {
 
     private void save(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            plugin.save();
+            plugin.save(false);
             sender.sendMessage(Utils.getMessage("main-command.saved", sender));
             return;
         }
 
         switch (args[1]) {
+            case "arena":
+            case "arenas":
+            case "arenalar":
+                arenaManager.save();
+                return;
             case "stats":
             case "stat":
             case "istatistik":
@@ -88,7 +97,7 @@ public class BDuelsCommand implements CommandExecutor {
             case "all":
             case "hepsi":
             case "herşey":
-                plugin.save();
+                plugin.save(false);
                 sender.sendMessage(Utils.getMessage("main-command.saved", sender));
                 return;
             default:

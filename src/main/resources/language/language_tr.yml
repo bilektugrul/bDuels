@@ -28,6 +28,7 @@ messages:
       - '%prefix% &7- &3reload'
       - '%prefix% &7- &3save [<veri türü>] &7| &3Girilen verileri gerekli yerlere kaydeder. Veri türü girmezseniz her şey kaydedilecektir.'
       - '%prefix% &6Veri türleri:'
+      - '%prefix% &7- &3arenalar &7| &3Tüm arenaları kapsar.'
       - '%prefix% &7- &3stats &7| &3Aktif oyuncuların istatistiklerini kapsar.'
       - '%prefix% &7- &3leaderboards &7| &3Tüm mevcut sıralamaları kapsar.'
       - '%prefix% &7- &3all &7| &3Tüm veri türlerini kapsar.'
