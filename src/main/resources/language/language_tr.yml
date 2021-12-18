@@ -12,6 +12,7 @@ messages:
   player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
   saving-statistics: '%prefix% &6Tüm istatistikler kaydediliyor...'
   wrong-usage: '%prefix% &cKomutu hatalı kullandınız. Doğru kullanım: &3%usage%'
+  empty: '&cMEVCUT DEĞİL'
 
   user-states:
     FREE: Müsait
@@ -28,6 +29,7 @@ messages:
       - '%prefix% &7- &3reload'
       - '%prefix% &7- &3save [<veri türü>] &7| &3Girilen verileri gerekli yerlere kaydeder. Veri türü girmezseniz her şey kaydedilecektir.'
       - '%prefix% &6Veri türleri:'
+      - '%prefix% &7- &3arenalar &7| &3Tüm arenaları kapsar.'
       - '%prefix% &7- &3stats &7| &3Aktif oyuncuların istatistiklerini kapsar.'
       - '%prefix% &7- &3leaderboards &7| &3Tüm mevcut sıralamaları kapsar.'
       - '%prefix% &7- &3all &7| &3Tüm veri türlerini kapsar.'
@@ -196,6 +198,7 @@ messages:
       - '%prefix% &6/arena sil <arena ismi> &7| &3Var olan bir arenayı siler.'
       - '%prefix% &6/arena bilgi <arena ismi> &7| &3Girilen arenanın bilgilerini gösterir.'
       - '%prefix% &6/arena liste &7| &3Sohbetinize arena listesini gönderir.'
+      - '%prefix% &6/arena kaydet <arena ismi> &7| &3Girdiğiniz arenayı kaydeder.'
       - '%prefix% &6/arena ışınlan <arena ismi> &7| &3Girdiğiniz arenaya ışınlanırsınız.'
       - '%prefix% &6/arena p1 <arena ismi> &7| &3Arenanın 1. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
       - '%prefix% &6/arena p2 <arena ismi> &7| &3Arenanın 2. oyuncusunun başlangıç noktasını bulunduğunuz lokasyon olarak ayarlar.'
@@ -209,6 +212,8 @@ messages:
     all-in-usage-2: '%prefix% &cŞu anda hiç müsait arena yok. Düello iptal edildi, daha sonra tekrar deneyin.'
     already-exist: '%prefix% &cBu arena zaten mevcut.'
     deleted: '%prefix% &3%arena% &6isimli arena silindi.'
+    saved-arena: '%prefix% &3%arena% &6isimli arena kaydedildi.'
+    not-ready: '%prefix% &3%arena% &cisimli arena hazır olmadığı için kaydedilemedi.'
     could-not-deleted: '%prefix% &3%arena% &ckullanımda olduğu için silinemedi. Daha sonra tekrar deneyin.'
     player-location-set: '%prefix% &3%arena% &6adlı arenada &3%no% &6numaralı oyuncunun başlangıç noktası belirlendi.'
     edge-location-set: '%prefix% &3%arena% &6adlı arenada &3%no% &6numaralı köşe noktası belirlendi.'

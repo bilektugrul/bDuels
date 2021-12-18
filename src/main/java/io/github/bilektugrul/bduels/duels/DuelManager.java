@@ -123,10 +123,17 @@ public class DuelManager {
     }
 
     public boolean canSendOrAcceptDuel(User user) {
+        if (user == null) {
+            return false;
+        }
         return user.getRequestProcess() == null && user.getState() == UserState.FREE;
     }
 
     public boolean sendDuelRequest(User sender, User opponent) {
+        if (sender == null || opponent == null) {
+            return false;
+        }
+
         Player senderPlayer = sender.getBase();
         Player opponentPlayer = opponent.getBase();
 
@@ -171,6 +178,10 @@ public class DuelManager {
     }
 
     public void acceptDuelRequest(DuelRequestProcess process, List<String> timer) {
+        if (process == null || timer == null || timer.isEmpty()) {
+            return;
+        }
+
         process.setRequestAccepted(true);
 
         User sender = process.getPlayer();
@@ -242,6 +253,10 @@ public class DuelManager {
     }
 
     public void updateHeads(HInventory inventory, DuelRequestProcess process) {
+        if (inventory == null || process == null) {
+            return;
+        }
+
         ItemStack playerSkull = playerHead.clone();
         ItemStack opponentSkull = playerHead.clone();
         inventory.setItem(12, ClickableItem.empty(replaceLoreAndName(playerSkull, process, null)));
@@ -250,6 +265,10 @@ public class DuelManager {
     }
 
     public void updateMetas(HInventory inventory, DuelRequestProcess process) {
+        if (inventory == null || process == null) {
+            return;
+        }
+
         Inventory original = inventory.getInventory();
         ItemStack playerSkull = original.getItem(12);
         ItemStack opponentSkull = original.getItem(14);
@@ -280,6 +299,10 @@ public class DuelManager {
     }
 
     public void putMoneyBetItems(HInventory inventory, int[] side, User user, DuelRequestProcess process) {
+        if (inventory == null || user == null || process == null) {
+            return;
+        }
+
         int index = 0;
         for (int i : side) {
             MoneyBetSettings settings = moneyBetSettingsCache.get(index);
@@ -309,6 +332,10 @@ public class DuelManager {
     }
 
     public void putAcceptItem(HInventory inventory, int slot, User user, DuelRequestProcess process) {
+        if (inventory == null || user == null || process == null) {
+            return;
+        }
+
         Player player = user.getBase();
         inventory.setItem(slot, ClickableItem.of(replaceLoreAndName(redGlass, process, player), event -> {
             Player clicker = (Player) event.getWhoClicked();
@@ -329,6 +356,10 @@ public class DuelManager {
     }
 
     public void cancel(Player canceller, DuelRequestProcess requestProcess, boolean remove) {
+        if (canceller == null || requestProcess == null) {
+            return;
+        }
+
         for (User user : requestProcess.getPlayers()) {
             user.setRequestProcess(null);
             user.setState(UserState.FREE);
@@ -337,10 +368,8 @@ public class DuelManager {
             if (inventory != null) {
                 inventory.close(player);
             }
-            if (canceller != null) {
-                player.sendMessage(Utils.getMessage("duel.cancelled", player)
-                        .replace("%who%", canceller.getName()));
-            }
+            player.sendMessage(Utils.getMessage("duel.cancelled", player)
+                    .replace("%who%", canceller.getName()));
         }
         if (remove) {
             duelRequestProcesses.remove(requestProcess);
@@ -348,6 +377,10 @@ public class DuelManager {
     }
 
     public void startMatch(DuelRequestProcess requestProcess) {
+        if (requestProcess == null) {
+            return;
+        }
+
         cancel(null, requestProcess, true);
         if (!arenaManager.isAnyArenaAvailable()) {
             for (User user : requestProcess.getPlayers()) {
@@ -369,6 +402,10 @@ public class DuelManager {
     }
 
     private void clearArena(Duel duel) {
+        if (duel == null) {
+            return;
+        }
+
         Location maxArea = duel.getArena().getEdge();
         Location minArea = duel.getArena().getOtherEdge();
         List<String> blocksToClear = plugin.getConfig().getStringList("whitelisted-blocks");
@@ -393,6 +430,10 @@ public class DuelManager {
     }
 
     public void endMatch(Duel duel, DuelEndReason reason) {
+        if (duel == null || reason == null) {
+            return;
+        }
+
         User winner = duel.getWinner();
         User loser = duel.getLoser();
         Player winnerPlayer = winner.getBase();
@@ -409,10 +450,9 @@ public class DuelManager {
         }
 
         for (User user : duel.getPlayers()) {
-            Location preDuelLocation = duel.getPreDuelLocations().get(user);
             Player player = user.getBase();
             player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
-            player.teleport(preDuelLocation);
+            scheduler.runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
             player.setHealth(player.getMaxHealth());
             user.setState(UserState.FREE);
             user.setDuel(null);
@@ -459,6 +499,10 @@ public class DuelManager {
     }
 
     public void giveItems(List<ItemStack> items, Player player) {
+        if (items == null || items.isEmpty() || player == null) {
+            return;
+        }
+
         Inventory inventory = player.getInventory();
         World world = player.getWorld();
         Location location = player.getLocation();
