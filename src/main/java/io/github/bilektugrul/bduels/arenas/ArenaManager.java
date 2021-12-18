@@ -101,24 +101,36 @@ public class ArenaManager {
 
     public void save() {
         for (Arena arena : arenas) {
-            if (arena.isReady()) {
-                String playerLocation = LocationSerializer.toString(arena.getPlayerLocation());
-                String opponentLocation = LocationSerializer.toString(arena.getOpponentLocation());
-                String edgeLocation = LocationSerializer.toString(arena.getEdge());
-                String otherEdgeLocation = LocationSerializer.toString(arena.getOtherEdge());
-
-                String name = arena.getName();
-                String path = "arenas." + name + ".";
-
-                arenasFile.set(path + "playerLocation", playerLocation);
-                arenasFile.set(path + "opponentLocation", opponentLocation);
-                arenasFile.set(path + "edgeLocation", edgeLocation);
-                arenasFile.set(path + "otherEdgeLocation", otherEdgeLocation);
-            } else {
-                plugin.getLogger().warning(arena.getName() + " isimli arena hazır değil, bu yüzden kaydedilemedi.");
-            }
+            save(arena, true);
         }
+
         ConfigUtils.saveConfig(plugin, arenasFile, "arenas");
+    }
+
+    public void save(Arena arena, boolean noIOPorn) {
+        if (arena == null) {
+            return;
+        }
+
+        if (arena.isReady()) {
+            String playerLocation = LocationSerializer.toString(arena.getPlayerLocation());
+            String opponentLocation = LocationSerializer.toString(arena.getOpponentLocation());
+            String edgeLocation = LocationSerializer.toString(arena.getEdge());
+            String otherEdgeLocation = LocationSerializer.toString(arena.getOtherEdge());
+
+            String name = arena.getName();
+            String path = "arenas." + name + ".";
+
+            arenasFile.set(path + "playerLocation", playerLocation);
+            arenasFile.set(path + "opponentLocation", opponentLocation);
+            arenasFile.set(path + "edgeLocation", edgeLocation);
+            arenasFile.set(path + "otherEdgeLocation", otherEdgeLocation);
+            if (!noIOPorn) {
+                ConfigUtils.saveConfig(plugin, arenasFile, "arenas");
+            }
+        } else {
+            plugin.getLogger().warning(arena.getName() + " isimli arena hazır değil, bu yüzden kaydedilemedi.");
+        }
     }
 
     public Set<Arena> getArenas() {

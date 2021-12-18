@@ -28,6 +28,10 @@ public class StatisticsUtils {
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
 
     public static void getStats(StatisticType stat, Consumer<List<LeaderboardEntry>> consumer) {
+        if (stat == null | consumer == null) {
+            return;
+        }
+
         if (!plugin.isDatabaseEnabled()) {
             plugin.getLogger().warning(stat.name() + " için tüm istatistikler istendi ama database özelliği kapalı.");
             return;
@@ -66,7 +70,11 @@ public class StatisticsUtils {
         });
     }
 
-    private static void getFlatStats(StatisticType statisticType, Consumer<List<LeaderboardEntry>> consumer) {
+    private static void getFlatStats(StatisticType stat, Consumer<List<LeaderboardEntry>> consumer) {
+        if (stat == null | consumer == null) {
+            return;
+        }
+
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             File base = new File(plugin.getDataFolder() + "/players/");
             List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
@@ -83,7 +91,7 @@ public class StatisticsUtils {
             for (File file : users) {
                 FileConfiguration data = YamlConfiguration.loadConfiguration(file);
                 String name = data.getString("name");
-                int value = data.getInt("stats." + statisticType.name());
+                int value = data.getInt("stats." + stat.name());
                 LeaderboardEntry entry = new LeaderboardEntry(name, value);
                 leaderboardEntries.add(entry);
             }

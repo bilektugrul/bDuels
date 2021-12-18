@@ -66,7 +66,6 @@ public class PlayerListener extends ListenerAdapter {
             duel.setWinner(duel.getOpponentOf(user));
             Bukkit.getScheduler().runTask(plugin, () -> {
                 user.getBase().spigot().respawn();
-                user.getBase().teleport(duel.getPreDuelLocations().get(user));
             });
             duelManager.endMatch(duel, DuelEndReason.DEATH);
         }

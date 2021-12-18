@@ -40,7 +40,7 @@ public class UserManager {
     }
 
     public User getOrLoadUser(Player player) {
-        if (!player.isOnline()) {
+        if (player == null || !player.isOnline()) {
             return null;
         }
 
@@ -66,6 +66,10 @@ public class UserManager {
     }
 
     public void loadStatistics(User user) {
+        if (user == null) {
+            return;
+        }
+
         if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
             FileConfiguration data = user.getData();
             for (StatisticType statisticType : StatisticType.values()) {
@@ -82,6 +86,10 @@ public class UserManager {
     }
 
     public void saveStatistics(User user, boolean sync) {
+        if (user == null) {
+            return;
+        }
+
         if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
             FileConfiguration data = user.getData();
             String path = "/players/" + user.getUUID();
