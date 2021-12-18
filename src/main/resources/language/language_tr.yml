@@ -12,6 +12,7 @@ messages:
   player-not-found: '%prefix% &cÜzgünüm ancak o oyuncuyu bulamadım.'
   saving-statistics: '%prefix% &6Tüm istatistikler kaydediliyor...'
   wrong-usage: '%prefix% &cKomutu hatalı kullandınız. Doğru kullanım: &3%usage%'
+  empty: '&cMEVCUT DEĞİL'
 
   user-states:
     FREE: Müsait

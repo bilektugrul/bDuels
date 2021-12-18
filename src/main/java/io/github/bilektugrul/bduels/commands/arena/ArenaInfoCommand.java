@@ -4,6 +4,7 @@ import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.commands.arena.base.SubCommand;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.despical.commons.serializer.LocationSerializer;
+import org.bukkit.Location;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
@@ -37,10 +38,10 @@ public class ArenaInfoCommand extends SubCommand {
 
         String message = Utils.getMessage("arenas.info", sender)
                 .replace("%arena%", arena.getName())
-                .replace("%p1loc%", LocationSerializer.toString(arena.getPlayerLocation()))
-                .replace("%p2loc%", LocationSerializer.toString(arena.getOpponentLocation()))
-                .replace("%edge1loc%", LocationSerializer.toString(arena.getEdge()))
-                .replace("%edge2loc%", LocationSerializer.toString(arena.getOtherEdge()))
+                .replace("%p1loc%", locationToString(arena.getPlayerLocation()))
+                .replace("%p2loc%", locationToString(arena.getOpponentLocation()))
+                .replace("%edge1loc%", locationToString(arena.getEdge()))
+                .replace("%edge2loc%", locationToString(arena.getOtherEdge()))
                 .replace("%state%", Utils.getMessage("arenas.states." + arena.getState().name()));
         sender.sendMessage(message);
     }
@@ -53,6 +54,14 @@ public class ArenaInfoCommand extends SubCommand {
     @Override
     public SenderType getSenderType() {
         return SenderType.PLAYER;
+    }
+
+    private String locationToString(Location location) {
+        String string = LocationSerializer.toString(location);
+        if (string.isEmpty()) {
+            return Utils.getMessage("empty");
+        }
+        return string;
     }
 
 }
