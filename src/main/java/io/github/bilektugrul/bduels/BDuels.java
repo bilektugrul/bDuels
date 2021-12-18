@@ -107,13 +107,10 @@ public final class BDuels extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
         if (!forceDisable) {
             duelManager.endMatches(DuelEndReason.SERVER_STOP);
-            if (databaseEnabled) {
-                saveAllUserStatistics(true);
-                if (usedDatabaseType == DatabaseType.MYSQL) {
-                    mysqlDatabase.shutdownConnPool();
-                }
+            save(true);
+            if (databaseEnabled && usedDatabaseType == DatabaseType.MYSQL) {
+                mysqlDatabase.shutdownConnPool();
             }
-            save();
         }
     }
 
@@ -247,8 +244,9 @@ public final class BDuels extends JavaPlugin {
         }
     }
 
-    public void save() {
+    public void save(boolean sync) {
         arenaManager.save();
+        saveAllUserStatistics(sync);
         if (isLeaderboardManagerReady()) {
             leaderboardManager.save();
         }
