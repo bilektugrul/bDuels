@@ -139,12 +139,6 @@ public final class BDuels extends JavaPlugin {
             duelManager = new DuelManager(this);
             userManager = new UserManager(this);
 
-            if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
-                new PAPIPlaceholders(this).register();
-            } else {
-                getLogger().warning("Sunucunuzda PlaceholderAPI kurulu değil, ona bağlı özellikleri kullanamayacaksınız.");
-            }
-
             hologramsEnabled = pluginManager.isPluginEnabled("HolographicDisplays");
             if (!hologramsEnabled) {
                 getLogger().warning("HolographicDisplays bulunamadı, sıralama hologramı çalışmayacak.");
@@ -152,6 +146,12 @@ public final class BDuels extends JavaPlugin {
 
             if (databaseEnabled) {
                 leaderboardManager = new LeaderboardManager(this);
+            }
+
+            if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
+                new PAPIPlaceholders(this).register();
+            } else {
+                getLogger().warning("Sunucunuzda PlaceholderAPI kurulu değil, ona bağlı özellikleri kullanamayacaksınız.");
             }
         }
         return true;
