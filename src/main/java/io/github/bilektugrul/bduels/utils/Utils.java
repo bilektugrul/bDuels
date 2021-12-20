@@ -349,4 +349,9 @@ public class Utils {
         return !(player.hasPermission("bduels." + what));
     }
 
+    public static String formatTime(long millis) {
+        long secs = millis / 1000;
+        return String.format("%02d:%02d", (secs % 3600) / 60, secs % 60);
+    }
+
 }

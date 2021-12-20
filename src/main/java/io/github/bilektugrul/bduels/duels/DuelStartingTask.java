@@ -23,6 +23,10 @@ public class DuelStartingTask extends BukkitRunnable {
     private int time;
 
     public DuelStartingTask(Duel duel) {
+        if (duel.isStarted()) {
+            throw new IllegalStateException("Maç zaten başlamış!");
+        }
+
         this.duel = duel;
         this.player = duel.getPlayer().getBase();
         this.opponent = duel.getOpponent().getBase();

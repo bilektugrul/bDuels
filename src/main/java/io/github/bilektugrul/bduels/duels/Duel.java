@@ -7,14 +7,16 @@ import io.github.bilektugrul.bduels.features.stats.StatisticType;
 import io.github.bilektugrul.bduels.stuff.PlayerType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
+import io.github.bilektugrul.bduels.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Duel {
+public class Duel extends BukkitRunnable {
 
     private static final BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
 
@@ -24,6 +26,8 @@ public class Duel {
     private final Map<User, DuelRewards> duelRewards;
     private final Map<User, Location> preDuelLocations = new HashMap<>();
 
+    private int time;
+    private boolean started;
     private User winner, loser;
     private DuelStartingTask startingTask;
 
@@ -40,11 +44,17 @@ public class Duel {
         this.player.addStat(StatisticType.TOTAL_MATCHES, 1);
         this.opponent.addStat(StatisticType.TOTAL_MATCHES, 1);
 
+        this.time = Utils.getInt("in-game-settings.match-time");
+
         preDuelLocations.put(player, player.getBase().getLocation());
         preDuelLocations.put(opponent, opponent.getBase().getLocation());
     }
 
     public void startCountdown() {
+        if (isStarted()) {
+            return;
+        }
+
         for (User user : players) {
             user.setState(UserState.STARTING_MATCH);
         }
@@ -53,17 +63,32 @@ public class Duel {
     }
 
     public void start() {
+        if (started) {
+            return;
+        }
+
+        this.started = true;
+
         Player requestSender = player.getBase();
         requestSender.setHealth(requestSender.getMaxHealth());
         requestSender.teleport(arena.getPlayerLocation());
-        player.setState(UserState.IN_MATCH);
+        this.player.setState(UserState.IN_MATCH);
 
         Player opponentPlayer = opponent.getBase();
         opponentPlayer.setHealth(opponentPlayer.getMaxHealth());
         opponentPlayer.teleport(arena.getOpponentLocation());
-        opponent.setState(UserState.IN_MATCH);
+        this.opponent.setState(UserState.IN_MATCH);
 
-        arena.setState(ArenaState.IN_MATCH);
+        this.arena.setState(ArenaState.IN_MATCH);
+        this.runTaskTimer(plugin, 20, 20);
+    }
+
+    @Override
+    public void run() {
+        time--;
+        if (time == 0) {
+            plugin.getDuelManager().endMatch(this, DuelEndReason.TIME_ENDED);
+        }
     }
 
     public Map<User, DuelRewards> getDuelRewards() {
@@ -99,6 +124,18 @@ public class Duel {
 
     public Arena getArena() {
         return arena;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public String getTimeString() {
+        return Utils.formatTime(time * 1000L);
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 
     public User getPlayer() {
