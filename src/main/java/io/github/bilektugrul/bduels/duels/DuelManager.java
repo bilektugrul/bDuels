@@ -40,6 +40,7 @@ public class DuelManager {
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<MoneyBetSettings> moneyBetSettingsCache = new ArrayList<>();
     private final List<Duel> ongoingDuels = new ArrayList<>();
+    private boolean adreno = false;
 
     private static final int[] midGlasses = {4, 13, 22, 31, 40};
     private static final int[] playerSide = {0, 1, 2, 3, 9, 10, 11, 18, 19, 20, 21, 27, 28, 29, 30, 36, 37, 38, 39, 45, 46, 47};
@@ -52,6 +53,7 @@ public class DuelManager {
     private static ItemStack redGlass = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
     private static ItemStack cancelItem = new ItemStack(Material.BARRIER);
     private static final ItemStack playerHead = XMaterial.PLAYER_HEAD.parseItem();
+
 
     public DuelManager(BDuels plugin) {
         this.plugin = plugin;
@@ -67,6 +69,7 @@ public class DuelManager {
         endMatches(DuelEndReason.RELOAD);
         prepareMoneyBetItems();
         prepareGuiItems();
+        adreno = Utils.getBoolean("adreno");
     }
 
     public void prepareGuiItems() {
@@ -452,7 +455,13 @@ public class DuelManager {
         for (User user : duel.getPlayers()) {
             Player player = user.getBase();
             player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
-            scheduler.runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
+            if (adreno) {
+                scheduler.runTaskLater(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)), 40);
+            } else {
+                scheduler.runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
+
+            }
+
             player.setHealth(player.getMaxHealth());
             user.setState(UserState.FREE);
             user.setDuel(null);
