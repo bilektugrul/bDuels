@@ -437,6 +437,8 @@ public class DuelManager {
             return;
         }
 
+        duel.cancel();
+
         User winner = duel.getWinner();
         User loser = duel.getLoser();
         Player winnerPlayer = winner.getBase();
@@ -461,7 +463,6 @@ public class DuelManager {
                 scheduler.runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
 
             }
-
             player.setHealth(player.getMaxHealth());
             user.setState(UserState.FREE);
             user.setDuel(null);
@@ -478,12 +479,12 @@ public class DuelManager {
         List<ItemStack> winnerItemsPut = winnerRewards.getItemsBet();
         int winnerMoneyBet = winnerRewards.getMoneyBet();
 
-        if (isReloadOrStop) {
-            giveItems(winnerItemsPut, winnerPlayer); // ortaya koyduğu eşyaları geri veriyoz çünkü stop veya reload yedi
-            giveItems(loserItemsPut, loserPlayer); // diğerinin eşyalarını da geri veriyoz çünkü stop veya reload yedi
+        if (isReloadOrStop || reason == DuelEndReason.TIME_ENDED) {
+            giveItems(winnerItemsPut, winnerPlayer);
+            giveItems(loserItemsPut, loserPlayer);
 
-            winnerPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", winnerPlayer));
-            loserPlayer.sendMessage(Utils.getMessage("duel.match-force-ended", loserPlayer));
+            winnerPlayer.sendMessage(Utils.getMessage((reason == DuelEndReason.TIME_ENDED ? "duel.time-ended" : "duel.match-force-ended"), winnerPlayer));
+            loserPlayer.sendMessage(Utils.getMessage((reason == DuelEndReason.TIME_ENDED ? "duel.time-ended" : "duel.match-force-ended"), loserPlayer));
 
             economy.addMoney(winnerPlayer, winnerMoneyBet);
             economy.addMoney(loserPlayer, loserMoneyBet);

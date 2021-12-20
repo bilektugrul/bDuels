@@ -46,6 +46,7 @@ in-game-settings:
   can-drop-item: ONLY_WITH_PERMISSION    # sadece bduels.can-drop-item yetkisi olanlar maç sırasında yere eşya atabilir
   can-teleport: ONLY_WITH_PERMISSION     # sadece bduels.can-teleport yetkisi olanlar maç sırasında başka bir yere ışınlanabilir
                                          # sadece enter pearl ile olan ışınlanmalar için geçerlidir
+  match-time: 300 # saniye cinsinden, düelloların oynanacağı süre
 
 whitelisted-blocks: # maçlarda koyulabilecek bloklar, bu bloklar maç sonrasında arenadan kaldırılır.
                     # arenalarınızın içinde bu blokları kullanmayın!

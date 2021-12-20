@@ -190,6 +190,7 @@ messages:
         # örnek:
         # broadcast: ''
     match-force-ended: '%prefix% &6Maç bitirildi, eşyalarınız ve paralarınız geri verildi.'
+    time-ended: '%prefix% &6Maç süresi bittiği için eşyalarınız ve paralarınız geri verildi, maç bitirildi.'
 
   arenas:
     help-message:
