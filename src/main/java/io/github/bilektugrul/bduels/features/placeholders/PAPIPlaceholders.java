@@ -12,7 +12,6 @@ import io.github.bilektugrul.bduels.users.UserManager;
 import io.github.bilektugrul.bduels.utils.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,13 +37,8 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public boolean canRegister() {
-        return true;
-    }
-
-    @Override
     public @NotNull String getAuthor() {
-        return plugin.getDescription().getAuthors().toString();
+        return Utils.listToString(plugin.getDescription().getAuthors());
     }
 
     @Override
@@ -97,7 +91,6 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
         }
 
         User user = userManager.getOrLoadUser(player);
-        Duel duel = user.getDuel();
 
         if (identifier.contains("state_raw")) {
             return user.getState().name();
@@ -112,6 +105,8 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
             return String.valueOf(user.getStat(StatisticType.getByShort(statName)));
         }
 
+        Duel duel = user.getDuel();
+
         if (identifier.contains("opponent")) {
             DuelRequestProcess process = user.getRequestProcess();
             if (process != null) {
@@ -122,10 +117,20 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
             return "";
         }
 
+        if (duel == null) {
+            return "";
+        }
+
+        if (identifier.contains("time_raw")) {
+            return Integer.toString(duel.getTime());
+        }
+
+        if (identifier.contains("time")) {
+            return duel.getTimeString();
+        }
+
         if (identifier.contains("arena")) {
-            if (duel != null) {
-                return duel.getArena().getName();
-            }
+            return duel.getArena().getName();
         }
 
         return "";
