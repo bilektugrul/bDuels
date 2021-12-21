@@ -129,6 +129,7 @@ public class DuelManager {
         if (user == null) {
             return false;
         }
+
         return user.getRequestProcess() == null && user.getState() == UserState.FREE;
     }
 
@@ -404,6 +405,7 @@ public class DuelManager {
         }
     }
 
+    //TODO: FIX ONDISABLE ERROR
     private void clearArena(Duel duel) {
         if (duel == null) {
             return;
