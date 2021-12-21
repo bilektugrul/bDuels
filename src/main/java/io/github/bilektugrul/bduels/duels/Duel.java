@@ -41,6 +41,10 @@ public class Duel extends BukkitRunnable {
 
         this.player.setDuel(this);
         this.opponent.setDuel(this);
+
+        this.player.setRequestProcess(null);
+        this.opponent.setRequestProcess(null);
+
         this.player.addStat(StatisticType.TOTAL_MATCHES, 1);
         this.opponent.addStat(StatisticType.TOTAL_MATCHES, 1);
 

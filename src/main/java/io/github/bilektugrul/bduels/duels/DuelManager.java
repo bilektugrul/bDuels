@@ -116,15 +116,6 @@ public class DuelManager {
         }
     }
 
-    public DuelRequestProcess getProcess(User player) {
-        for (DuelRequestProcess process : duelRequestProcesses) {
-            if (process.getPlayer().equals(player) || process.getOpponent().equals(player)) {
-                return process;
-            }
-        }
-        return null;
-    }
-
     public boolean canSendOrAcceptDuel(User user) {
         if (user == null) {
             return false;
