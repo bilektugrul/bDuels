@@ -34,17 +34,12 @@ public class DuelStatsCommand implements CommandExecutor {
         }
 
         User statUser = userManager.getOrLoadUser(statPlayer);
-        String message = Utils.getMessage("stats-command.command", sender)
-                .replace("%statplayer%", statPlayer.getName())
-                .replace("%totalmatches%", String.valueOf(statUser.getStat(StatisticType.TOTAL_MATCHES)))
-                .replace("%wins%", String.valueOf(statUser.getStat(StatisticType.WINS)))
-                .replace("%loses%", String.valueOf(statUser.getStat(StatisticType.LOSES)))
-                .replace("%winstreak%", String.valueOf(statUser.getStat(StatisticType.WIN_STREAK)))
-                .replace("%money%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_MONEY)))
-                .replace("%lostmoney%", String.valueOf(statUser.getStat(StatisticType.TOTAL_LOST_MONEY)))
-                .replace("%item%", String.valueOf(statUser.getStat(StatisticType.TOTAL_EARNED_ITEM)))
-                .replace("%lostitem%", String.valueOf(statUser.getStat(StatisticType.TOTAL_LOST_ITEM)))
-                .replace("%requests%", Utils.getMessage("request-toggle-command.modes." + statUser.getStat(StatisticType.DUEL_REQUESTS), sender));
+        String message = Utils.getMessage("stats-command.command", sender).replace("%statplayer%", statPlayer.getName());
+
+        for (StatisticType stat : StatisticType.values()) {
+            message = message.replace(stat.getShortName(), String.valueOf(statUser.getStat(stat)));
+        }
+
         sender.sendMessage(message);
         return true;
     }
