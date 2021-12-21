@@ -64,27 +64,31 @@ public final class BDuels extends JavaPlugin {
         inventoryAPI = InventoryAPI.getInstance(this);
         pluginManager = getServer().getPluginManager();
 
-        if (registerManagers()) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                userManager.getOrLoadUser(p);
-            }
-
-            pluginManager.registerEvents(new PlayerListener(this), this);
-            pluginManager.registerEvents(new HInventoryClickListener(this), this);
-            pluginManager.registerEvents(new InMatchEventListener(this), this);
-
-            getCommand("accept").setExecutor(new DuelAcceptCommand(this));
-            getCommand("arena").setExecutor(new ArenaCommand());
-            getCommand("bduels").setExecutor(new BDuelsCommand(this));
-            getCommand("duel").setExecutor(new DuelCommand(this));
-            getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
-            getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
-            if (isLeaderboardManagerReady()) {
-                getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
-            }
-            getLogger().info(Utils.getMessage("after-load"));
-        } else {
+        if (!registerManagers()) {
             forceClose();
+            return;
+        }
+
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            userManager.getOrLoadUser(p);
+        }
+
+        pluginManager.registerEvents(new PlayerListener(this), this);
+        pluginManager.registerEvents(new HInventoryClickListener(this), this);
+        pluginManager.registerEvents(new InMatchEventListener(this), this);
+
+        getCommand("accept").setExecutor(new DuelAcceptCommand(this));
+        getCommand("arena").setExecutor(new ArenaCommand());
+        getCommand("bduels").setExecutor(new BDuelsCommand(this));
+        getCommand("duel").setExecutor(new DuelCommand(this));
+        getCommand("duelstats").setExecutor(new DuelStatsCommand(this));
+        getCommand("toggleduel").setExecutor(new ToggleDuelRequestsCommand(this));
+        if (isLeaderboardManagerReady()) {
+            getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
+        }
+
+        for (String s : Utils.getMessageList("after-load", null)) {
+            getLogger().info(s);
         }
     }
 
