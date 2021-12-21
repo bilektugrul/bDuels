@@ -479,12 +479,13 @@ public class DuelManager {
         List<ItemStack> winnerItemsPut = winnerRewards.getItemsBet();
         int winnerMoneyBet = winnerRewards.getMoneyBet();
 
-        if (isReloadOrStop || reason == DuelEndReason.TIME_ENDED) {
+        boolean timeEnded = reason == DuelEndReason.TIME_ENDED;
+        if (isReloadOrStop || timeEnded) {
             giveItems(winnerItemsPut, winnerPlayer);
             giveItems(loserItemsPut, loserPlayer);
 
-            winnerPlayer.sendMessage(Utils.getMessage((reason == DuelEndReason.TIME_ENDED ? "duel.time-ended" : "duel.match-force-ended"), winnerPlayer));
-            loserPlayer.sendMessage(Utils.getMessage((reason == DuelEndReason.TIME_ENDED ? "duel.time-ended" : "duel.match-force-ended"), loserPlayer));
+            winnerPlayer.sendMessage(Utils.getMessage((timeEnded ? "duel.time-ended" : "duel.match-force-ended"), winnerPlayer));
+            loserPlayer.sendMessage(Utils.getMessage((timeEnded ? "duel.time-ended" : "duel.match-force-ended"), loserPlayer));
 
             economy.addMoney(winnerPlayer, winnerMoneyBet);
             economy.addMoney(loserPlayer, loserMoneyBet);
