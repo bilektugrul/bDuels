@@ -106,7 +106,7 @@ public final class BDuels extends JavaPlugin {
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
         if (!forceDisable) {
-            duelManager.endMatches(DuelEndReason.SERVER_STOP);
+            duelManager.endMatches(DuelEndReason.SERVER_STOP, true);
             save(true);
             if (databaseEnabled && usedDatabaseType == DatabaseType.MYSQL) {
                 mysqlDatabase.shutdownConnPool();

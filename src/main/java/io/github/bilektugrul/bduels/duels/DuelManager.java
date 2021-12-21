@@ -66,7 +66,7 @@ public class DuelManager {
 
     public void reload() {
         endProcesses();
-        endMatches(DuelEndReason.RELOAD);
+        endMatches(DuelEndReason.RELOAD, false);
         prepareMoneyBetItems();
         prepareGuiItems();
         delayTeleport = Utils.getBoolean("delay-teleport");
@@ -405,36 +405,45 @@ public class DuelManager {
         }
     }
 
-    //TODO: FIX ONDISABLE ERROR
-    private void clearArena(Duel duel) {
+    private void clearArena(Duel duel, boolean sync) {
         if (duel == null) {
             return;
         }
 
         Location maxArea = duel.getArena().getEdge();
         Location minArea = duel.getArena().getOtherEdge();
-        List<String> blocksToClear = plugin.getConfig().getStringList("whitelisted-blocks");
 
         if (minArea == null || maxArea == null) {
             return;
         }
 
-        scheduler.runTaskAsynchronously(plugin, () -> {
-            for (int x = (int) minArea.getX(); x <= maxArea.getX(); x++) {
-                for (int y = (int) minArea.getY(); y <= maxArea.getY(); y++) {
-                    for (int z = (int) minArea.getZ(); z <= maxArea.getZ(); z++) {
-                        Block block = minArea.getWorld().getBlockAt(x, y, z);
+        if (!sync) {
+            scheduler.runTaskAsynchronously(plugin, () -> startCleaning(minArea, maxArea, sync));
+        } else {
+            startCleaning(minArea, maxArea, sync);
+        }
+    }
 
-                        if (blocksToClear.contains(block.getType().name())) {
+    private void startCleaning(Location minArea, Location maxArea, boolean sync) {
+        List<String> blocksToClear = plugin.getConfig().getStringList("whitelisted-blocks");
+        for (int x = (int) minArea.getX(); x <= maxArea.getX(); x++) {
+            for (int y = (int) minArea.getY(); y <= maxArea.getY(); y++) {
+                for (int z = (int) minArea.getZ(); z <= maxArea.getZ(); z++) {
+                    Block block = minArea.getWorld().getBlockAt(x, y, z);
+
+                    if (blocksToClear.contains(block.getType().name())) {
+                        if (!sync) {
                             scheduler.runTask(plugin, () -> block.setType(Material.AIR));
+                        } else {
+                            block.setType(Material.AIR);
                         }
                     }
                 }
             }
-        });
+        }
     }
 
-    public void endMatch(Duel duel, DuelEndReason reason) {
+    public void endMatch(Duel duel, DuelEndReason reason, boolean sync) {
         if (duel == null || reason == null) {
             return;
         }
@@ -449,7 +458,7 @@ public class DuelManager {
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
 
-        clearArena(duel);
+        clearArena(duel, sync);
 
         boolean isReloadOrStop = reason == DuelEndReason.RELOAD || reason == DuelEndReason.SERVER_STOP;
         if (!isReloadOrStop) {
@@ -529,11 +538,11 @@ public class DuelManager {
         }
     }
 
-    public void endMatches(DuelEndReason reason) {
+    public void endMatches(DuelEndReason reason, boolean sync) {
         for (Duel duel : ongoingDuels) {
             duel.setWinner(duel.getPlayers()[0]);
             duel.getStartingTask().cancel();
-            endMatch(duel, reason);
+            endMatch(duel, reason, sync);
         }
         ongoingDuels.clear();
     }

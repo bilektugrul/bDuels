@@ -88,7 +88,7 @@ public class Duel extends BukkitRunnable {
         time--;
         if (time == 0) {
             setWinner(player);
-            plugin.getDuelManager().endMatch(this, DuelEndReason.TIME_ENDED);
+            plugin.getDuelManager().endMatch(this, DuelEndReason.TIME_ENDED, false);
         }
     }
 
