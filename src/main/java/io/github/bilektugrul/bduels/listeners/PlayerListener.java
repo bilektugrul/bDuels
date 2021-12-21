@@ -42,7 +42,7 @@ public class PlayerListener extends ListenerAdapter {
 
         if (duel != null) {
             duel.setWinner(duel.getOpponentOf(user));
-            duelManager.endMatch(duel, DuelEndReason.QUIT);
+            duelManager.endMatch(duel, DuelEndReason.QUIT, false);
         }
 
         if (process != null) {
@@ -65,7 +65,7 @@ public class PlayerListener extends ListenerAdapter {
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
             Bukkit.getScheduler().runTask(plugin, () -> user.getBase().spigot().respawn());
-            duelManager.endMatch(duel, DuelEndReason.DEATH);
+            duelManager.endMatch(duel, DuelEndReason.DEATH, false);
         }
     }
 
