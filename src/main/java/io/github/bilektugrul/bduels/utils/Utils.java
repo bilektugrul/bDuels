@@ -100,7 +100,7 @@ public class Utils {
             return "";
         }
 
-        String msg = originalMsg instanceof List ? listToString((List) originalMsg) : (String) originalMsg;
+        String msg = originalMsg instanceof List ? listToString((List<?>) originalMsg) : (String) originalMsg;
         msg = placeholderManager.replacePlaceholders(Strings.format(msg)).replace("%nl%", "\n");
 
         if (replacePersonalPlaceholders) {

@@ -64,9 +64,7 @@ public class PlayerListener extends ListenerAdapter {
             e.setKeepInventory(true);
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                user.getBase().spigot().respawn();
-            });
+            Bukkit.getScheduler().runTask(plugin, () -> user.getBase().spigot().respawn());
             duelManager.endMatch(duel, DuelEndReason.DEATH);
         }
     }

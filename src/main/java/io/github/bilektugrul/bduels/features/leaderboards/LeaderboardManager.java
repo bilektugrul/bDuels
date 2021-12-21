@@ -14,7 +14,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class LeaderboardManager {
@@ -149,7 +148,7 @@ public class LeaderboardManager {
         return null;
     }
 
-    public void sort(Leaderboard leaderboard) throws ExecutionException, InterruptedException {
+    public void sort(Leaderboard leaderboard) {
         StatisticsUtils.getStats(leaderboard.getType(), leaderboardEntries -> {
             if (leaderboardEntries != null && !leaderboardEntries.isEmpty()) {
                 leaderboard.setLeaderboardEntries(leaderboardEntries
@@ -168,11 +167,7 @@ public class LeaderboardManager {
     public void sortEveryLeaderboard() {
         scheduler.runTaskAsynchronously(plugin, () -> {
             for (Leaderboard leaderboard : leaderboards) {
-                try {
-                    sort(leaderboard);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
+                sort(leaderboard);
             }
         });
     }
@@ -226,12 +221,11 @@ public class LeaderboardManager {
         sender.sendMessage(Utils.listToString(leaderboardToString(leaderboard, sender, "chat")));
     }
 
-    public boolean save() {
+    public void save() {
         for (Leaderboard leaderboard : leaderboards) {
             saveLeaderboard(leaderboard);
         }
         ConfigUtils.saveConfig(plugin, file, "leaderboards");
-        return true;
     }
 
     public boolean saveLeaderboard(Leaderboard leaderboard) {

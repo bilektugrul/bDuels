@@ -19,6 +19,7 @@ import java.util.UUID;
 public class User {
 
     private final static BDuels plugin = JavaPlugin.getPlugin(BDuels.class);
+
     private final Map<StatisticType, Integer> stats = new EnumMap<>(StatisticType.class);
     private final Player base;
 
