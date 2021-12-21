@@ -70,18 +70,20 @@ public class UserManager {
             return;
         }
 
-        if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
-            FileConfiguration data = user.getData();
-            for (StatisticType statisticType : StatisticType.values()) {
-                String path = "stats." + statisticType.name();
-                if (statisticType == StatisticType.DUEL_REQUESTS && !data.isSet(path)) {
-                    data.set(path, 1);
+        switch (plugin.getUsedDatabaseType()) {
+            case FLAT:
+                FileConfiguration data = user.getData();
+                for (StatisticType statisticType : StatisticType.values()) {
+                    String path = "stats." + statisticType.name();
+                    if (statisticType == StatisticType.DUEL_REQUESTS && !data.isSet(path)) {
+                        data.set(path, 1);
+                    }
+                    int stat = data.getInt(path);
+                    user.setStat(statisticType, stat);
                 }
-                int stat = data.getInt(path);
-                user.setStat(statisticType, stat);
-            }
-        } else if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL && isMysqlManagerReady()) {
-            mysqlManager.loadStatistics(user);
+                return;
+            case MYSQL:
+                mysqlManager.loadStatistics(user);
         }
     }
 
@@ -90,20 +92,22 @@ public class UserManager {
             return;
         }
 
-        if (plugin.getUsedDatabaseType() == DatabaseType.FLAT) {
-            FileConfiguration data = user.getData();
-            String path = "/players/" + user.getUUID();
-            data.set("name", user.getName());
-            for (StatisticType statisticType : StatisticType.values()) {
-                data.set("stats." + statisticType.name(), user.getStat(statisticType));
-            }
-            if (!sync) {
-                plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> ConfigUtils.saveConfig(plugin, data, path));
-            } else {
-                ConfigUtils.saveConfig(plugin, data, path);
-            }
-        } else if (plugin.getUsedDatabaseType() == DatabaseType.MYSQL && isMysqlManagerReady()) {
-            mysqlManager.saveAllStatistic(user, sync);
+        switch (plugin.getUsedDatabaseType()) {
+            case FLAT:
+                FileConfiguration data = user.getData();
+                String path = "/players/" + user.getUUID();
+                data.set("name", user.getName());
+                for (StatisticType statisticType : StatisticType.values()) {
+                    data.set("stats." + statisticType.name(), user.getStat(statisticType));
+                }
+                if (!sync) {
+                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> ConfigUtils.saveConfig(plugin, data, path));
+                } else {
+                    ConfigUtils.saveConfig(plugin, data, path);
+                }
+                return;
+            case MYSQL:
+                mysqlManager.saveAllStatistic(user, sync);
         }
     }
 

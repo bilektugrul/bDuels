@@ -85,14 +85,12 @@ public class BDuelsCommand implements CommandExecutor {
             case "leaderboards":
             case "sıralama":
             case "sıralamalar":
-                boolean saved = false;
                 if (!plugin.isLeaderboardManagerReady()) {
                     sender.sendMessage(Utils.getMessage("leaderboards.not-active", sender));
-                } else {
-                    saved = leaderboardManager.save();
-                } if (saved) {
-                    sender.sendMessage(Utils.getMessage("leaderboards.saved", sender));
+                    return;
                 }
+                leaderboardManager.save();
+                sender.sendMessage(Utils.getMessage("leaderboards.saved", sender));
                 return;
             case "all":
             case "hepsi":
