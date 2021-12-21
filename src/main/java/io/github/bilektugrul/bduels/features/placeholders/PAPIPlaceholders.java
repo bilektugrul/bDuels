@@ -85,18 +85,18 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
             return String.valueOf(duelManager.getOngoingDuels().size() * 2);
         }
 
-        boolean userRequired = identifier.contains("stat") || identifier.contains("opponent") || identifier.contains("arena");
+        boolean userRequired = identifier.contains("stat") || identifier.contains("opponent") || identifier.contains("arena") || identifier.contains("time");
         if (!userRequired) {
             return "";
         }
 
         User user = userManager.getOrLoadUser(player);
 
-        if (identifier.contains("state_raw")) {
+        if (identifier.equalsIgnoreCase("state_raw")) {
             return user.getState().name();
         }
 
-        if (identifier.contains("state")) {
+        if (identifier.equalsIgnoreCase("state")) {
             return Utils.getMessage("user-states." + user.getState().name(), player);
         }
 
@@ -107,7 +107,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
 
         Duel duel = user.getDuel();
 
-        if (identifier.contains("opponent")) {
+        if (identifier.equalsIgnoreCase("opponent")) {
             DuelRequestProcess process = user.getRequestProcess();
             if (process != null) {
                 return process.getOpponentOf(user).getName();
@@ -121,15 +121,15 @@ public class PAPIPlaceholders extends PlaceholderExpansion {
             return "";
         }
 
-        if (identifier.contains("time_raw")) {
-            return Integer.toString(duel.getTime());
-        }
-
-        if (identifier.contains("time")) {
+        if (identifier.equalsIgnoreCase("time")) {
             return duel.getTimeString();
         }
 
-        if (identifier.contains("arena")) {
+        if (identifier.equalsIgnoreCase("time_raw")) {
+            return Integer.toString(duel.getTime());
+        }
+
+        if (identifier.equalsIgnoreCase("arena")) {
             return duel.getArena().getName();
         }
 
