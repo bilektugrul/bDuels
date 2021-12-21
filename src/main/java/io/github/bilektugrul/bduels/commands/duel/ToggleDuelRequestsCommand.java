@@ -40,7 +40,6 @@ public class ToggleDuelRequestsCommand implements CommandExecutor {
         String path = "request-toggle-command.";
         player.sendMessage(Utils.getMessage(path + "toggled", sender)
                 .replace("%newmode%", Utils.getMessage(path + ".modes." + newMode, player)));
-
         return true;
     }
 

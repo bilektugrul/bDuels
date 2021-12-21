@@ -31,8 +31,7 @@ public class ArenaDeleteCommand extends SubCommand {
             return;
         }
 
-        boolean deleted = arenaManager.deleteArena(arenaName);
-        if (deleted) {
+        if (arenaManager.deleteArena(arenaName)) {
             sender.sendMessage(Utils.getMessage("arenas.deleted", sender)
                     .replace("%arena%", arenaName));
         } else {
