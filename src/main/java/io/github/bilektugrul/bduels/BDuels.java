@@ -13,6 +13,7 @@ import io.github.bilektugrul.bduels.commands.duel.ToggleDuelRequestsCommand;
 import io.github.bilektugrul.bduels.duels.DuelEndReason;
 import io.github.bilektugrul.bduels.duels.DuelManager;
 import io.github.bilektugrul.bduels.economy.EconomyAdapter;
+import io.github.bilektugrul.bduels.economy.EmptyEconomy;
 import io.github.bilektugrul.bduels.economy.VaultEconomy;
 import io.github.bilektugrul.bduels.economy.VaultManager;
 import io.github.bilektugrul.bduels.features.language.LanguageManager;
@@ -123,8 +124,8 @@ public final class BDuels extends JavaPlugin {
             vaultManager = new VaultManager(this);
             setEconomyAdapter(new VaultEconomy(this));
         } else {
-            getLogger().warning("Sunucunuzda Vault kurulu değil, BDuels'in çalışması için Vault gereklidir.");
-            return false;
+            setEconomyAdapter(new EmptyEconomy());
+            getLogger().warning("Sunucunuzda Vault bulunamadığı için ekonomiye bağlı sistemler çalışmayacaktır.");
         }
 
         databaseEnabled = getConfig().getBoolean("database.enabled");
