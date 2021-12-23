@@ -10,7 +10,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 public class LeaderboardManager {
 
     private final BDuels plugin;
-    private final BukkitScheduler scheduler;
     private final Set<Leaderboard> leaderboards = new HashSet<>();
 
     private SimpleDateFormat formatter;
@@ -27,7 +25,6 @@ public class LeaderboardManager {
 
     public LeaderboardManager(BDuels plugin) {
         this.plugin = plugin;
-        this.scheduler = plugin.getServer().getScheduler();
         reload(true);
     }
 
@@ -159,13 +156,13 @@ public class LeaderboardManager {
                         .limit(leaderboard.getMaxSize())
                         .collect(Collectors.toList())
                 );
-                scheduler.runTask(plugin, () -> updateHologram(leaderboard));
+                plugin.getServer().getScheduler().runTask(plugin, () -> updateHologram(leaderboard));
             }
         });
     }
 
     public void sortEveryLeaderboard() {
-        scheduler.runTaskAsynchronously(plugin, () -> {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             for (Leaderboard leaderboard : leaderboards) {
                 sort(leaderboard);
             }

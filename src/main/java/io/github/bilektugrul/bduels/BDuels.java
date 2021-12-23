@@ -109,7 +109,7 @@ public final class BDuels extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getScheduler().cancelTasks(this);
+        getServer().getScheduler().cancelTasks(this);
         if (!forceDisable) {
             duelManager.endMatches(DuelEndReason.SERVER_STOP, true);
             save(true);

@@ -24,7 +24,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ public class DuelManager {
     private final InventoryAPI inventoryAPI;
     private final EconomyAdapter economy;
     private final ArenaManager arenaManager;
-    private final BukkitScheduler scheduler;
 
     private final List<DuelRequestProcess> duelRequestProcesses = new ArrayList<>();
     private final List<MoneyBetSettings> moneyBetSettingsCache = new ArrayList<>();
@@ -60,7 +58,6 @@ public class DuelManager {
         this.inventoryAPI = plugin.getInventoryAPI();
         this.economy = plugin.getEconomyAdapter();
         this.arenaManager = plugin.getArenaManager();
-        this.scheduler = plugin.getServer().getScheduler();
         reload();
     }
 
@@ -193,7 +190,7 @@ public class DuelManager {
         opponentPlayer.sendMessage(Utils.getMessage("duel.request-accepted", opponentPlayer)
                 .replace("%opponent%", opponentName));
 
-        scheduler.runTaskLater(plugin, () -> {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             timer.remove(opponentName);
             HInventory inventory = inventoryAPI.getInventoryCreator()
                     .setTitle(Utils.getString("request-gui-name", sender.getBase())
@@ -409,7 +406,7 @@ public class DuelManager {
         }
 
         if (!sync) {
-            scheduler.runTaskAsynchronously(plugin, () -> startCleaning(minArea, maxArea, sync));
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> startCleaning(minArea, maxArea, sync));
         } else {
             startCleaning(minArea, maxArea, sync);
         }
@@ -424,7 +421,7 @@ public class DuelManager {
 
                     if (blocksToClear.contains(block.getType().name())) {
                         if (!sync) {
-                            scheduler.runTask(plugin, () -> block.setType(Material.AIR));
+                            plugin.getServer().getScheduler().runTask(plugin, () -> block.setType(Material.AIR));
                         } else {
                             block.setType(Material.AIR);
                         }
@@ -460,9 +457,9 @@ public class DuelManager {
             Player player = user.getBase();
             player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
             if (delayTeleport) {
-                scheduler.runTaskLater(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)), 40);
+                plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)), 40);
             } else {
-                scheduler.runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
+                plugin.getServer().getScheduler().runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
 
             }
             player.setHealth(player.getMaxHealth());
