@@ -60,7 +60,7 @@ public class PlayerListener extends ListenerAdapter {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         User user = userManager.getOrLoadUser(e.getEntity());
-        if (user.isInMatch()) {
+        if (user != null && user.isInMatch()) {
             e.setKeepInventory(true);
             Duel duel = user.getDuel();
             duel.setWinner(duel.getOpponentOf(user));
