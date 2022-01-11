@@ -6,34 +6,22 @@ import org.bukkit.entity.Player;
 public class EmptyEconomy implements EconomyAdapter {
 
     @Override
-    public void addMoney(String playerName, double amount) {
-
-    }
+    public void addMoney(String playerName, double amount) {}
 
     @Override
-    public void addMoney(Player player, double amount) {
-
-    }
+    public void addMoney(Player player, double amount) {}
 
     @Override
-    public void addMoney(OfflinePlayer offlinePlayer, double amount) {
-
-    }
+    public void addMoney(OfflinePlayer offlinePlayer, double amount) {}
 
     @Override
-    public void removeMoney(String playerName, double amount) {
-
-    }
+    public void removeMoney(String playerName, double amount) {}
 
     @Override
-    public void removeMoney(Player player, double amount) {
-
-    }
+    public void removeMoney(Player player, double amount) {}
 
     @Override
-    public void removeMoney(OfflinePlayer offlinePlayer, double amount) {
-
-    }
+    public void removeMoney(OfflinePlayer offlinePlayer, double amount) {}
 
     @Override
     public double getMoney(String playerName) {
