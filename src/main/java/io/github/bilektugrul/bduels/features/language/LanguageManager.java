@@ -25,7 +25,7 @@ public class LanguageManager {
         try {
             language = ConfigUtils.getConfig(plugin, "language" + s + "language_" + languageString);
         } catch (IllegalArgumentException ignored) {
-            plugin.getLogger().warning("Olmayan bir seçtiniz, mevcut dilleri kontrol etmek için eklentinin .jar dosyasını açıp languages klasörüne göz atın");
+            plugin.getLogger().warning("Olmayan bir dil seçtiniz, mevcut dilleri kontrol etmek için eklentinin .jar dosyasını açıp languages klasörüne göz atın");
             plugin.getLogger().warning("Eklenti Türkçe dilini kullanacak.");
             languageString = "tr";
             language = ConfigUtils.getConfig(plugin, "language" + s + "language_" + languageString);

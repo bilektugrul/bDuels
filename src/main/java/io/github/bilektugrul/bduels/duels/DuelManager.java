@@ -393,7 +393,7 @@ public class DuelManager {
         }
     }
 
-    private void clearArena(Duel duel, boolean sync) {
+    private void startCleaning(Duel duel, boolean sync) {
         if (duel == null) {
             return;
         }
@@ -406,13 +406,13 @@ public class DuelManager {
         }
 
         if (!sync) {
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> startCleaning(minArea, maxArea, sync));
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> clearArena(minArea, maxArea, sync));
         } else {
-            startCleaning(minArea, maxArea, sync);
+            clearArena(minArea, maxArea, sync);
         }
     }
 
-    private void startCleaning(Location minArea, Location maxArea, boolean sync) {
+    private void clearArena(Location minArea, Location maxArea, boolean sync) {
         List<String> blocksToClear = plugin.getConfig().getStringList("whitelisted-blocks");
         for (int x = (int) minArea.getX(); x <= maxArea.getX(); x++) {
             for (int y = (int) minArea.getY(); y <= maxArea.getY(); y++) {
@@ -420,11 +420,7 @@ public class DuelManager {
                     Block block = minArea.getWorld().getBlockAt(x, y, z);
 
                     if (blocksToClear.contains(block.getType().name())) {
-                        if (!sync) {
-                            plugin.getServer().getScheduler().runTask(plugin, () -> block.setType(Material.AIR));
-                        } else {
-                            block.setType(Material.AIR);
-                        }
+                        plugin.getServer().getScheduler().runTask(plugin, () -> block.setType(Material.AIR));
                     }
                 }
             }
@@ -446,7 +442,7 @@ public class DuelManager {
         Arena arena = duel.getArena();
         arena.setState(ArenaState.POST_MATCH);
 
-        clearArena(duel, sync);
+        startCleaning(duel, sync);
 
         boolean isReloadOrStop = reason == DuelEndReason.RELOAD || reason == DuelEndReason.SERVER_STOP;
         if (!isReloadOrStop) {
@@ -455,11 +451,11 @@ public class DuelManager {
 
         for (User user : duel.getPlayers()) {
             Player player = user.getBase();
-            player.removeMetadata("god-mode-bduels", plugin); // DuelStartingTask tamamlanmadan maç bittiyse bug olmaması için tekrar siliyoruz
+            player.removeMetadata("god-mode-bduels", plugin); // Pek gerek olmayabilir ama işi garantiye almak her zaman iyidir...
             if (delayTeleport) {
-                plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)), 40);
+                plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.teleport(duel.getPreDuelLocationOf(user)), 40);
             } else {
-                plugin.getServer().getScheduler().runTask(plugin, () -> player.teleport(duel.getPreDuelLocations().get(user)));
+                plugin.getServer().getScheduler().runTask(plugin, () -> player.teleport(duel.getPreDuelLocationOf(user)));
 
             }
             player.setHealth(player.getMaxHealth());
@@ -528,7 +524,7 @@ public class DuelManager {
 
     public void endMatches(DuelEndReason reason, boolean sync) {
         for (Duel duel : ongoingDuels) {
-            duel.setWinner(duel.getPlayers()[0]);
+            duel.setWinner(duel.getPlayer());
             duel.getStartingTask().cancel();
             endMatch(duel, reason, sync);
         }

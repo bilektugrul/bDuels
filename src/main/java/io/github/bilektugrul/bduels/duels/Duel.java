@@ -23,13 +23,13 @@ public class Duel extends BukkitRunnable {
     private final Arena arena;
     private final User[] players;
     private final User player, opponent;
+    private final DuelStartingTask startingTask;
     private final Map<User, DuelRewards> duelRewards;
     private final Map<User, Location> preDuelLocations = new HashMap<>();
 
     private int time;
     private boolean started;
     private User winner, loser;
-    private DuelStartingTask startingTask;
 
     public Duel(DuelRequestProcess requestProcess, Arena arena) {
         this.player = requestProcess.getPlayer();
@@ -49,20 +49,21 @@ public class Duel extends BukkitRunnable {
         this.opponent.addStat(StatisticType.TOTAL_MATCHES, 1);
 
         this.time = Utils.getInt("in-game-settings.match-time");
+        this.startingTask = new DuelStartingTask(this);
 
         preDuelLocations.put(player, player.getBase().getLocation());
         preDuelLocations.put(opponent, opponent.getBase().getLocation());
     }
 
     public void startCountdown() {
-        if (isStarted()) {
+        if (started) {
             return;
         }
 
         for (User user : players) {
             user.setState(UserState.STARTING_MATCH);
         }
-        setStartingTask(new DuelStartingTask(this));
+
         startingTask.runTaskTimer(plugin, 0, 20L);
     }
 
@@ -74,11 +75,13 @@ public class Duel extends BukkitRunnable {
         this.started = true;
 
         Player requestSender = player.getBase();
+        requestSender.removeMetadata("god-mode-bduels", plugin);
         requestSender.setHealth(requestSender.getMaxHealth());
         requestSender.teleport(arena.getPlayerLocation());
         this.player.setState(UserState.IN_MATCH);
 
         Player opponentPlayer = opponent.getBase();
+        opponentPlayer.removeMetadata("god-mode-bduels", plugin);
         opponentPlayer.setHealth(opponentPlayer.getMaxHealth());
         opponentPlayer.teleport(arena.getOpponentLocation());
         this.opponent.setState(UserState.IN_MATCH);
@@ -100,8 +103,8 @@ public class Duel extends BukkitRunnable {
         return duelRewards;
     }
 
-    public Map<User, Location> getPreDuelLocations() {
-        return preDuelLocations;
+    public Location getPreDuelLocationOf(User user) {
+        return preDuelLocations.get(user);
     }
 
     public User[] getPlayers() {
@@ -115,7 +118,7 @@ public class Duel extends BukkitRunnable {
     }
 
     public User getOpponentOf(User user) {
-        for (User user2 : getPlayers()) {
+        for (User user2 : players) {
             if (!user2.equals(user)) {
                 return user2;
             }
@@ -170,10 +173,6 @@ public class Duel extends BukkitRunnable {
 
     public DuelStartingTask getStartingTask() {
         return startingTask;
-    }
-
-    public void setStartingTask(DuelStartingTask startingTask) {
-        this.startingTask = startingTask;
     }
 
 }

@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+//TODO: TEST ET
 public class InMatchEventListener extends ListenerAdapter {
 
     public InMatchEventListener(BDuels plugin) {
@@ -36,12 +37,7 @@ public class InMatchEventListener extends ListenerAdapter {
         Player player = e.getPlayer();
         User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
-            if (user.getState() == UserState.STARTING_MATCH) {
-                e.setCancelled(true);
-                return;
-            }
-            
-            e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
+            e.setCancelled(user.getState() == UserState.STARTING_MATCH || Utils.shouldCancelEvent("can-place-blocks", player));
         }
     }
 
@@ -50,12 +46,7 @@ public class InMatchEventListener extends ListenerAdapter {
         Player player = e.getPlayer();
         User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
-            if (user.getState() == UserState.STARTING_MATCH) {
-                e.setCancelled(true);
-                return;
-            }
-
-            e.setCancelled(Utils.shouldCancelEvent("can-place-blocks", player));
+            e.setCancelled(user.getState() == UserState.STARTING_MATCH || Utils.shouldCancelEvent("can-place-blocks", player));
         }
     }
 
@@ -64,12 +55,7 @@ public class InMatchEventListener extends ListenerAdapter {
         Player player = e.getPlayer();
         User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
-            if (user.getState() == UserState.STARTING_MATCH) {
-                e.setCancelled(true);
-                return;
-            }
-            
-            e.setCancelled(Utils.shouldCancelEvent("can-break-blocks", player));
+            e.setCancelled(user.getState() == UserState.STARTING_MATCH || Utils.shouldCancelEvent("can-break-blocks", player));
         }
     }
 
@@ -78,12 +64,7 @@ public class InMatchEventListener extends ListenerAdapter {
         Player player = e.getPlayer();
         User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
-            if (user.getState() == UserState.STARTING_MATCH) {
-                e.setCancelled(true);
-                return;
-            }
-
-            e.setCancelled(Utils.shouldCancelEvent("can-drop-item", player));
+            e.setCancelled(user.getState() == UserState.STARTING_MATCH || Utils.shouldCancelEvent("can-drop-blocks", player));
         }
     }
 
@@ -96,12 +77,7 @@ public class InMatchEventListener extends ListenerAdapter {
         Player player = e.getPlayer();
         User user = userManager.getOrLoadUser(player);
         if (user.isInMatch()) {
-            if (user.getState() == UserState.STARTING_MATCH) {
-                e.setCancelled(true);
-                return;
-            }
-
-            e.setCancelled(Utils.shouldCancelEvent("can-teleport", player));
+            e.setCancelled(user.getState() == UserState.STARTING_MATCH || Utils.shouldCancelEvent("can-teleport", player));
         }
     }
 

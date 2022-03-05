@@ -44,7 +44,7 @@ public class DuelRequestProcess {
     }
 
     public User getOpponentOf(User user) {
-        for (User user2 : getPlayers()) {
+        for (User user2 : players) {
             if (!user2.equals(user)) {
                 return user2;
             }
