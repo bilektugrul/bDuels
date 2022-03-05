@@ -62,9 +62,6 @@ public class DuelStartingTask extends BukkitRunnable {
         }
 
         if (time == 0) {
-            player.removeMetadata("god-mode-bduels", plugin);
-            opponent.removeMetadata("god-mode-bduels", plugin);
-
             for (User user : duel.getPlayers()) {
                 Player userPlayer = user.getBase();
                 User opponentOf = duel.getOpponentOf(user);

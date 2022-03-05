@@ -35,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Optional;
 
-public final class BDuels extends JavaPlugin {
+public class BDuels extends JavaPlugin {
 
     private CustomPlaceholderManager customPlaceholderManager;
     private LeaderboardManager leaderboardManager;
@@ -122,9 +122,9 @@ public final class BDuels extends JavaPlugin {
     private boolean registerManagers() {
         if (pluginManager.isPluginEnabled("Vault")) {
             vaultManager = new VaultManager(this);
-            setEconomyAdapter(new VaultEconomy(this));
+            economyAdapter = new VaultEconomy(this);
         } else {
-            setEconomyAdapter(new EmptyEconomy());
+            economyAdapter = new EmptyEconomy();
             getLogger().warning("Sunucunuzda Vault bulunamadığı için ekonomiye bağlı sistemler çalışmayacaktır.");
         }
 
