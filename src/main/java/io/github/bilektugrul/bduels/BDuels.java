@@ -1,7 +1,6 @@
 package io.github.bilektugrul.bduels;
 
-import com.hakan.controller.LicenseController;
-import com.hakan.inventoryapi.InventoryAPI;
+import com.hakan.core.HCore;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
 import io.github.bilektugrul.bduels.commands.BDuelsCommand;
 import io.github.bilektugrul.bduels.commands.LeaderboardCommand;
@@ -48,7 +47,6 @@ public class BDuels extends JavaPlugin {
     private DuelManager duelManager;
 
     private PluginManager pluginManager;
-    private InventoryAPI inventoryAPI;
 
     private DatabaseType usedDatabaseType = null;
     private boolean hologramsEnabled = false;
@@ -57,12 +55,9 @@ public class BDuels extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!checkLicence()) {
-            return;
-        }
+        HCore.initialize(this);
 
         saveDefaultConfig();
-        inventoryAPI = InventoryAPI.getInstance(this);
         pluginManager = getServer().getPluginManager();
 
         if (!registerManagers()) {
@@ -91,15 +86,6 @@ public class BDuels extends JavaPlugin {
         for (String s : Utils.getMessageList("after-load", null)) {
             getLogger().info(s);
         }
-    }
-
-    private boolean checkLicence() {
-        boolean licenced = new LicenseController().checkLicense("bDuels");
-        if (!licenced) {
-            getLogger().warning("Lisans doğrulanamadı. Eklenti kapatılıyor.");
-            forceClose();
-        }
-        return licenced;
     }
 
     private void forceClose() {
@@ -168,7 +154,7 @@ public class BDuels extends JavaPlugin {
         }
 
         MySQLManager mySQLManager = userManager.getMysqlManager();
-        for (User user : userManager.getUserList()) {
+        for (User user : userManager.getCachedUsers()) {
             if (usedDatabaseType == DatabaseType.FLAT) {
                 userManager.saveStatistics(user, sync);
             } else if (mySQLManager != null) {
@@ -204,10 +190,6 @@ public class BDuels extends JavaPlugin {
 
     public DuelManager getDuelManager() {
         return duelManager;
-    }
-
-    public InventoryAPI getInventoryAPI() {
-        return inventoryAPI;
     }
 
     public void setEconomyAdapter(EconomyAdapter economyAdapter) {

@@ -22,7 +22,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -104,15 +104,13 @@
     </repositories>
 
     <dependencies>
-        <!--
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>Bukkit</artifactId>
             <version>1.8.8</version>
-            <systemPath>${project.basedir}/libs/1.8.8.jar</systemPath>
+            <systemPath>${project.basedir}/../PickupFilter/libs/lib.jar</systemPath>
             <scope>system</scope>
         </dependency>
-        -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -120,20 +118,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.hakan-krgn</groupId>
-            <artifactId>hInventoryAPI</artifactId>
-            <version>1.0.8</version>
+            <groupId>com.github.Despical</groupId>
+            <artifactId>Commons</artifactId>
+            <version>1.9.8</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.hakan</groupId>
-            <artifactId>LicenseController</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Despical</groupId>
-            <artifactId>Commons</artifactId>
-            <version>1.4.3</version>
-            <scope>compile</scope>
+            <artifactId>hCore-bukkit</artifactId>
+            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
@@ -150,7 +143,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.1</version>
+            <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

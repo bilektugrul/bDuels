@@ -1,8 +1,8 @@
 package io.github.bilektugrul.bduels.duels;
 
-import com.hakan.inventoryapi.InventoryAPI;
-import com.hakan.inventoryapi.inventory.ClickableItem;
-import com.hakan.inventoryapi.inventory.HInventory;
+import com.hakan.core.HCore;
+import com.hakan.core.ui.inventory.InventoryGui;
+import com.hakan.core.ui.inventory.item.ClickableItem;
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.arenas.Arena;
 import io.github.bilektugrul.bduels.arenas.ArenaManager;
@@ -13,7 +13,7 @@ import io.github.bilektugrul.bduels.stuff.MessageType;
 import io.github.bilektugrul.bduels.users.User;
 import io.github.bilektugrul.bduels.users.UserState;
 import io.github.bilektugrul.bduels.utils.Utils;
-import me.despical.commons.compat.XMaterial;
+import me.despical.commons.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -31,7 +31,6 @@ import java.util.List;
 public class DuelManager {
 
     private final BDuels plugin;
-    private final InventoryAPI inventoryAPI;
     private final EconomyAdapter economy;
     private final ArenaManager arenaManager;
 
@@ -55,7 +54,6 @@ public class DuelManager {
 
     public DuelManager(BDuels plugin) {
         this.plugin = plugin;
-        this.inventoryAPI = plugin.getInventoryAPI();
         this.economy = plugin.getEconomyAdapter();
         this.arenaManager = plugin.getArenaManager();
         reload();
@@ -192,20 +190,21 @@ public class DuelManager {
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             timer.remove(opponentName);
-            HInventory inventory = inventoryAPI.getInventoryCreator()
-                    .setTitle(Utils.getString("request-gui-name", sender.getBase())
+            InventoryGui inventory = HCore.inventoryBuilder(senderName + "-bDuels")
+                    .title(Utils.getString("request-gui-name", sender.getBase())
                             .replace("%opponent%", opponentName))
-                    .setClosable(false)
-                    .setId(senderName + "-bDuels")
-                    .create();
+                    .options(InventoryGui.Option.CLOSABLE)
+                    .build();
 
-            inventory.guiAir();
+            inventory.fillAir();
 
             for (int i : midGlasses) {
-                inventory.setItem(i, ClickableItem.empty(replaceLoreAndName(glass, process, null)));
+                inventory.setItem(i, new ClickableItem(replaceLoreAndName(glass, process, null), (e) -> {
+
+                }));
             }
 
-            inventory.setItem(49, ClickableItem.of(replaceLoreAndName(cancelItem, process, null),
+            inventory.setItem(49, new ClickableItem(replaceLoreAndName(cancelItem, process, null),
                     event -> cancel((Player) event.getWhoClicked(), process, true)));
 
             putAcceptItem(inventory, 48, sender, process);
@@ -244,26 +243,25 @@ public class DuelManager {
         return newItem;
     }
 
-    public void updateHeads(HInventory inventory, DuelRequestProcess process) {
+    public void updateHeads(InventoryGui inventory, DuelRequestProcess process) {
         if (inventory == null || process == null) {
             return;
         }
 
         ItemStack playerSkull = playerHead.clone();
         ItemStack opponentSkull = playerHead.clone();
-        inventory.setItem(12, ClickableItem.empty(replaceLoreAndName(playerSkull, process, null)));
-        inventory.setItem(14, ClickableItem.empty(replaceLoreAndName(opponentSkull, process, null)));
+        inventory.setItem(12, new ClickableItem(replaceLoreAndName(playerSkull, process, null), e -> {}));
+        inventory.setItem(14, new ClickableItem(replaceLoreAndName(opponentSkull, process, null), e -> {}));
         updateMetas(inventory, process);
     }
 
-    public void updateMetas(HInventory inventory, DuelRequestProcess process) {
+    public void updateMetas(InventoryGui inventory, DuelRequestProcess process) {
         if (inventory == null || process == null) {
             return;
         }
 
-        Inventory original = inventory.getInventory();
-        ItemStack playerSkull = original.getItem(12);
-        ItemStack opponentSkull = original.getItem(14);
+        ItemStack playerSkull = inventory.getItem(12).getItem();
+        ItemStack opponentSkull = inventory.getItem(14).getItem();
 
         User playerUser = process.getPlayer();
         Player player = playerUser.getBase();
@@ -290,7 +288,7 @@ public class DuelManager {
         opponentSkull.setItemMeta(opponentMeta);
     }
 
-    public void putMoneyBetItems(HInventory inventory, int[] side, User user, DuelRequestProcess process) {
+    public void putMoneyBetItems(InventoryGui inventory, int[] side, User user, DuelRequestProcess process) {
         if (inventory == null || user == null || process == null) {
             return;
         }
@@ -301,7 +299,7 @@ public class DuelManager {
             index++;
             ItemStack item = replaceLoreAndName(settings.getItem(), process, null);
             int moneyToAdd = settings.getMoneyToAdd();
-            inventory.setItem(i, ClickableItem.of(item, event -> {
+            inventory.setItem(i, new ClickableItem(item, event -> {
                 if (process.isFinished(user)) {
                     return;
                 }
@@ -323,13 +321,13 @@ public class DuelManager {
         }
     }
 
-    public void putAcceptItem(HInventory inventory, int slot, User user, DuelRequestProcess process) {
+    public void putAcceptItem(InventoryGui inventory, int slot, User user, DuelRequestProcess process) {
         if (inventory == null || user == null || process == null) {
             return;
         }
 
         Player player = user.getBase();
-        inventory.setItem(slot, ClickableItem.of(replaceLoreAndName(redGlass, process, player), event -> {
+        inventory.setItem(slot, new ClickableItem(replaceLoreAndName(redGlass, process, player), event -> {
             Player clicker = (Player) event.getWhoClicked();
             if (clicker.equals(player)) {
                 boolean newFinished = !process.isFinished(user);
@@ -337,7 +335,7 @@ public class DuelManager {
                 if (newFinished) {
                     event.setCurrentItem(replaceLoreAndName(greenGlass, process, clicker));
                     if (process.isBothFinished()) {
-                        inventory.setClosable(true);
+                        inventory.addOption(InventoryGui.Option.CLOSABLE);
                         startMatch(process);
                     }
                 } else {
@@ -356,10 +354,8 @@ public class DuelManager {
             user.setRequestProcess(null);
             user.setState(UserState.FREE);
             Player player = user.getBase();
-            HInventory inventory = inventoryAPI.getInventoryManager().getPlayerInventory(player);
-            if (inventory != null) {
-                inventory.close(player);
-            }
+            InventoryGui inventory = HCore.getInventoryByPlayer(player);
+            inventory.close(player);
             player.sendMessage(Utils.getMessage("duel.cancelled", player)
                     .replace("%who%", canceller.getName()));
         }

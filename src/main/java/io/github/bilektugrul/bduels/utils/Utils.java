@@ -7,7 +7,7 @@ import io.github.bilektugrul.bduels.features.placeholders.CustomPlaceholderManag
 import io.github.bilektugrul.bduels.stuff.InGameSettingMode;
 import io.github.bilektugrul.bduels.stuff.MessageType;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.despical.commons.compat.Titles;
+import me.despical.commons.messages.Titles;
 import me.despical.commons.util.Strings;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -230,7 +230,7 @@ public class Utils {
         for (Player p : players) {
             String title = replaceWinnerAndLoser(getMessage("duel.win.title.title", p), winner, loser);
             String subtitle = replaceWinnerAndLoser(getMessage("duel.win.title.subtitle", p), winner, loser);
-            Titles.sendTitle(p, title, subtitle, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"));
+            Titles.sendTitle(p, getInt("titles.fade-in"), getInt("titles.stay"), getInt("titles-fade-out"), title, subtitle);
         }
     }
 
@@ -257,12 +257,6 @@ public class Utils {
         if (player == null || message == null) return;
         String nmsVersion = Bukkit.getServer().getClass().getPackage().getName();
         nmsVersion = nmsVersion.substring(nmsVersion.lastIndexOf(".") + 1);
-
-        //1.10 and up
-        if (!nmsVersion.startsWith("v1_9_R") && !nmsVersion.startsWith("v1_8_R")) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-            return;
-        }
 
         //1.8.x and 1.9.x
         try {

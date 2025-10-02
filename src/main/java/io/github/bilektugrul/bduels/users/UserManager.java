@@ -9,14 +9,12 @@ import me.despical.commons.configuration.ConfigUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class UserManager {
 
     private final BDuels plugin;
-    private final Set<User> userList = new HashSet<>();
+    private final Map<UUID, User> cachedUsers = new HashMap<>();
 
     private MySQLManager mysqlManager;
     private StatisticSaveProcess statisticSaveProcess;
@@ -45,20 +43,15 @@ public class UserManager {
         }
 
         UUID uuid = player.getUniqueId();
-        for (User user : userList) {
-            if (user.getUUID().equals(uuid)) {
-                return user;
-            }
-        }
-
-        User user = new User(player);
-        loadStatistics(user);
-        userList.add(user);
-        return user;
+        return cachedUsers.computeIfAbsent(uuid, k -> {
+            User user = new User(player);
+            loadStatistics(user);
+            return user;
+        });
     }
 
     public void removeUser(User user) {
-        userList.remove(user);
+        cachedUsers.remove(user.getUUID());
     }
 
     public boolean isMysqlManagerReady() {
@@ -111,8 +104,8 @@ public class UserManager {
         }
     }
 
-    public Set<User> getUserList() {
-        return userList;
+    public Set<User> getCachedUsers() {
+        return new HashSet<>(cachedUsers.values());
     }
 
     public MySQLManager getMysqlManager() {

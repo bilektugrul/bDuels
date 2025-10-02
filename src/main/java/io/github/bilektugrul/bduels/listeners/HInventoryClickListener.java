@@ -1,6 +1,7 @@
 package io.github.bilektugrul.bduels.listeners;
 
-import com.hakan.inventoryapi.inventory.HInventory;
+import com.hakan.core.HCore;
+import com.hakan.core.ui.inventory.InventoryGui;
 import io.github.bilektugrul.bduels.BDuels;
 import io.github.bilektugrul.bduels.duels.DuelRequestProcess;
 import io.github.bilektugrul.bduels.duels.DuelRewards;
@@ -22,8 +23,8 @@ public class HInventoryClickListener extends ListenerAdapter {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         Player clicker = (Player) e.getWhoClicked();
-        HInventory playerHInventory = plugin.getInventoryAPI().getInventoryManager().getPlayerInventory(clicker);
-        if (playerHInventory != null && playerHInventory.getId().contains("-bDuels")) {
+        InventoryGui playerHInventory = HCore.getInventoryByPlayer(clicker);
+        if (playerHInventory.getId().contains("-bDuels")) {
             ItemStack clicked = e.getCurrentItem();
             if (clicked == null) {
                 return;
@@ -44,7 +45,7 @@ public class HInventoryClickListener extends ListenerAdapter {
             int[] side = clickerType == PlayerType.PLAYER ? duelManager.getPlayerSide() : duelManager.getOpponentSide();
             DuelRewards rewards = process.getRewardsOf(user);
 
-            Inventory playerHInventoryOriginal = playerHInventory.getInventory();
+            Inventory playerHInventoryOriginal = playerHInventory.toInventory();
 
             if (!clickedInventory.equals(playerHInventoryOriginal)) { // KENDİ ENVANTERİNE TIKLADIĞINDA TIKLADIĞI EŞYA BET OLAN İTEMLERE EKLENİCEK
                 int slotToPut = Utils.nextEmptySlot(side, playerHInventoryOriginal);
